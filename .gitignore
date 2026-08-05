@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+*.cover
+
+# Django / Wagtail
+.env
+*.sqlite3
+media/
+staticfiles/
+db.sqlite3
+
+# Tooling / local scratch
+.scratch/
+.idea/
+.vscode/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
