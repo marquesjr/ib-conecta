@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}IB Conecta — Igreja Batista em Santa Leopoldina{% endblock %}</title>
+    <style>
+      :root {
+        --bg: #f3efe6;
+        --ink: #1f2a24;
+        --accent: #0f5c4c;
+        --muted: #4d5a53;
+        --surface: #fffdf8;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Source Serif 4", "Palatino Linotype", Palatino, serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, #dce8e2 0%, transparent 40%),
+          linear-gradient(180deg, #f7f2e8 0%, var(--bg) 100%);
+        line-height: 1.55;
+      }
+      a { color: var(--accent); }
+      .wrap { width: min(720px, calc(100% - 2rem)); margin: 0 auto; padding: 1.5rem 0 3rem; }
+      header.site-header, footer.site-footer { padding: 1rem 0; }
+      .brand { font-size: 1.35rem; font-weight: 700; text-decoration: none; color: var(--ink); }
+      .cta {
+        display: inline-block;
+        margin: 0.35rem 0.35rem 0.35rem 0;
+        padding: 0.7rem 1rem;
+        background: var(--accent);
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+      }
+      .cta.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+      .panel {
+        background: var(--surface);
+        border: 1px solid #ddd4c4;
+        padding: 1rem 1.1rem;
+        margin: 1rem 0;
+      }
+      .muted { color: var(--muted); }
+      nav a { margin-right: 0.9rem; text-decoration: none; }
+    </style>
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-header">
+        <a class="brand" href="{% url 'home' %}">IB Conecta</a>
+        <nav>
+          <a href="{% url 'plan_visit' %}">Planeje sua visita</a>
+          {% if whatsapp_url %}
+            <a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          {% endif %}
+        </nav>
+      </header>
+
+      <main>
+        {% block content %}{% endblock %}
+      </main>
+
+      <footer class="site-footer">
+        <p><strong>Igreja Batista em Santa Leopoldina</strong></p>
+        {% if church_settings and church_settings.whatsapp_welcome_text %}
+          <p class="muted">{{ church_settings.whatsapp_welcome_text }}</p>
+        {% endif %}
+        {% if whatsapp_url %}
+          <p>
+            <a class="cta secondary" href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer">
+              Falar no WhatsApp da igreja
+            </a>
+          </p>
+        {% endif %}
+      </footer>
+    </div>
+  </body>
+</html>

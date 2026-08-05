@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Planeje sua visita — IB Conecta{% endblock %}
+
+{% block content %}
+  <section>
+    <h1>Planeje sua visita</h1>
+    <p class="muted">
+      Tudo o que você precisa para chegar com tranquilidade — especialmente se vem da zona rural.
+    </p>
+
+    <div class="panel">
+      <h2>Horários</h2>
+      <p>{{ church_settings.service_times|linebreaksbr }}</p>
+    </div>
+
+    <div class="panel">
+      <h2>Localização</h2>
+      <p>{{ church_settings.address_line }}</p>
+      {% if church_settings.address_references %}
+        <p><strong>Referências:</strong> {{ church_settings.address_references|linebreaksbr }}</p>
+      {% endif %}
+      {% if church_settings.map_url %}
+        <p>
+          <a href="{{ church_settings.map_url }}" target="_blank" rel="noopener noreferrer">
+            Abrir mapa
+          </a>
+        </p>
+      {% endif %}
+    </div>
+
+    {% if church_settings.accessibility_info %}
+      <div class="panel">
+        <h2>Acessibilidade</h2>
+        <p>{{ church_settings.accessibility_info|linebreaksbr }}</p>
+      </div>
+    {% endif %}
+
+    {% if church_settings.transport_info %}
+      <div class="panel">
+        <h2>Transporte e caronas</h2>
+        <p>{{ church_settings.transport_info|linebreaksbr }}</p>
+      </div>
+    {% endif %}
+
+    <div class="panel">
+      <h2>Fale conosco</h2>
+      {% if church_settings.whatsapp_welcome_text %}
+        <p>{{ church_settings.whatsapp_welcome_text }}</p>
+      {% endif %}
+      {% if whatsapp_url %}
+        <p>
+          <a class="cta" href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer">
+            Conversar no WhatsApp da igreja
+          </a>
+        </p>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

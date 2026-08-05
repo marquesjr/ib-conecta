@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     # Wagtail
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
+    "wagtail.contrib.settings",
     "wagtail.embeds",
     "wagtail.sites",
     "wagtail.users",
@@ -34,6 +35,7 @@ INSTALLED_APPS = [
     "wagtail",
     "modelcluster",
     "taggit",
+
     # Django
     "django.contrib.admin",
     "django.contrib.auth",
@@ -67,7 +69,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.public.context_processors.church_settings",
             ],
+
         },
     },
 ]

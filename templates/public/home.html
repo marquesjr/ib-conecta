@@ -1,17 +1,29 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>IB Conecta — Igreja Batista em Santa Leopoldina</title>
-  </head>
-  <body>
-    <main>
-      <h1>IB Conecta</h1>
-      <p>Portal da Igreja Batista em Santa Leopoldina.</p>
-      <p>
-        <a href="/admin/">Área administrativa (Wagtail)</a>
-      </p>
-    </main>
-  </body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}IB Conecta — Igreja Batista em Santa Leopoldina{% endblock %}
+
+{% block content %}
+  <section>
+    <p class="muted">Igreja Batista em Santa Leopoldina</p>
+    <h1>{{ church_settings.evangelistic_headline }}</h1>
+    <p>{{ church_settings.evangelistic_message }}</p>
+
+    <div class="panel">
+      <h2>{{ church_settings.next_service_label }}</h2>
+      <p><strong>{{ church_settings.next_service_when }}</strong></p>
+      {% if church_settings.next_service_description %}
+        <p>{{ church_settings.next_service_description }}</p>
+      {% endif %}
+      <p class="muted">{{ church_settings.address_line }}</p>
+    </div>
+
+    <p>
+      <a class="cta" href="{% url 'plan_visit' %}">Planeje sua visita</a>
+      {% if whatsapp_url %}
+        <a class="cta secondary" href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer">
+          Falar no WhatsApp
+        </a>
+      {% endif %}
+    </p>
+  </section>
+{% endblock %}

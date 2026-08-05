@@ -32,7 +32,11 @@ docker compose up --build
 Em seguida:
 
 - Página pública: http://localhost:8000/
+- Planeje sua visita: http://localhost:8000/planeje-sua-visita/
 - Admin Wagtail: http://localhost:8000/admin/
+
+No admin Wagtail, em **Configurações**, edite WhatsApp, horários, endereço e o próximo culto (sem hardcode no código).
+
 
 Credenciais iniciais (definidas em `.env`):
 
