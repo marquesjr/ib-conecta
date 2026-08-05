@@ -1,6 +1,86 @@
 from django.db import models
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
+from wagtail.fields import RichTextField
+from wagtail.models import Page
+
+
+class InstitutionalPage(Page):
+    """Página institucional editável (história, crenças, ministérios, liderança)."""
+
+    intro = models.CharField(
+        max_length=300,
+        blank=True,
+        default="",
+        verbose_name="Resumo",
+        help_text="Frase curta exibida abaixo do título.",
+    )
+    body = RichTextField(verbose_name="Conteúdo")
+
+    content_panels = Page.content_panels + [
+        FieldPanel("intro"),
+        FieldPanel("body"),
+    ]
+
+    parent_page_types = ["wagtailcore.Page"]
+    subpage_types = []
+
+    class Meta:
+        verbose_name = "Página institucional"
+        verbose_name_plural = "Páginas institucionais"
+
+
+class NewsIndexPage(Page):
+    """Índice público de notícias e comunicados."""
+
+    intro = models.CharField(
+        max_length=300,
+        blank=True,
+        default="",
+        verbose_name="Resumo",
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("intro"),
+    ]
+
+    parent_page_types = ["wagtailcore.Page"]
+    subpage_types = ["public.NewsPage"]
+
+    class Meta:
+        verbose_name = "Índice de notícias"
+        verbose_name_plural = "Índices de notícias"
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context["news_pages"] = (
+            NewsPage.objects.child_of(self).live().public().order_by("-first_published_at", "-path")
+        )
+        return context
+
+
+class NewsPage(Page):
+    """Notícia ou comunicado publicado pela Comunicação."""
+
+    intro = models.CharField(
+        max_length=300,
+        blank=True,
+        default="",
+        verbose_name="Resumo",
+    )
+    body = RichTextField(verbose_name="Conteúdo")
+
+    content_panels = Page.content_panels + [
+        FieldPanel("intro"),
+        FieldPanel("body"),
+    ]
+
+    parent_page_types = ["public.NewsIndexPage"]
+    subpage_types = []
+
+    class Meta:
+        verbose_name = "Notícia"
+        verbose_name_plural = "Notícias"
 
 
 @register_setting
