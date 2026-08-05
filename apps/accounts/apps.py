@@ -6,3 +6,6 @@ class AccountsConfig(AppConfig):
     name = "apps.accounts"
     label = "accounts"
     verbose_name = "Autenticação"
+
+    def ready(self) -> None:
+        from apps.accounts import signals  # noqa: F401

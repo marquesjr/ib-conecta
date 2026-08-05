@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Entrar — IB Conecta</title>
+  </head>
+  <body>
+    <main>
+      <h1>Entrar</h1>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Entrar</button>
+      </form>
+      <p><a href="{% url 'accounts:password_reset' %}">Esqueci minha senha</a></p>
+    </main>
+  </body>
+</html>
