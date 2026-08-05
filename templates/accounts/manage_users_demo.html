@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Usuários — IB Conecta</title>
+  </head>
+  <body>
+    <main>
+      <h1>Gestão de perfis</h1>
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      <ul>
+        {% for item in users %}
+          <li>
+            {{ item.username }} — {{ item.profile.get_role_display }}
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="user_id" value="{{ item.id }}" />
+              <select name="role">
+                {% for value, label in roles %}
+                  <option value="{{ value }}" {% if item.profile.role == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+              <button type="submit">Salvar</button>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+    </main>
+  </body>
+</html>

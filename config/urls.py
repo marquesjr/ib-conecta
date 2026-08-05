@@ -9,9 +9,11 @@ from wagtail import urls as wagtail_urls
 urlpatterns = [
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
+    path("", include("apps.accounts.urls")),
     path("", include("apps.public.urls")),
     path("", include(wagtail_urls)),
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

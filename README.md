@@ -55,6 +55,15 @@ docker compose down -v
 docker compose run --rm --no-deps --entrypoint python --env DJANGO_SETTINGS_MODULE=config.settings.test web manage.py test
 ```
 
+## Conta e autenticação
+
+- Entrar: http://localhost:8000/conta/entrar/
+- Recuperar senha: http://localhost:8000/conta/recuperar-senha/
+- Área da conta: http://localhost:8000/conta/
+- 2FA (administradores): http://localhost:8000/conta/2fa/
+
+Perfis suportados: membro, líder de ministério, comunicação, pastor, tesouraria, comissão de eventos e administrador. Ações sensíveis geram trilha de auditoria sem gravar senhas ou conteúdo pastoral.
+
 ## Parar
 
 ```bash

@@ -106,7 +106,18 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+LOGIN_URL = "accounts:login"
+LOGIN_REDIRECT_URL = "accounts:account_home"
+LOGOUT_REDIRECT_URL = "home"
+
+EMAIL_BACKEND = os.environ.get(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.console.EmailBackend",
+)
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "noreply@ibsantaleopoldina.com.br")
+
 WAGTAIL_SITE_NAME = "IB Conecta"
+
 WAGTAILADMIN_BASE_URL = os.environ.get("WAGTAILADMIN_BASE_URL", "http://localhost:8000")
 WAGTAILDOCS_EXTENSIONS = [
     "csv",
