@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block title %}{{ page.title }} — IB Conecta{% endblock %}
+
+{% block content %}
+  <article class="cms-page">
+    <h1>{{ page.title }}</h1>
+    {% if page.intro %}
+      <p class="lede">{{ page.intro }}</p>
+    {% endif %}
+
+    {% if live_embed_src %}
+      <div class="media-embed">
+        <iframe
+          src="{{ live_embed_src }}"
+          title="Transmissão ao vivo: {{ page.title }}"
+          loading="lazy"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"
+        ></iframe>
+      </div>
+    {% elif page.youtube_url %}
+      <p>
+        <a class="cta secondary" href="{{ page.youtube_url }}" target="_blank" rel="noopener noreferrer">
+          Assistir no YouTube
+        </a>
+      </p>
+    {% else %}
+      <p class="muted">A transmissão será disponibilizada aqui quando houver culto ao vivo.</p>
+    {% endif %}
+
+    {% if page.body %}
+      <div class="rich-text">
+        {{ page.body|richtext }}
+      </div>
+    {% endif %}
+  </article>
+{% endblock %}

@@ -1,7 +1,18 @@
 from wagtail.models import Site
 
-from apps.public.cms import AGENDA_INDEX_SLUG, NEWS_INDEX_SLUG
-from apps.public.models import ChurchSettings, EventIndexPage, NewsIndexPage
+from apps.public.cms import (
+    AGENDA_INDEX_SLUG,
+    LIVE_STREAM_SLUG,
+    NEWS_INDEX_SLUG,
+    SERMON_INDEX_SLUG,
+)
+from apps.public.models import (
+    ChurchSettings,
+    EventIndexPage,
+    LiveStreamPage,
+    NewsIndexPage,
+    SermonIndexPage,
+)
 from apps.public.whatsapp import build_whatsapp_url
 
 
@@ -16,6 +27,8 @@ def church_settings(request):
             "whatsapp_url": "",
             "news_index_url": "",
             "agenda_index_url": "",
+            "sermon_index_url": "",
+            "live_stream_url": "",
         }
 
     settings = ChurchSettings.for_site(site)
@@ -31,6 +44,18 @@ def church_settings(request):
         .filter(slug=AGENDA_INDEX_SLUG)
         .first()
     )
+    sermon_index = (
+        SermonIndexPage.objects.live()
+        .public()
+        .filter(slug=SERMON_INDEX_SLUG)
+        .first()
+    )
+    live_stream = (
+        LiveStreamPage.objects.live()
+        .public()
+        .filter(slug=LIVE_STREAM_SLUG)
+        .first()
+    )
     return {
         "church_settings": settings,
         "whatsapp_url": build_whatsapp_url(
@@ -39,4 +64,6 @@ def church_settings(request):
         ),
         "news_index_url": news_index.url if news_index else "",
         "agenda_index_url": agenda_index.url if agenda_index else "",
+        "sermon_index_url": sermon_index.url if sermon_index else "",
+        "live_stream_url": live_stream.url if live_stream else "",
     }

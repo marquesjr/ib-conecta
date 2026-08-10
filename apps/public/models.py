@@ -234,6 +234,115 @@ class EventRegistration(models.Model):
         return f"{self.name} → {self.event}"
 
 
+class SermonIndexPage(Page):
+    """Índice público de sermões e estudos."""
+
+    intro = models.CharField(
+        max_length=300,
+        blank=True,
+        default="",
+        verbose_name="Resumo",
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("intro"),
+    ]
+
+    parent_page_types = ["wagtailcore.Page"]
+    subpage_types = ["public.SermonPage"]
+
+    class Meta:
+        verbose_name = "Índice de sermões"
+        verbose_name_plural = "Índices de sermões"
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context["sermon_pages"] = (
+            SermonPage.objects.child_of(self)
+            .live()
+            .public()
+            .order_by("-first_published_at", "-path")
+        )
+        return context
+
+
+class SermonPage(Page):
+    """Sermão ou estudo com texto e mídia incorporada externa (sem upload de vídeo)."""
+
+    intro = models.CharField(
+        max_length=300,
+        blank=True,
+        default="",
+        verbose_name="Resumo",
+    )
+    body = RichTextField(blank=True, default="", verbose_name="Conteúdo")
+    media_url = models.URLField(
+        blank=True,
+        default="",
+        verbose_name="URL da mídia incorporada",
+        help_text="YouTube ou outro link externo. Não use upload de vídeo no portal.",
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("intro"),
+        FieldPanel("body"),
+        FieldPanel("media_url"),
+    ]
+
+    parent_page_types = ["public.SermonIndexPage"]
+    subpage_types = []
+
+    class Meta:
+        verbose_name = "Sermão"
+        verbose_name_plural = "Sermões"
+
+    def get_context(self, request, *args, **kwargs):
+        from apps.public.embeds import is_external_audio_url, youtube_embed_src
+
+        context = super().get_context(request, *args, **kwargs)
+        context["media_embed_src"] = youtube_embed_src(self.media_url)
+        context["media_is_audio"] = is_external_audio_url(self.media_url)
+        return context
+
+
+class LiveStreamPage(Page):
+    """Página de transmissão ao vivo com incorporação YouTube."""
+
+    intro = models.CharField(
+        max_length=300,
+        blank=True,
+        default="",
+        verbose_name="Resumo",
+    )
+    body = RichTextField(blank=True, default="", verbose_name="Conteúdo")
+    youtube_url = models.URLField(
+        blank=True,
+        default="",
+        verbose_name="URL do YouTube ao vivo",
+        help_text="Link do vídeo ou transmissão no YouTube. Sem autoplay agressivo.",
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("intro"),
+        FieldPanel("body"),
+        FieldPanel("youtube_url"),
+    ]
+
+    parent_page_types = ["wagtailcore.Page"]
+    subpage_types = []
+
+    class Meta:
+        verbose_name = "Transmissão ao vivo"
+        verbose_name_plural = "Transmissões ao vivo"
+
+    def get_context(self, request, *args, **kwargs):
+        from apps.public.embeds import youtube_embed_src
+
+        context = super().get_context(request, *args, **kwargs)
+        context["live_embed_src"] = youtube_embed_src(self.youtube_url)
+        return context
+
+
 @register_setting
 class ChurchSettings(BaseSiteSetting):
     evangelistic_headline = models.CharField(

@@ -1,8 +1,20 @@
 from django.test import TestCase
 
 from apps.public.bootstrap import bootstrap_cms
-from apps.public.cms import AGENDA_INDEX_SLUG, INSTITUTIONAL_PAGE_SEEDS, NEWS_INDEX_SLUG
-from apps.public.models import EventIndexPage, InstitutionalPage, NewsIndexPage
+from apps.public.cms import (
+    AGENDA_INDEX_SLUG,
+    INSTITUTIONAL_PAGE_SEEDS,
+    LIVE_STREAM_SLUG,
+    NEWS_INDEX_SLUG,
+    SERMON_INDEX_SLUG,
+)
+from apps.public.models import (
+    EventIndexPage,
+    InstitutionalPage,
+    LiveStreamPage,
+    NewsIndexPage,
+    SermonIndexPage,
+)
 
 
 class CmsBootstrapTests(TestCase):
@@ -26,6 +38,24 @@ class CmsBootstrapTests(TestCase):
             1,
         )
 
+        sermons = self.client.get(f"/{SERMON_INDEX_SLUG}/")
+        self.assertEqual(sermons.status_code, 200)
+        self.assertContains(sermons, "Sermões")
+        self.assertContains(sermons, f'href="/{SERMON_INDEX_SLUG}/"')
+        self.assertEqual(
+            SermonIndexPage.objects.live().filter(slug=SERMON_INDEX_SLUG).count(),
+            1,
+        )
+
+        live = self.client.get(f"/{LIVE_STREAM_SLUG}/")
+        self.assertEqual(live.status_code, 200)
+        self.assertContains(live, "Ao vivo")
+        self.assertContains(live, f'href="/{LIVE_STREAM_SLUG}/"')
+        self.assertEqual(
+            LiveStreamPage.objects.live().filter(slug=LIVE_STREAM_SLUG).count(),
+            1,
+        )
+
         for slug, title, _intro in INSTITUTIONAL_PAGE_SEEDS:
             page_response = self.client.get(f"/{slug}/")
             self.assertEqual(page_response.status_code, 200, slug)
@@ -34,6 +64,8 @@ class CmsBootstrapTests(TestCase):
         bootstrap_cms()
         self.assertEqual(NewsIndexPage.objects.filter(slug=NEWS_INDEX_SLUG).count(), 1)
         self.assertEqual(EventIndexPage.objects.filter(slug=AGENDA_INDEX_SLUG).count(), 1)
+        self.assertEqual(SermonIndexPage.objects.filter(slug=SERMON_INDEX_SLUG).count(), 1)
+        self.assertEqual(LiveStreamPage.objects.filter(slug=LIVE_STREAM_SLUG).count(), 1)
         self.assertEqual(
             InstitutionalPage.objects.filter(
                 slug__in=[slug for slug, _, _ in INSTITUTIONAL_PAGE_SEEDS]

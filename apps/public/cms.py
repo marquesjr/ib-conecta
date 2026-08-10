@@ -9,6 +9,8 @@ CMS_EDITORS_GROUP_NAME = "Editores de conteúdo"
 PAGE_PERMISSION_CODENAMES = ("add_page", "change_page", "publish_page")
 NEWS_INDEX_SLUG = "noticias"
 AGENDA_INDEX_SLUG = "agenda"
+SERMON_INDEX_SLUG = "sermoes"
+LIVE_STREAM_SLUG = "ao-vivo"
 INSTITUTIONAL_PAGE_SEEDS = (
     ("historia", "Nossa história", "Como a igreja nasceu em Santa Leopoldina."),
     ("crencas", "Crenças", "O que cremos e confessamos."),

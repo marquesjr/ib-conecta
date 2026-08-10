@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block title %}{{ page.title }} — IB Conecta{% endblock %}
+
+{% block content %}
+  <article class="cms-page">
+    <p class="news-meta">
+      <a href="{{ page.get_parent.url }}">Sermões</a>
+      {% if page.first_published_at %}
+        · {{ page.first_published_at|date:"d/m/Y" }}
+      {% endif %}
+    </p>
+    <h1>{{ page.title }}</h1>
+    {% if page.intro %}
+      <p class="lede">{{ page.intro }}</p>
+    {% endif %}
+
+    {% if media_embed_src %}
+      <div class="media-embed">
+        <iframe
+          src="{{ media_embed_src }}"
+          title="Mídia: {{ page.title }}"
+          loading="lazy"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"
+        ></iframe>
+      </div>
+    {% elif media_is_audio and page.media_url %}
+      <audio controls preload="none" src="{{ page.media_url }}">
+        Seu navegador não reproduz áudio embutido.
+        <a href="{{ page.media_url }}" target="_blank" rel="noopener noreferrer">Abrir áudio</a>
+      </audio>
+    {% elif page.media_url %}
+      <p>
+        <a class="cta secondary" href="{{ page.media_url }}" target="_blank" rel="noopener noreferrer">
+          Abrir mídia externa
+        </a>
+      </p>
+    {% endif %}
+
+    {% if page.body %}
+      <div class="rich-text">
+        {{ page.body|richtext }}
+      </div>
+    {% endif %}
+  </article>
+{% endblock %}
