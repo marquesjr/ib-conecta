@@ -13,3 +13,10 @@ def ensure_profile(sender, instance, created, **kwargs):
         Profile.objects.get_or_create(user=instance, defaults={"role": Role.MEMBER})
     else:
         Profile.objects.get_or_create(user=instance)
+
+
+@receiver(post_save, sender=Profile)
+def sync_cms_access_on_profile_save(sender, instance, **kwargs):
+    from apps.public.cms import sync_cms_access_for_user
+
+    sync_cms_access_for_user(instance.user)

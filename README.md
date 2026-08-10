@@ -33,9 +33,10 @@ Em seguida:
 
 - Página pública: http://localhost:8000/
 - Planeje sua visita: http://localhost:8000/planeje-sua-visita/
+- Notícias: http://localhost:8000/noticias/
 - Admin Wagtail: http://localhost:8000/admin/
 
-No admin Wagtail, em **Configurações**, edite WhatsApp, horários, endereço e o próximo culto (sem hardcode no código).
+No admin Wagtail, em **Configurações**, edite WhatsApp, horários, endereço e o próximo culto (sem hardcode no código). Páginas institucionais (história, crenças, ministérios, liderança) e notícias são criadas/publicadas pelo CMS; rascunhos não ficam públicos até a publicação. Perfis com permissão de conteúdo (Comunicação, Pastor, Administrador) entram no grupo **Editores de conteúdo** e acessam o admin.
 
 
 Credenciais iniciais (definidas em `.env`):

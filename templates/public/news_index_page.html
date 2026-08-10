@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} — IB Conecta{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>{{ page.title }}</h1>
+    {% if page.intro %}
+      <p class="lede">{{ page.intro }}</p>
+    {% endif %}
+
+    {% if news_pages %}
+      <ul class="news-list">
+        {% for news in news_pages %}
+          <li>
+            <a href="{{ news.url }}">
+              <strong>{{ news.title }}</strong>
+              {% if news.intro %}
+                <p class="muted">{{ news.intro }}</p>
+              {% endif %}
+              {% if news.first_published_at %}
+                <p class="news-meta">{{ news.first_published_at|date:"d/m/Y" }}</p>
+              {% endif %}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">Nenhuma notícia publicada no momento.</p>
+    {% endif %}
+  </section>
+{% endblock %}

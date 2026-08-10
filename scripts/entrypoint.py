@@ -32,9 +32,18 @@ if created or not user.check_password(password):
     run([sys.executable, "manage.py", "shell", "-c", script])
 
 
+def bootstrap_cms() -> None:
+    script = """
+from apps.public.bootstrap import bootstrap_cms
+bootstrap_cms()
+"""
+    run([sys.executable, "manage.py", "shell", "-c", script])
+
+
 def main() -> None:
     run([sys.executable, "manage.py", "migrate", "--noinput"])
     ensure_superuser()
+    bootstrap_cms()
     os.execvp(sys.argv[1], sys.argv[1:])
 
 
