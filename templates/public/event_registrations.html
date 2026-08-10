@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Inscritos em eventos — IB Conecta{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Inscritos em eventos</h1>
+    <p class="lede">Acompanhe e gerencie as inscrições públicas da agenda.</p>
+
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if registrations %}
+      <ul class="news-list">
+        {% for item in registrations %}
+          <li>
+            <strong>{{ item.name }}</strong>
+            <p class="news-meta">
+              {{ item.event.title }} · {{ item.email }}
+              {% if item.phone %} · {{ item.phone }}{% endif %}
+              · {{ item.get_status_display }}
+            </p>
+            {% if item.status != "cancelled" %}
+              <form method="post" action="{% url 'accounts:event_registration_cancel' item.pk %}">
+                {% csrf_token %}
+                <button class="cta secondary" type="submit">Cancelar inscrição</button>
+              </form>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">Nenhuma inscrição registrada.</p>
+    {% endif %}
+  </section>
+{% endblock %}

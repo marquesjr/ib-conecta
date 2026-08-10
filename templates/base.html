@@ -61,6 +61,9 @@
         <a class="brand" href="{% url 'home' %}">IB Conecta</a>
         <nav>
           <a href="{% url 'plan_visit' %}">Planeje sua visita</a>
+          {% if agenda_index_url %}
+            <a href="{{ agenda_index_url }}">Agenda</a>
+          {% endif %}
           {% if news_index_url %}
             <a href="{{ news_index_url }}">Notícias</a>
           {% endif %}

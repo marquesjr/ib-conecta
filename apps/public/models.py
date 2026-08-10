@@ -1,5 +1,10 @@
+from django.contrib import messages
 from django.db import models
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.utils import timezone
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.contrib.routable_page.models import RoutablePageMixin, path
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import RichTextField
 from wagtail.models import Page
@@ -81,6 +86,152 @@ class NewsPage(Page):
     class Meta:
         verbose_name = "Notícia"
         verbose_name_plural = "Notícias"
+
+
+class EventIndexPage(Page):
+    """Índice público da agenda de cultos e eventos."""
+
+    intro = models.CharField(
+        max_length=300,
+        blank=True,
+        default="",
+        verbose_name="Resumo",
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("intro"),
+    ]
+
+    parent_page_types = ["wagtailcore.Page"]
+    subpage_types = ["public.EventPage"]
+
+    class Meta:
+        verbose_name = "Índice da agenda"
+        verbose_name_plural = "Índices da agenda"
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context["event_pages"] = (
+            EventPage.objects.child_of(self)
+            .live()
+            .public()
+            .filter(starts_at__gte=timezone.now())
+            .order_by("starts_at", "path")
+        )
+        return context
+
+
+class EventPage(RoutablePageMixin, Page):
+    """Culto ou evento público da agenda."""
+
+    starts_at = models.DateTimeField(verbose_name="Início")
+    ends_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Término",
+    )
+    location = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+        verbose_name="Local",
+    )
+    body = RichTextField(blank=True, default="", verbose_name="Descrição")
+    requires_registration = models.BooleanField(
+        default=False,
+        verbose_name="Exige inscrição",
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("starts_at"),
+        FieldPanel("ends_at"),
+        FieldPanel("location"),
+        FieldPanel("body"),
+        FieldPanel("requires_registration"),
+    ]
+
+    parent_page_types = ["public.EventIndexPage"]
+    subpage_types = []
+
+    class Meta:
+        verbose_name = "Evento"
+        verbose_name_plural = "Eventos"
+
+    def get_context(self, request, *args, **kwargs):
+        from apps.public.forms import EventRegistrationForm
+
+        context = super().get_context(request, *args, **kwargs)
+        context["registration_form"] = EventRegistrationForm()
+        return context
+
+    @path("inscrever/")
+    def register_view(self, request):
+        from apps.public.forms import EventRegistrationForm
+
+        if not self.requires_registration:
+            return HttpResponse(status=404)
+
+        if request.method != "POST":
+            return redirect(self.url)
+
+        form = EventRegistrationForm(request.POST)
+        if form.is_valid():
+            EventRegistration.objects.create(
+                event=self,
+                name=form.cleaned_data["name"],
+                email=form.cleaned_data["email"],
+                phone=form.cleaned_data.get("phone", ""),
+            )
+            messages.success(
+                request,
+                f"Inscrição confirmada. Obrigado, {form.cleaned_data['name']}!",
+            )
+            return redirect(self.url)
+
+        return self.render(
+            request,
+            context_overrides={"registration_form": form},
+        )
+
+    @path("calendario/")
+    def calendar_ics(self, request):
+        from apps.public.calendar import build_event_ics
+
+        content = build_event_ics(self, request)
+        response = HttpResponse(content, content_type="text/calendar; charset=utf-8")
+        response["Content-Disposition"] = f'attachment; filename="{self.slug}.ics"'
+        return response
+
+
+class EventRegistration(models.Model):
+    class Status(models.TextChoices):
+        CONFIRMED = "confirmed", "Confirmada"
+        CANCELLED = "cancelled", "Cancelada"
+
+    event = models.ForeignKey(
+        EventPage,
+        on_delete=models.CASCADE,
+        related_name="registrations",
+        verbose_name="Evento",
+    )
+    name = models.CharField(max_length=120, verbose_name="Nome")
+    email = models.EmailField(verbose_name="E-mail")
+    phone = models.CharField(max_length=30, blank=True, default="", verbose_name="Telefone")
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.CONFIRMED,
+        verbose_name="Situação",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Inscrição em evento"
+        verbose_name_plural = "Inscrições em eventos"
+
+    def __str__(self) -> str:
+        return f"{self.name} → {self.event}"
 
 
 @register_setting

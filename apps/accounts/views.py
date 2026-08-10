@@ -70,12 +70,16 @@ def logout_view(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def account_home(request: HttpRequest) -> HttpResponse:
+    can_manage_event_registrations = user_has_permission(
+        request.user, Permission.MANAGE_EVENT_OPERATIONS
+    ) or user_has_permission(request.user, Permission.MANAGE_CONTENT)
     return render(
         request,
         "accounts/account_home.html",
         {
             "profile": request.user.profile,
             "can_manage_2fa": user_has_permission(request.user, Permission.MANAGE_TWO_FACTOR),
+            "can_manage_event_registrations": can_manage_event_registrations,
         },
     )
 
@@ -142,6 +146,30 @@ def two_factor_setup(request: HttpRequest) -> HttpResponse:
             "enabled": profile.totp_enabled,
         },
     )
+
+
+@permission_required(Permission.MANAGE_EVENT_OPERATIONS, Permission.MANAGE_CONTENT)
+def event_registrations(request: HttpRequest) -> HttpResponse:
+    from apps.public.models import EventRegistration
+
+    registrations = EventRegistration.objects.select_related("event").all()
+    return render(
+        request,
+        "public/event_registrations.html",
+        {"registrations": registrations},
+    )
+
+
+@permission_required(Permission.MANAGE_EVENT_OPERATIONS, Permission.MANAGE_CONTENT)
+@require_http_methods(["POST"])
+def event_registration_cancel(request: HttpRequest, pk: int) -> HttpResponse:
+    from apps.public.models import EventRegistration
+
+    registration = get_object_or_404(EventRegistration, pk=pk)
+    registration.status = EventRegistration.Status.CANCELLED
+    registration.save(update_fields=["status"])
+    messages.success(request, f"Inscrição de {registration.name} cancelada.")
+    return redirect("accounts:event_registrations")
 
 
 @permission_required(Permission.MANAGE_USERS)

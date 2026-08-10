@@ -8,6 +8,7 @@ from apps.accounts.permissions import user_has_permission
 CMS_EDITORS_GROUP_NAME = "Editores de conteúdo"
 PAGE_PERMISSION_CODENAMES = ("add_page", "change_page", "publish_page")
 NEWS_INDEX_SLUG = "noticias"
+AGENDA_INDEX_SLUG = "agenda"
 INSTITUTIONAL_PAGE_SEEDS = (
     ("historia", "Nossa história", "Como a igreja nasceu em Santa Leopoldina."),
     ("crencas", "Crenças", "O que cremos e confessamos."),

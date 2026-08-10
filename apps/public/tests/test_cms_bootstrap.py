@@ -1,8 +1,8 @@
 from django.test import TestCase
 
 from apps.public.bootstrap import bootstrap_cms
-from apps.public.cms import INSTITUTIONAL_PAGE_SEEDS, NEWS_INDEX_SLUG
-from apps.public.models import InstitutionalPage, NewsIndexPage
+from apps.public.cms import AGENDA_INDEX_SLUG, INSTITUTIONAL_PAGE_SEEDS, NEWS_INDEX_SLUG
+from apps.public.models import EventIndexPage, InstitutionalPage, NewsIndexPage
 
 
 class CmsBootstrapTests(TestCase):
@@ -17,6 +17,15 @@ class CmsBootstrapTests(TestCase):
             1,
         )
 
+        agenda = self.client.get(f"/{AGENDA_INDEX_SLUG}/")
+        self.assertEqual(agenda.status_code, 200)
+        self.assertContains(agenda, "Agenda")
+        self.assertContains(agenda, f'href="/{AGENDA_INDEX_SLUG}/"')
+        self.assertEqual(
+            EventIndexPage.objects.live().filter(slug=AGENDA_INDEX_SLUG).count(),
+            1,
+        )
+
         for slug, title, _intro in INSTITUTIONAL_PAGE_SEEDS:
             page_response = self.client.get(f"/{slug}/")
             self.assertEqual(page_response.status_code, 200, slug)
@@ -24,6 +33,7 @@ class CmsBootstrapTests(TestCase):
 
         bootstrap_cms()
         self.assertEqual(NewsIndexPage.objects.filter(slug=NEWS_INDEX_SLUG).count(), 1)
+        self.assertEqual(EventIndexPage.objects.filter(slug=AGENDA_INDEX_SLUG).count(), 1)
         self.assertEqual(
             InstitutionalPage.objects.filter(
                 slug__in=[slug for slug, _, _ in INSTITUTIONAL_PAGE_SEEDS]
