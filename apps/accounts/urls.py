@@ -12,6 +12,16 @@ urlpatterns = [
     path("conta/2fa/verificar/", views.two_factor_verify, name="two_factor_verify"),
     path("conta/usuarios/", views.manage_users_demo, name="manage_users_demo"),
     path(
+        "conta/eventos/inscritos/",
+        views.event_registrations,
+        name="event_registrations",
+    ),
+    path(
+        "conta/eventos/inscritos/<int:pk>/cancelar/",
+        views.event_registration_cancel,
+        name="event_registration_cancel",
+    ),
+    path(
         "conta/recuperar-senha/",
         views.EmailPasswordResetView.as_view(),
         name="password_reset",

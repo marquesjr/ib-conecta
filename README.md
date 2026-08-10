@@ -34,9 +34,11 @@ Em seguida:
 - Página pública: http://localhost:8000/
 - Planeje sua visita: http://localhost:8000/planeje-sua-visita/
 - Notícias: http://localhost:8000/noticias/
+- Agenda: http://localhost:8000/agenda/
+- Inscritos (perfis autorizados): http://localhost:8000/conta/eventos/inscritos/
 - Admin Wagtail: http://localhost:8000/admin/
 
-No admin Wagtail, em **Configurações**, edite WhatsApp, horários, endereço e o próximo culto (sem hardcode no código). Páginas institucionais (história, crenças, ministérios, liderança) e notícias são criadas/publicadas pelo CMS; rascunhos não ficam públicos até a publicação. Perfis com permissão de conteúdo (Comunicação, Pastor, Administrador) entram no grupo **Editores de conteúdo** e acessam o admin.
+No admin Wagtail, em **Configurações**, edite WhatsApp, horários, endereço e o próximo culto (sem hardcode no código). Páginas institucionais (história, crenças, ministérios, liderança), notícias e eventos da agenda são criadas/publicadas pelo CMS; rascunhos não ficam públicos até a publicação. Perfis com permissão de conteúdo (Comunicação, Pastor, Administrador) entram no grupo **Editores de conteúdo** e acessam o admin. Comissão de eventos e comunicação gerenciam inscritos pela área da conta.
 
 
 Credenciais iniciais (definidas em `.env`):

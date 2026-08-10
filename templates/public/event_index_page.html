@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} — IB Conecta{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>{{ page.title }}</h1>
+    {% if page.intro %}
+      <p class="lede">{{ page.intro }}</p>
+    {% endif %}
+
+    {% if event_pages %}
+      <ul class="news-list">
+        {% for event in event_pages %}
+          <li>
+            <a href="{{ event.url }}">
+              <strong>{{ event.title }}</strong>
+              <p class="news-meta">
+                {{ event.starts_at|date:"d/m/Y H:i" }}
+                {% if event.location %} · {{ event.location }}{% endif %}
+              </p>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">Nenhum evento publicado no momento.</p>
+    {% endif %}
+  </section>
+{% endblock %}

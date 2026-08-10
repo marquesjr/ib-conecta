@@ -2,12 +2,13 @@ from wagtail.models import Page, Site
 
 from apps.accounts.models import Profile
 from apps.public.cms import (
+    AGENDA_INDEX_SLUG,
     INSTITUTIONAL_PAGE_SEEDS,
     NEWS_INDEX_SLUG,
     ensure_cms_editors_group,
     sync_cms_access_for_user,
 )
-from apps.public.models import InstitutionalPage, NewsIndexPage
+from apps.public.models import EventIndexPage, InstitutionalPage, NewsIndexPage
 
 
 def _site_root() -> Page:
@@ -48,9 +49,25 @@ def ensure_institutional_pages() -> None:
         page.save_revision().publish()
 
 
+def ensure_agenda_index() -> EventIndexPage:
+    existing = EventIndexPage.objects.filter(slug=AGENDA_INDEX_SLUG).first()
+    if existing:
+        return existing
+
+    index = EventIndexPage(
+        title="Agenda",
+        slug=AGENDA_INDEX_SLUG,
+        intro="Cultos e eventos da Igreja Batista em Santa Leopoldina.",
+    )
+    _site_root().add_child(instance=index)
+    index.save_revision().publish()
+    return index
+
+
 def bootstrap_cms() -> None:
     ensure_cms_editors_group()
     ensure_news_index()
     ensure_institutional_pages()
+    ensure_agenda_index()
     for profile in Profile.objects.select_related("user").iterator():
         sync_cms_access_for_user(profile.user)
