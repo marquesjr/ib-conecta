@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} — IB Conecta{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>{{ page.title }}</h1>
+    {% if page.intro %}
+      <p class="lede">{{ page.intro }}</p>
+    {% endif %}
+
+    {% if sermon_pages %}
+      <ul class="news-list">
+        {% for sermon in sermon_pages %}
+          <li>
+            <a href="{{ sermon.url }}">
+              <strong>{{ sermon.title }}</strong>
+              {% if sermon.intro %}
+                <p class="muted">{{ sermon.intro }}</p>
+              {% endif %}
+              {% if sermon.first_published_at %}
+                <p class="news-meta">{{ sermon.first_published_at|date:"d/m/Y" }}</p>
+              {% endif %}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">Nenhum sermão publicado no momento.</p>
+    {% endif %}
+  </section>
+{% endblock %}
