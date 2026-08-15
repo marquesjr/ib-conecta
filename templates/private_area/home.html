@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Área privada — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Área privada</h1>
+    <p class="lede">
+      Espaço dos membros autenticados. Conteúdos daqui não são públicos.
+    </p>
+    <div class="panel">
+      <h2>Biblioteca de documentos</h2>
+      <p>Atas, comunicados internos e arquivos restritos ao seu perfil.</p>
+      <p>
+        <a class="cta" href="{% url 'private_area:document_library' %}">Abrir biblioteca</a>
+        {% if can_manage_documents %}
+          <a class="cta secondary" href="{% url 'private_area:document_upload' %}">Enviar documento</a>
+        {% endif %}
+      </p>
+    </div>
+    <p><a href="{% url 'accounts:account_home' %}">Voltar para minha conta</a></p>
+  </section>
+{% endblock %}
