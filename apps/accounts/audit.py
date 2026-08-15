@@ -13,6 +13,8 @@ class AuditAction:
     PASSWORD_RESET_REQUESTED = "password_reset_requested"
     PASSWORD_RESET_COMPLETED = "password_reset_completed"
     ROLE_CHANGED = "role_changed"
+    PRAYER_REQUEST_STATUS_CHANGED = "prayer_request_status_changed"
+    KNOW_CHURCH_CONTACT_STATUS_CHANGED = "know_church_contact_status_changed"
 
 
 REDACT_KEYS = {

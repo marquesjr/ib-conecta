@@ -21,6 +21,22 @@ urlpatterns = [
         views.event_registration_cancel,
         name="event_registration_cancel",
     ),
+    path("conta/pedidos-de-oracao/", views.prayer_requests, name="prayer_requests"),
+    path(
+        "conta/pedidos-de-oracao/<int:pk>/situacao/",
+        views.prayer_request_status,
+        name="prayer_request_status",
+    ),
+    path(
+        "conta/quero-conhecer/",
+        views.know_church_contacts,
+        name="know_church_contacts",
+    ),
+    path(
+        "conta/quero-conhecer/<int:pk>/situacao/",
+        views.know_church_contact_status,
+        name="know_church_contact_status",
+    ),
     path(
         "conta/recuperar-senha/",
         views.EmailPasswordResetView.as_view(),

@@ -7,14 +7,6 @@
     <h1>Inscritos em eventos</h1>
     <p class="lede">Acompanhe e gerencie as inscrições públicas da agenda.</p>
 
-    {% if messages %}
-      <ul>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-
     {% if registrations %}
       <ul class="news-list">
         {% for item in registrations %}

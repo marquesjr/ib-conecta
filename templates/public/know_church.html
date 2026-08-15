@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Quero conhecer a igreja — IB Conecta{% endblock %}
+
+{% block content %}
+  <section>
+    <h1>Quero conhecer a igreja</h1>
+    <p class="muted">
+      Deixe seu contato. Usaremos seus dados apenas para acolhimento pastoral
+      e evangelístico, conforme a LGPD.
+    </p>
+
+    <div class="panel">
+      <form method="post">
+        {% csrf_token %}
+        <p class="hp">{{ form.website.label_tag }} {{ form.website }}</p>
+        {% if form.non_field_errors %}
+          <ul class="form-errors">{{ form.non_field_errors }}</ul>
+        {% endif %}
+        <p>
+          {{ form.name.label_tag }}
+          {{ form.name }}
+          {{ form.name.errors }}
+        </p>
+        <p>
+          {{ form.email.label_tag }}
+          {{ form.email }}
+          {{ form.email.errors }}
+        </p>
+        <p>
+          {{ form.phone.label_tag }}
+          {{ form.phone }}
+          {{ form.phone.errors }}
+        </p>
+        <p>
+          {{ form.message.label_tag }}
+          {{ form.message }}
+          {{ form.message.errors }}
+        </p>
+        <p>
+          {{ form.lgpd_consent }}
+          {{ form.lgpd_consent.label_tag }}
+          {{ form.lgpd_consent.errors }}
+        </p>
+        <button class="cta" type="submit">Enviar contato</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Prefere o WhatsApp?</h2>
+      <p class="muted">
+        O WhatsApp da igreja continua disponível como atalho paralelo — não substitui este formulário.
+      </p>
+      {% if form_whatsapp_url %}
+        <p>
+          <a class="cta secondary" href="{{ form_whatsapp_url }}" target="_blank" rel="noopener noreferrer">
+            Falar no WhatsApp da igreja
+          </a>
+        </p>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}
