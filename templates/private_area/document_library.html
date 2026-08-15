@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Biblioteca de documentos — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Biblioteca de documentos</h1>
+    <p class="lede">Somente os arquivos autorizados para o seu perfil aparecem aqui.</p>
+    {% if can_manage_documents %}
+      <p>
+        <a class="cta" href="{% url 'private_area:document_upload' %}">Enviar documento</a>
+      </p>
+    {% endif %}
+    {% if documents %}
+      <ul class="news-list">
+        {% for document in documents %}
+          <li>
+            <a href="{% url 'private_area:document_download' document.pk %}">{{ document.title }}</a>
+            {% if document.description %}
+              <p>{{ document.description }}</p>
+            {% endif %}
+            <p class="news-meta">{{ document.created_at|date:"d/m/Y H:i" }}</p>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">Nenhum documento disponível para o seu perfil.</p>
+    {% endif %}
+    <p><a href="{% url 'private_area:home' %}">Voltar à área privada</a></p>
+  </section>
+{% endblock %}

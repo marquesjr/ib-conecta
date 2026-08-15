@@ -15,6 +15,7 @@ class AuditAction:
     ROLE_CHANGED = "role_changed"
     PRAYER_REQUEST_STATUS_CHANGED = "prayer_request_status_changed"
     KNOW_CHURCH_CONTACT_STATUS_CHANGED = "know_church_contact_status_changed"
+    DOCUMENT_UPLOADED = "document_uploaded"
 
 
 REDACT_KEYS = {
