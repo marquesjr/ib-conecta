@@ -234,6 +234,64 @@ class EventRegistration(models.Model):
         return f"{self.name} → {self.event}"
 
 
+class PrayerRequest(models.Model):
+    class Status(models.TextChoices):
+        NEW = "new", "Novo"
+        IN_PROGRESS = "in_progress", "Em acompanhamento"
+        DONE = "done", "Concluído"
+
+    is_anonymous = models.BooleanField(default=False, verbose_name="Anônimo")
+    name = models.CharField(max_length=120, blank=True, default="", verbose_name="Nome")
+    email = models.EmailField(blank=True, default="", verbose_name="E-mail")
+    phone = models.CharField(max_length=30, blank=True, default="", verbose_name="Telefone")
+    body = models.TextField(verbose_name="Pedido")
+    lgpd_consent = models.BooleanField(default=False, verbose_name="Consentimento LGPD")
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.NEW,
+        verbose_name="Situação",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Pedido de oração"
+        verbose_name_plural = "Pedidos de oração"
+
+    def __str__(self) -> str:
+        who = "Anônimo" if self.is_anonymous else (self.name or "Sem nome")
+        return f"{who} ({self.get_status_display()})"
+
+
+class KnowChurchContact(models.Model):
+    class Status(models.TextChoices):
+        NEW = "new", "Novo"
+        IN_PROGRESS = "in_progress", "Em acompanhamento"
+        DONE = "done", "Concluído"
+
+    name = models.CharField(max_length=120, verbose_name="Nome")
+    email = models.EmailField(blank=True, default="", verbose_name="E-mail")
+    phone = models.CharField(max_length=30, blank=True, default="", verbose_name="Telefone")
+    message = models.TextField(blank=True, default="", verbose_name="Mensagem")
+    lgpd_consent = models.BooleanField(verbose_name="Consentimento LGPD")
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.NEW,
+        verbose_name="Situação",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Contato Quero conhecer"
+        verbose_name_plural = "Contatos Quero conhecer"
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.get_status_display()})"
+
+
 class SermonIndexPage(Page):
     """Índice público de sermões e estudos."""
 

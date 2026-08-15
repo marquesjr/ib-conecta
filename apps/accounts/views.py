@@ -73,6 +73,9 @@ def account_home(request: HttpRequest) -> HttpResponse:
     can_manage_event_registrations = user_has_permission(
         request.user, Permission.MANAGE_EVENT_OPERATIONS
     ) or user_has_permission(request.user, Permission.MANAGE_CONTENT)
+    can_manage_prayer_requests = user_has_permission(
+        request.user, Permission.MANAGE_PRAYER_REQUESTS
+    )
     return render(
         request,
         "accounts/account_home.html",
@@ -80,6 +83,7 @@ def account_home(request: HttpRequest) -> HttpResponse:
             "profile": request.user.profile,
             "can_manage_2fa": user_has_permission(request.user, Permission.MANAGE_TWO_FACTOR),
             "can_manage_event_registrations": can_manage_event_registrations,
+            "can_manage_prayer_requests": can_manage_prayer_requests,
         },
     )
 
@@ -170,6 +174,82 @@ def event_registration_cancel(request: HttpRequest, pk: int) -> HttpResponse:
     registration.save(update_fields=["status"])
     messages.success(request, f"Inscrição de {registration.name} cancelada.")
     return redirect("accounts:event_registrations")
+
+
+@permission_required(Permission.MANAGE_PRAYER_REQUESTS)
+def prayer_requests(request: HttpRequest) -> HttpResponse:
+    from apps.public.models import PrayerRequest
+
+    return render(
+        request,
+        "public/prayer_requests.html",
+        {
+            "requests": PrayerRequest.objects.all(),
+            "statuses": PrayerRequest.Status.choices,
+        },
+    )
+
+
+@permission_required(Permission.MANAGE_PRAYER_REQUESTS)
+@require_http_methods(["POST"])
+def prayer_request_status(request: HttpRequest, pk: int) -> HttpResponse:
+    from apps.public.models import PrayerRequest
+
+    item = get_object_or_404(PrayerRequest, pk=pk)
+    new_status = request.POST.get("status", "")
+    if new_status in PrayerRequest.Status.values:
+        old_status = item.status
+        item.status = new_status
+        item.save(update_fields=["status"])
+        log_audit(
+            actor=request.user,
+            action=AuditAction.PRAYER_REQUEST_STATUS_CHANGED,
+            metadata={
+                "request_id": item.pk,
+                "old_status": old_status,
+                "new_status": new_status,
+            },
+        )
+        messages.success(request, "Situação do pedido atualizada.")
+    return redirect("accounts:prayer_requests")
+
+
+@permission_required(Permission.MANAGE_PRAYER_REQUESTS)
+def know_church_contacts(request: HttpRequest) -> HttpResponse:
+    from apps.public.models import KnowChurchContact
+
+    return render(
+        request,
+        "public/know_church_contacts.html",
+        {
+            "contacts": KnowChurchContact.objects.all(),
+            "statuses": KnowChurchContact.Status.choices,
+        },
+    )
+
+
+@permission_required(Permission.MANAGE_PRAYER_REQUESTS)
+@require_http_methods(["POST"])
+def know_church_contact_status(request: HttpRequest, pk: int) -> HttpResponse:
+    from apps.public.models import KnowChurchContact
+
+    item = get_object_or_404(KnowChurchContact, pk=pk)
+    new_status = request.POST.get("status", "")
+    if new_status in KnowChurchContact.Status.values:
+        old_status = item.status
+        item.status = new_status
+        item.save(update_fields=["status"])
+        log_audit(
+            actor=request.user,
+            action=AuditAction.KNOW_CHURCH_CONTACT_STATUS_CHANGED,
+            metadata={
+                "contact_id": item.pk,
+                "old_status": old_status,
+                "new_status": new_status,
+            },
+        )
+        messages.success(request, "Situação do contato atualizada.")
+    return redirect("accounts:know_church_contacts")
 
 
 @permission_required(Permission.MANAGE_USERS)

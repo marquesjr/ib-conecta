@@ -22,9 +22,10 @@ class PermissionMatrixTests(TestCase):
         self.assertFalse(user_has_permission(user, Permission.MANAGE_USERS))
         self.assertFalse(user_has_permission(user, Permission.MANAGE_FINANCES))
 
-    def test_communication_can_manage_content_but_not_finances(self):
+    def test_communication_can_manage_content_and_prayer_requests(self):
         user = make_user("comms", Role.COMMUNICATION)
         self.assertTrue(user_has_permission(user, Permission.MANAGE_CONTENT))
+        self.assertTrue(user_has_permission(user, Permission.MANAGE_PRAYER_REQUESTS))
         self.assertFalse(user_has_permission(user, Permission.MANAGE_FINANCES))
 
     def test_pastor_can_manage_prayer_requests(self):

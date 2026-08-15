@@ -24,14 +24,6 @@
       <a class="cta secondary" href="{{ page.url }}calendario/">Adicionar ao calendário</a>
     </p>
 
-    {% if messages %}
-      <ul>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-
     {% if page.requires_registration %}
       <div class="panel">
         <h2>Inscrição</h2>

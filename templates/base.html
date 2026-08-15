@@ -36,6 +36,7 @@
         border-radius: 4px;
       }
       .cta.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+      button.cta { border: 0; cursor: pointer; font: inherit; }
       .panel {
         background: var(--surface);
         border: 1px solid #ddd4c4;
@@ -43,6 +44,31 @@
         margin: 1rem 0;
       }
       .muted { color: var(--muted); }
+      .messages { list-style: none; padding: 0; margin: 0 0 1rem; }
+      .messages li { padding: 0.6rem 0.8rem; background: #e7f3ee; border: 1px solid #c5ddd4; }
+      .messages li.error { background: #f8ebe6; border-color: #e2c4b8; }
+      .hp {
+        position: absolute;
+        left: -10000px;
+        top: auto;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+      form p { margin: 0 0 0.85rem; }
+      form label { display: inline-block; margin-bottom: 0.25rem; }
+      form input[type="text"],
+      form input[type="email"],
+      form textarea,
+      form select {
+        width: 100%;
+        padding: 0.45rem 0.5rem;
+        font: inherit;
+        border: 1px solid #cfc6b6;
+        background: #fff;
+      }
+      form input[type="checkbox"] { width: auto; margin-right: 0.35rem; }
+      .form-errors, .errorlist { color: #8a2b12; padding-left: 1.1rem; }
       nav a { margin-right: 0.9rem; text-decoration: none; }
       .cms-page h1 { font-size: clamp(1.6rem, 4vw, 2.1rem); line-height: 1.25; margin: 0 0 0.6rem; }
       .cms-page .lede { font-size: 1.1rem; color: var(--muted); margin: 0 0 1.2rem; }
@@ -75,6 +101,8 @@
         <a class="brand" href="{% url 'home' %}">IB Conecta</a>
         <nav>
           <a href="{% url 'plan_visit' %}">Planeje sua visita</a>
+          <a href="{% url 'prayer_request' %}">Pedido de oração</a>
+          <a href="{% url 'know_church' %}">Quero conhecer</a>
           {% if agenda_index_url %}
             <a href="{{ agenda_index_url }}">Agenda</a>
           {% endif %}
@@ -94,6 +122,13 @@
       </header>
 
       <main>
+        {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
         {% block content %}{% endblock %}
       </main>
 

@@ -25,6 +25,7 @@ ROLE_PERMISSIONS: dict[str, set[Permission]] = {
     Role.COMMUNICATION: {
         Permission.ACCESS_PRIVATE_AREA,
         Permission.MANAGE_CONTENT,
+        Permission.MANAGE_PRAYER_REQUESTS,
     },
     Role.PASTOR: {
         Permission.ACCESS_PRIVATE_AREA,

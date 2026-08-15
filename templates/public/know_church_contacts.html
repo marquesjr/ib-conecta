@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Quero conhecer a igreja — acompanhamento — IB Conecta{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Contatos: Quero conhecer a igreja</h1>
+    <p class="lede">Acompanhe os pedidos de contato evangelístico sem exposição pública.</p>
+
+    {% if contacts %}
+      <ul class="news-list">
+        {% for item in contacts %}
+          <li>
+            <strong>{{ item.name }}</strong>
+            <p class="news-meta">
+              {{ item.created_at|date:"d/m/Y H:i" }}
+              {% if item.email %} · {{ item.email }}{% endif %}
+              {% if item.phone %} · {{ item.phone }}{% endif %}
+              · {{ item.get_status_display }}
+            </p>
+            {% if item.message %}
+              <p>{{ item.message }}</p>
+            {% endif %}
+            <form method="post" action="{% url 'accounts:know_church_contact_status' item.pk %}">
+              {% csrf_token %}
+              <label>
+                Situação
+                <select name="status">
+                  {% for value, label in statuses %}
+                    <option value="{{ value }}" {% if item.status == value %}selected{% endif %}>{{ label }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+              <button class="cta secondary" type="submit">Atualizar situação</button>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">Nenhum contato registrado.</p>
+    {% endif %}
+  </section>
+{% endblock %}
