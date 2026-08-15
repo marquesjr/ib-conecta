@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Contribuições — IB Conecta{% endblock %}
+
+{% block content %}
+  <section>
+    <h1>Contribuições</h1>
+    <p class="muted">
+      Ofertas e dízimos via PIX da igreja. O portal não processa pagamentos
+      e não armazena dados bancários de terceiros.
+    </p>
+
+    {% if church_settings.pix_key %}
+      <div class="panel">
+        <h2>PIX</h2>
+        <p>Abra o aplicativo do seu banco, escolha PIX e cole a chave abaixo.</p>
+        <p>
+          <strong>Chave PIX</strong><br />
+          <span class="pix-key">{{ church_settings.pix_key }}</span>
+        </p>
+        {% if church_settings.pix_key_type %}
+          <p class="muted">Tipo: {{ church_settings.get_pix_key_type_display }}</p>
+        {% endif %}
+        {% if church_settings.pix_beneficiary_name %}
+          <p><strong>Favorecido:</strong> {{ church_settings.pix_beneficiary_name }}</p>
+        {% endif %}
+        {% if church_settings.pix_city %}
+          <p><strong>Cidade:</strong> {{ church_settings.pix_city }}</p>
+        {% endif %}
+        {% if church_settings.pix_instructions %}
+          <p>{{ church_settings.pix_instructions|linebreaksbr }}</p>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="panel">
+        <p class="muted">
+          A chave PIX será publicada aqui quando a administração configurar.
+        </p>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

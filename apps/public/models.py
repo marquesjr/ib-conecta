@@ -483,6 +483,61 @@ class ChurchSettings(BaseSiteSetting):
         verbose_name="Texto de acolhimento do WhatsApp",
     )
 
+    class PixKeyType(models.TextChoices):
+        RANDOM = "random", "Chave aleatória"
+        EMAIL = "email", "E-mail"
+        PHONE = "phone", "Telefone"
+        CPF = "cpf", "CPF"
+        CNPJ = "cnpj", "CNPJ"
+
+    pix_key = models.CharField(
+        max_length=140,
+        blank=True,
+        default="",
+        verbose_name="Chave PIX",
+        help_text="Chave PIX da igreja. Não cadastre dados bancários de terceiros.",
+    )
+    pix_key_type = models.CharField(
+        max_length=20,
+        blank=True,
+        default="",
+        choices=PixKeyType.choices,
+        verbose_name="Tipo da chave PIX",
+    )
+    pix_beneficiary_name = models.CharField(
+        max_length=140,
+        blank=True,
+        default="",
+        verbose_name="Nome do favorecido",
+    )
+    pix_city = models.CharField(
+        max_length=80,
+        blank=True,
+        default="",
+        verbose_name="Cidade do PIX",
+    )
+    pix_instructions = models.TextField(
+        blank=True,
+        default="",
+        verbose_name="Orientação para ofertas",
+        help_text="Texto público. O portal não processa pagamento nem guarda dados do doador.",
+    )
+    instagram_url = models.URLField(
+        blank=True,
+        default="",
+        verbose_name="Instagram",
+    )
+    facebook_url = models.URLField(
+        blank=True,
+        default="",
+        verbose_name="Facebook",
+    )
+    youtube_url = models.URLField(
+        blank=True,
+        default="",
+        verbose_name="YouTube",
+    )
+
     panels = [
         MultiFieldPanel(
             [
@@ -513,7 +568,36 @@ class ChurchSettings(BaseSiteSetting):
             ],
             heading="WhatsApp institucional",
         ),
+        MultiFieldPanel(
+            [
+                FieldPanel("pix_key"),
+                FieldPanel("pix_key_type"),
+                FieldPanel("pix_beneficiary_name"),
+                FieldPanel("pix_city"),
+                FieldPanel("pix_instructions"),
+            ],
+            heading="Contribuições PIX",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("instagram_url"),
+                FieldPanel("facebook_url"),
+                FieldPanel("youtube_url"),
+            ],
+            heading="Redes sociais",
+        ),
     ]
 
     class Meta:
         verbose_name = "Configurações da igreja"
+
+    def social_links(self):
+        links = []
+        for label, url in (
+            ("Instagram", self.instagram_url),
+            ("Facebook", self.facebook_url),
+            ("YouTube", self.youtube_url),
+        ):
+            if url:
+                links.append({"label": label, "url": url})
+        return links
