@@ -41,6 +41,10 @@ def plan_visit(request):
     return render(request, "public/plan_visit.html")
 
 
+def contribute(request):
+    return render(request, "public/contribute.html")
+
+
 @require_http_methods(["GET", "POST"])
 def prayer_request(request):
     form = PrayerRequestForm(request.POST or None)

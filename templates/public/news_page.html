@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags public_tags %}
 
 {% block title %}{{ page.title }} — IB Conecta{% endblock %}
 
@@ -19,4 +19,8 @@
       {{ page.body|richtext }}
     </div>
   </article>
+{% endblock %}
+
+{% block share %}
+  {% whatsapp_share page.title %}
 {% endblock %}

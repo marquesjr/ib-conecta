@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load public_tags %}
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
@@ -69,6 +70,15 @@
       }
       form input[type="checkbox"] { width: auto; margin-right: 0.35rem; }
       .form-errors, .errorlist { color: #8a2b12; padding-left: 1.1rem; }
+      .pix-key {
+        display: inline-block;
+        margin-top: 0.25rem;
+        padding: 0.35rem 0.5rem;
+        font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+        background: #eef4f1;
+        user-select: all;
+      }
+      .social-links a { margin-right: 0.9rem; }
       nav a { margin-right: 0.9rem; text-decoration: none; }
       .cms-page h1 { font-size: clamp(1.6rem, 4vw, 2.1rem); line-height: 1.25; margin: 0 0 0.6rem; }
       .cms-page .lede { font-size: 1.1rem; color: var(--muted); margin: 0 0 1.2rem; }
@@ -103,6 +113,7 @@
           <a href="{% url 'plan_visit' %}">Planeje sua visita</a>
           <a href="{% url 'prayer_request' %}">Pedido de oração</a>
           <a href="{% url 'know_church' %}">Quero conhecer</a>
+          <a href="{% url 'contribute' %}">Contribuir</a>
           {% if agenda_index_url %}
             <a href="{{ agenda_index_url }}">Agenda</a>
           {% endif %}
@@ -130,10 +141,20 @@
           </ul>
         {% endif %}
         {% block content %}{% endblock %}
+        {% block share %}
+          {% whatsapp_share %}
+        {% endblock %}
       </main>
 
       <footer class="site-footer">
         <p><strong>Igreja Batista em Santa Leopoldina</strong></p>
+        {% if church_settings and church_settings.social_links %}
+          <p class="social-links">
+            {% for link in church_settings.social_links %}
+              <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
+            {% endfor %}
+          </p>
+        {% endif %}
         {% if church_settings and church_settings.whatsapp_welcome_text %}
           <p class="muted">{{ church_settings.whatsapp_welcome_text }}</p>
         {% endif %}
