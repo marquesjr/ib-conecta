@@ -36,6 +36,45 @@
         </ul>
       {% endif %}
     </div>
+    {% if can_access_event_operations or my_event_tasks or my_event_checklist %}
+    <div class="panel">
+      <h2>Comissão de eventos</h2>
+      <p>Calendário anual, equipes, tarefas, orçamento e relatório dos eventos da agenda.</p>
+      {% if can_access_event_operations %}
+        <p>
+          <a class="cta" href="{% url 'private_area:event_calendar' %}">Abrir calendário anual</a>
+        </p>
+      {% endif %}
+      {% if my_event_tasks %}
+        <h3>Minhas tarefas</h3>
+        <ul class="news-list">
+          {% for task in my_event_tasks %}
+            <li>
+              <a href="{% url 'private_area:event_task_update' task.pk %}">{{ task.title }}</a>
+              <p class="news-meta">
+                {{ task.operation.public_event.title }}
+                · {% if task.done %}Concluída{% else %}Pendente{% endif %}
+              </p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% if my_event_checklist %}
+        <h3>Meu checklist</h3>
+        <ul class="news-list">
+          {% for item in my_event_checklist %}
+            <li>
+              <a href="{% url 'private_area:event_checklist_update' item.pk %}">{{ item.label }}</a>
+              <p class="news-meta">
+                {{ item.operation.public_event.title }}
+                · {% if item.done %}Concluído{% else %}Pendente{% endif %}
+              </p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    {% endif %}
     <div class="panel">
       <h2>Biblioteca de documentos</h2>
       <p>Atas, comunicados internos e arquivos restritos ao seu perfil.</p>

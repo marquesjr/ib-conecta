@@ -1,6 +1,6 @@
 from django.urls import path
 
-from apps.private_area import ministry_views, views
+from apps.private_area import event_views, ministry_views, views
 
 app_name = "private_area"
 
@@ -62,5 +62,95 @@ urlpatterns = [
         "area-privada/convocacoes/<int:pk>/substituir/",
         ministry_views.assignment_substitute,
         name="assignment_substitute",
+    ),
+    path(
+        "area-privada/eventos/",
+        event_views.event_calendar,
+        name="event_calendar",
+    ),
+    path(
+        "area-privada/eventos/novo/",
+        event_views.event_operation_create,
+        name="event_operation_create",
+    ),
+    path(
+        "area-privada/eventos/<int:pk>/",
+        event_views.event_operation_detail,
+        name="event_operation_detail",
+    ),
+    path(
+        "area-privada/eventos/<int:pk>/planejamento/",
+        event_views.event_planning_update,
+        name="event_planning_update",
+    ),
+    path(
+        "area-privada/eventos/<int:pk>/equipe/",
+        event_views.event_team_add,
+        name="event_team_add",
+    ),
+    path(
+        "area-privada/equipes/<int:pk>/membro/",
+        event_views.event_team_member_add,
+        name="event_team_member_add",
+    ),
+    path(
+        "area-privada/eventos/<int:pk>/tarefa/",
+        event_views.event_task_add,
+        name="event_task_add",
+    ),
+    path(
+        "area-privada/tarefas/<int:pk>/",
+        event_views.event_task_update,
+        name="event_task_update",
+    ),
+    path(
+        "area-privada/eventos/<int:pk>/checklist/",
+        event_views.event_checklist_add,
+        name="event_checklist_add",
+    ),
+    path(
+        "area-privada/checklist/<int:pk>/",
+        event_views.event_checklist_update,
+        name="event_checklist_update",
+    ),
+    path(
+        "area-privada/eventos/<int:pk>/fornecedor/",
+        event_views.event_supplier_add,
+        name="event_supplier_add",
+    ),
+    path(
+        "area-privada/eventos/<int:pk>/material/",
+        event_views.event_material_add,
+        name="event_material_add",
+    ),
+    path(
+        "area-privada/eventos/<int:pk>/orcamento/",
+        event_views.event_budget_add,
+        name="event_budget_add",
+    ),
+    path(
+        "area-privada/orcamento/<int:pk>/",
+        event_views.event_budget_review,
+        name="event_budget_review",
+    ),
+    path(
+        "area-privada/eventos/<int:pk>/comunicar/",
+        event_views.event_registrant_message,
+        name="event_registrant_message",
+    ),
+    path(
+        "area-privada/eventos/<int:pk>/relatorio/",
+        event_views.event_final_report,
+        name="event_final_report",
+    ),
+    path(
+        "area-privada/eventos/<int:pk>/documento/",
+        event_views.event_document_upload,
+        name="event_document_upload",
+    ),
+    path(
+        "area-privada/eventos/documentos/<int:pk>/",
+        event_views.event_document_download,
+        name="event_document_download",
     ),
 ]

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Tarefa — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>{{ task.title }}</h1>
+    <p class="lede">{{ task.operation.public_event.title }}</p>
+    <p>Situação: {% if task.done %}Concluída{% else %}Pendente{% endif %}</p>
+    {% if not task.done %}
+      <form method="post">
+        {% csrf_token %}
+        <button class="cta" type="submit" name="action" value="complete">Concluir</button>
+      </form>
+    {% endif %}
+  </section>
+{% endblock %}

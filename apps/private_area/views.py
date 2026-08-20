@@ -10,7 +10,12 @@ from apps.accounts.audit import AuditAction, log_audit
 from apps.accounts.decorators import permission_required
 from apps.accounts.permissions import Permission, user_has_permission
 from apps.private_area.forms import PrivateDocumentForm
-from apps.private_area.models import PrivateDocument, ScheduleAssignment
+from apps.private_area.models import (
+    EventChecklistItem,
+    EventTask,
+    PrivateDocument,
+    ScheduleAssignment,
+)
 
 
 @permission_required(Permission.ACCESS_PRIVATE_AREA)
@@ -25,11 +30,21 @@ def home(request: HttpRequest) -> HttpResponse:
             "can_manage_schedules": user_has_permission(
                 request.user, Permission.MANAGE_MINISTRY_SCHEDULES
             ),
+            "can_access_event_operations": user_has_permission(
+                request.user, Permission.MANAGE_EVENT_OPERATIONS
+            )
+            or user_has_permission(request.user, Permission.MANAGE_FINANCES),
             "my_assignments": ScheduleAssignment.objects.filter(
                 participant=request.user
             )
             .select_related("schedule__ministry")
             .order_by("starts_at")[:12],
+            "my_event_tasks": EventTask.objects.filter(assignee=request.user)
+            .select_related("operation__public_event")
+            .order_by("done", "title")[:12],
+            "my_event_checklist": EventChecklistItem.objects.filter(assignee=request.user)
+            .select_related("operation__public_event")
+            .order_by("done", "label")[:12],
         },
     )
 

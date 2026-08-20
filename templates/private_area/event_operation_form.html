@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Operar evento — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Operar evento da agenda</h1>
+    <p class="lede">
+      Vincule a operação da comissão a um evento já publicado, ou crie um novo na agenda
+      pública. A inscrição continua no cadastro público.
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="cta" type="submit">Salvar</button>
+    </form>
+    <p><a href="{% url 'private_area:event_calendar' %}">Voltar ao calendário</a></p>
+  </section>
+{% endblock %}
