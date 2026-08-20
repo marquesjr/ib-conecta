@@ -46,6 +46,7 @@ Em seguida:
 - Área privada (membros autenticados): http://localhost:8000/area-privada/
 - Biblioteca de documentos: http://localhost:8000/area-privada/documentos/
 - Ministérios e escalas: http://localhost:8000/area-privada/ministerios/
+- Comissão de eventos: http://localhost:8000/area-privada/eventos/
 - Admin Wagtail: http://localhost:8000/admin/
 
 No admin Wagtail, em **Configurações**, edite WhatsApp, PIX, redes sociais, horários, endereço e o próximo culto (sem hardcode no código). Páginas institucionais (história, crenças, ministérios, liderança), notícias, eventos da agenda, sermões e a página ao vivo são criadas/publicadas pelo CMS; rascunhos não ficam públicos até a publicação. Sermões e a transmissão usam URL externa (YouTube) incorporada sem autoplay — o portal não hospeda o vídeo. Perfis com permissão de conteúdo (Comunicação, Pastor, Administrador) entram no grupo **Editores de conteúdo** e acessam o admin. Comissão de eventos e comunicação gerenciam inscritos pela área da conta. Pastor e comunicação acompanham pedidos de oração e contatos de **Quero conhecer a igreja** na área da conta, sem expor o conteúdo no site público. A página de contribuições mostra a chave PIX configurada pela administração; o portal não processa cartão nem armazena dados bancários de terceiros.
@@ -84,6 +85,8 @@ Perfis suportados: membro, líder de ministério, comunicação, pastor, tesoura
 Membros autenticados entram na **área privada** e veem só os documentos liberados para o seu perfil (membros, comunicação/pastor, tesouraria ou administração). Visitantes não autenticados são redirecionados ao login. A lista completa de membros permanece restrita à gestão de perfis (`/conta/usuarios/`), acessível só a administradores. Arquivos privados ficam fora de `/media/` e só são baixados pela biblioteca autenticada. Comunicação, pastor e administrador enviam documentos em `/area-privada/documentos/novo/`.
 
 Líderes de ministério e administradores cadastram ministérios e montam a **escala mensal** (participantes e funções). O convocado confirma ou recusa pelo celular; substituições ficam registradas. A escala exporta para calendário (`.ics`) e tem página de impressão para salvar PDF; o compartilhamento via WhatsApp aponta para a URL privada, que continua exigindo login.
+
+A **comissão de eventos** opera o calendário anual sobre os eventos da agenda pública (sem duplicar inscrição): equipes, tarefas, checklists, fornecedores, materiais, orçamento com aprovação da tesouraria, comunicação com inscritos e relatório/atas privados. Membros só atualizam as tarefas e o checklist que lhes foram designados. Tesouraria vê e aprova o financeiro; relatório e documentos da operação ficam restritos à comissão e à administração.
 
 ## Parar
 

@@ -5,6 +5,15 @@ from django.contrib.auth import get_user_model
 
 from apps.private_area.models import (
     MONTH_LABELS,
+    EventBudgetLine,
+    EventChecklistItem,
+    EventMaterial,
+    EventOperation,
+    EventOperationDocument,
+    EventSupplier,
+    EventTask,
+    EventTeam,
+    EventTeamMember,
     Ministry,
     MonthlySchedule,
     PrivateDocument,
@@ -91,3 +100,155 @@ class SubstitutionForm(forms.Form):
         if assignment is not None:
             queryset = queryset.exclude(pk=assignment.participant_id)
         self.fields["substitute"].queryset = queryset
+
+
+class EventOperationForm(forms.ModelForm):
+    title = forms.CharField(max_length=200, required=False, label="Título")
+    starts_at = forms.DateTimeField(
+        required=False,
+        label="Início",
+        widget=forms.DateTimeInput(
+            attrs={"type": "datetime-local"},
+            format="%Y-%m-%dT%H:%M",
+        ),
+        input_formats=["%Y-%m-%dT%H:%M", "%Y-%m-%d %H:%M"],
+    )
+    ends_at = forms.DateTimeField(
+        required=False,
+        label="Término",
+        widget=forms.DateTimeInput(
+            attrs={"type": "datetime-local"},
+            format="%Y-%m-%dT%H:%M",
+        ),
+        input_formats=["%Y-%m-%dT%H:%M", "%Y-%m-%d %H:%M"],
+    )
+    location = forms.CharField(max_length=255, required=False, label="Local")
+    body = forms.CharField(
+        required=False,
+        label="Descrição pública",
+        widget=forms.Textarea,
+    )
+    requires_registration = forms.BooleanField(
+        required=False,
+        label="Exige inscrição",
+    )
+
+    class Meta:
+        model = EventOperation
+        fields = ("public_event", "notes")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        from apps.public.models import EventPage
+
+        queryset = EventPage.objects.filter(operation__isnull=True).order_by("starts_at")
+        if self.instance.pk:
+            queryset = EventPage.objects.filter(pk=self.instance.public_event_id) | queryset
+        self.fields["public_event"].queryset = queryset
+        self.fields["public_event"].required = False
+        self.fields["public_event"].label_from_instance = lambda event: event.title
+        self.fields["public_event"].help_text = (
+            "Escolha um evento já publicado ou deixe em branco para criar um novo na agenda."
+        )
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get("public_event"):
+            return cleaned
+        if not cleaned.get("title") or not cleaned.get("starts_at"):
+            raise forms.ValidationError(
+                "Selecione um evento da agenda ou informe título e início para criar um novo."
+            )
+        return cleaned
+
+
+class EventPlanningForm(forms.ModelForm):
+    class Meta:
+        model = EventOperation
+        fields = ("notes",)
+
+
+class EventTeamForm(forms.ModelForm):
+    class Meta:
+        model = EventTeam
+        fields = ("name",)
+
+
+class EventTeamMemberForm(forms.ModelForm):
+    class Meta:
+        model = EventTeamMember
+        fields = ("user",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["user"].queryset = User.objects.filter(is_active=True).order_by(
+            "username"
+        )
+
+
+class EventTaskForm(forms.ModelForm):
+    class Meta:
+        model = EventTask
+        fields = ("title", "assignee")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["assignee"].queryset = User.objects.filter(is_active=True).order_by(
+            "username"
+        )
+
+
+class EventChecklistForm(forms.ModelForm):
+    class Meta:
+        model = EventChecklistItem
+        fields = ("label", "assignee")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["assignee"].queryset = User.objects.filter(is_active=True).order_by(
+            "username"
+        )
+
+
+class EventSupplierForm(forms.ModelForm):
+    class Meta:
+        model = EventSupplier
+        fields = ("name", "contact", "notes")
+
+
+class EventMaterialForm(forms.ModelForm):
+    class Meta:
+        model = EventMaterial
+        fields = ("name", "quantity", "notes")
+
+
+class EventBudgetLineForm(forms.ModelForm):
+    class Meta:
+        model = EventBudgetLine
+        fields = ("description", "amount")
+
+
+class EventRegistrantMessageForm(forms.Form):
+    subject = forms.CharField(max_length=200, label="Assunto")
+    body = forms.CharField(widget=forms.Textarea, label="Mensagem")
+
+
+class EventFinalReportForm(forms.ModelForm):
+    class Meta:
+        model = EventOperation
+        fields = ("final_report",)
+
+
+class EventOperationDocumentForm(forms.ModelForm):
+    class Meta:
+        model = EventOperationDocument
+        fields = ("title", "file")
+
+    def clean_file(self):
+        uploaded = self.cleaned_data["file"]
+        suffix = Path(uploaded.name).suffix.lower()
+        if suffix not in ALLOWED_EXTENSIONS:
+            raise forms.ValidationError("Tipo de arquivo não permitido.")
+        if uploaded.size > MAX_UPLOAD_BYTES:
+            raise forms.ValidationError("O arquivo deve ter no máximo 20 MB.")
+        return uploaded

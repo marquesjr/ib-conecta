@@ -209,3 +209,234 @@ class Substitution(models.Model):
 
     def __str__(self) -> str:
         return f"{self.replaced} → {self.substitute}"
+
+
+class EventOperation(models.Model):
+    public_event = models.OneToOneField(
+        "public.EventPage",
+        on_delete=models.CASCADE,
+        related_name="operation",
+        verbose_name="Evento da agenda",
+    )
+    notes = models.TextField(blank=True, default="", verbose_name="Planejamento")
+    final_report = models.TextField(blank=True, default="", verbose_name="Relatório final")
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="created_event_operations",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["public_event__starts_at"]
+        verbose_name = "Operação de evento"
+        verbose_name_plural = "Operações de eventos"
+
+    def __str__(self) -> str:
+        return str(self.public_event)
+
+
+class EventTeam(models.Model):
+    operation = models.ForeignKey(
+        EventOperation,
+        on_delete=models.CASCADE,
+        related_name="teams",
+    )
+    name = models.CharField(max_length=80, verbose_name="Equipe")
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Equipe do evento"
+        verbose_name_plural = "Equipes do evento"
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class EventTeamMember(models.Model):
+    team = models.ForeignKey(
+        EventTeam,
+        on_delete=models.CASCADE,
+        related_name="members",
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="event_team_memberships",
+    )
+
+    class Meta:
+        ordering = ["user__username"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["team", "user"],
+                name="unique_event_team_member",
+            )
+        ]
+        verbose_name = "Membro da equipe"
+        verbose_name_plural = "Membros da equipe"
+
+    def __str__(self) -> str:
+        return f"{self.user} — {self.team}"
+
+
+class EventTask(models.Model):
+    operation = models.ForeignKey(
+        EventOperation,
+        on_delete=models.CASCADE,
+        related_name="tasks",
+    )
+    title = models.CharField(max_length=200, verbose_name="Tarefa")
+    assignee = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="event_tasks",
+        verbose_name="Responsável",
+    )
+    done = models.BooleanField(default=False, verbose_name="Concluída")
+
+    class Meta:
+        ordering = ["done", "title"]
+        verbose_name = "Tarefa do evento"
+        verbose_name_plural = "Tarefas do evento"
+
+    def __str__(self) -> str:
+        return self.title
+
+
+class EventChecklistItem(models.Model):
+    operation = models.ForeignKey(
+        EventOperation,
+        on_delete=models.CASCADE,
+        related_name="checklist_items",
+    )
+    label = models.CharField(max_length=200, verbose_name="Item")
+    assignee = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="event_checklist_items",
+        verbose_name="Responsável",
+    )
+    done = models.BooleanField(default=False, verbose_name="Concluído")
+
+    class Meta:
+        ordering = ["done", "label"]
+        verbose_name = "Item de checklist"
+        verbose_name_plural = "Itens de checklist"
+
+    def __str__(self) -> str:
+        return self.label
+
+
+class EventSupplier(models.Model):
+    operation = models.ForeignKey(
+        EventOperation,
+        on_delete=models.CASCADE,
+        related_name="suppliers",
+    )
+    name = models.CharField(max_length=120, verbose_name="Fornecedor")
+    contact = models.CharField(max_length=120, blank=True, default="", verbose_name="Contato")
+    notes = models.TextField(blank=True, default="", verbose_name="Observações")
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Fornecedor"
+        verbose_name_plural = "Fornecedores"
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class EventMaterial(models.Model):
+    operation = models.ForeignKey(
+        EventOperation,
+        on_delete=models.CASCADE,
+        related_name="materials",
+    )
+    name = models.CharField(max_length=120, verbose_name="Material")
+    quantity = models.CharField(max_length=40, blank=True, default="", verbose_name="Quantidade")
+    notes = models.TextField(blank=True, default="", verbose_name="Observações")
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Material"
+        verbose_name_plural = "Materiais"
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class BudgetLineStatus(models.TextChoices):
+    PENDING = "pending", "Pendente"
+    APPROVED = "approved", "Aprovado"
+    REJECTED = "rejected", "Recusado"
+
+
+class EventBudgetLine(models.Model):
+    operation = models.ForeignKey(
+        EventOperation,
+        on_delete=models.CASCADE,
+        related_name="budget_lines",
+    )
+    description = models.CharField(max_length=200, verbose_name="Descrição")
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor")
+    status = models.CharField(
+        max_length=16,
+        choices=BudgetLineStatus.choices,
+        default=BudgetLineStatus.PENDING,
+        verbose_name="Situação",
+    )
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="created_event_budget_lines",
+    )
+    reviewed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="reviewed_event_budget_lines",
+    )
+
+    class Meta:
+        ordering = ["status", "description"]
+        verbose_name = "Linha de orçamento"
+        verbose_name_plural = "Linhas de orçamento"
+
+    def __str__(self) -> str:
+        return f"{self.description} ({self.amount})"
+
+
+class EventOperationDocument(models.Model):
+    operation = models.ForeignKey(
+        EventOperation,
+        on_delete=models.CASCADE,
+        related_name="documents",
+    )
+    title = models.CharField(max_length=200, verbose_name="Título")
+    file = models.FileField(
+        upload_to="event-operations/",
+        storage=private_document_storage,
+        verbose_name="Arquivo",
+    )
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="uploaded_event_operation_documents",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Documento da operação"
+        verbose_name_plural = "Documentos da operação"
+
+    def __str__(self) -> str:
+        return self.title

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Checklist — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>{{ item.label }}</h1>
+    <p class="lede">{{ item.operation.public_event.title }}</p>
+    <p>Situação: {% if item.done %}Concluído{% else %}Pendente{% endif %}</p>
+    {% if not item.done %}
+      <form method="post">
+        {% csrf_token %}
+        <button class="cta" type="submit" name="action" value="complete">Concluir</button>
+      </form>
+    {% endif %}
+  </section>
+{% endblock %}

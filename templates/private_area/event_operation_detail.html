@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block title %}{{ operation.public_event.title }} — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>{{ operation.public_event.title }}</h1>
+    <p class="lede">
+      {{ operation.public_event.starts_at|date:"d/m/Y H:i" }}
+      {% if operation.public_event.location %} · {{ operation.public_event.location }}{% endif %}
+    </p>
+    {% if can_manage_operations %}
+      <div class="panel">
+        <h2>Planejamento</h2>
+        {% if operation.notes %}
+          <p>{{ operation.notes|linebreaksbr }}</p>
+        {% endif %}
+        <form method="post" action="{% url 'private_area:event_planning_update' operation.pk %}">
+          {% csrf_token %}
+          {{ planning_form.as_p }}
+          <button class="cta" type="submit">Atualizar planejamento</button>
+        </form>
+      </div>
+    {% endif %}
+    {% if can_manage_operations %}
+    <div class="panel">
+      <h2>Equipes</h2>
+      {% if teams %}
+        <ul class="news-list">
+          {% for team in teams %}
+            <li>
+              <strong>{{ team.name }}</strong>
+              {% for membership in team.members.all %}
+                <p class="news-meta">{{ membership.user.username }}</p>
+              {% endfor %}
+              {% if can_manage_operations %}
+                <form method="post" action="{% url 'private_area:event_team_member_add' team.pk %}">
+                  {% csrf_token %}
+                  {{ team_member_form.as_p }}
+                  <button class="cta secondary" type="submit">Incluir membro</button>
+                </form>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted">Ainda não há equipes neste evento.</p>
+      {% endif %}
+      {% if can_manage_operations %}
+        <form method="post" action="{% url 'private_area:event_team_add' operation.pk %}">
+          {% csrf_token %}
+          {{ team_form.as_p }}
+          <button class="cta" type="submit">Adicionar equipe</button>
+        </form>
+      {% endif %}
+    </div>
+    <div class="panel">
+      <h2>Tarefas</h2>
+      {% if tasks %}
+        <ul class="news-list">
+          {% for task in tasks %}
+            <li>
+              <strong>{{ task.title }}</strong>
+              <p class="news-meta">
+                {{ task.assignee.username }}
+                · {% if task.done %}Concluída{% else %}Pendente{% endif %}
+              </p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted">Ainda não há tarefas neste evento.</p>
+      {% endif %}
+      {% if can_manage_operations %}
+        <form method="post" action="{% url 'private_area:event_task_add' operation.pk %}">
+          {% csrf_token %}
+          {{ task_form.as_p }}
+          <button class="cta" type="submit">Atribuir tarefa</button>
+        </form>
+      {% endif %}
+    </div>
+    <div class="panel">
+      <h2>Checklist</h2>
+      {% if checklist_items %}
+        <ul class="news-list">
+          {% for item in checklist_items %}
+            <li>
+              <strong>{{ item.label }}</strong>
+              <p class="news-meta">
+                {{ item.assignee.username }}
+                · {% if item.done %}Concluído{% else %}Pendente{% endif %}
+              </p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted">Ainda não há itens de checklist.</p>
+      {% endif %}
+      {% if can_manage_operations %}
+        <form method="post" action="{% url 'private_area:event_checklist_add' operation.pk %}">
+          {% csrf_token %}
+          {{ checklist_form.as_p }}
+          <button class="cta" type="submit">Atribuir item</button>
+        </form>
+      {% endif %}
+    </div>
+    <div class="panel">
+      <h2>Fornecedores</h2>
+      {% if suppliers %}
+        <ul class="news-list">
+          {% for supplier in suppliers %}
+            <li>
+              <strong>{{ supplier.name }}</strong>
+              <p class="news-meta">
+                {% if supplier.contact %}{{ supplier.contact }}{% endif %}
+                {% if supplier.notes %} · {{ supplier.notes }}{% endif %}
+              </p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted">Nenhum fornecedor registrado.</p>
+      {% endif %}
+      {% if can_manage_operations %}
+        <form method="post" action="{% url 'private_area:event_supplier_add' operation.pk %}">
+          {% csrf_token %}
+          {{ supplier_form.as_p }}
+          <button class="cta" type="submit">Registrar fornecedor</button>
+        </form>
+      {% endif %}
+    </div>
+    <div class="panel">
+      <h2>Materiais</h2>
+      {% if materials %}
+        <ul class="news-list">
+          {% for material in materials %}
+            <li>
+              <strong>{{ material.name }}</strong>
+              <p class="news-meta">
+                {% if material.quantity %}{{ material.quantity }}{% endif %}
+                {% if material.notes %} · {{ material.notes }}{% endif %}
+              </p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted">Nenhum material registrado.</p>
+      {% endif %}
+      {% if can_manage_operations %}
+        <form method="post" action="{% url 'private_area:event_material_add' operation.pk %}">
+          {% csrf_token %}
+          {{ material_form.as_p }}
+          <button class="cta" type="submit">Registrar material</button>
+        </form>
+      {% endif %}
+    </div>
+    {% endif %}
+    <div class="panel">
+      <h2>Orçamento</h2>
+      {% if budget_lines %}
+        <ul class="news-list">
+          {% for line in budget_lines %}
+            <li>
+              <strong>{{ line.description }}</strong>
+              <p class="news-meta">
+                {{ line.amount }}
+                · {{ line.get_status_display }}
+              </p>
+              {% if can_review_finances and line.status == "pending" %}
+                <form method="post" action="{% url 'private_area:event_budget_review' line.pk %}">
+                  {% csrf_token %}
+                  <button class="cta" type="submit" name="action" value="approve">Aprovar</button>
+                  <button class="cta secondary" type="submit" name="action" value="reject">Recusar</button>
+                </form>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted">Nenhuma linha de orçamento.</p>
+      {% endif %}
+      {% if can_manage_operations %}
+        <form method="post" action="{% url 'private_area:event_budget_add' operation.pk %}">
+          {% csrf_token %}
+          {{ budget_form.as_p }}
+          <button class="cta" type="submit">Enviar para aprovação</button>
+        </form>
+      {% endif %}
+    </div>
+    {% if can_manage_operations %}
+    <div class="panel">
+      <h2>Inscritos</h2>
+      <p class="muted">Inscrições da agenda pública — sem cadastro duplicado.</p>
+      {% if registrations %}
+        <ul class="news-list">
+          {% for item in registrations %}
+            <li>
+              <strong>{{ item.name }}</strong>
+              <p class="news-meta">
+                {{ item.email }}
+                {% if item.phone %} · {{ item.phone }}{% endif %}
+                · {{ item.get_status_display }}
+              </p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted">Nenhuma inscrição registrada.</p>
+      {% endif %}
+      <form method="post" action="{% url 'private_area:event_registrant_message' operation.pk %}">
+        {% csrf_token %}
+        {{ message_form.as_p }}
+        <button class="cta" type="submit">Enviar aos inscritos</button>
+      </form>
+    </div>
+    <div class="panel">
+      <h2>Relatório final e atas</h2>
+      {% if operation.final_report %}
+        <p>{{ operation.final_report|linebreaksbr }}</p>
+      {% endif %}
+      <form method="post" action="{% url 'private_area:event_final_report' operation.pk %}">
+        {% csrf_token %}
+        {{ report_form.as_p }}
+        <button class="cta" type="submit">Salvar relatório</button>
+      </form>
+      {% if documents %}
+        <ul class="news-list">
+          {% for document in documents %}
+            <li>
+              <a href="{% url 'private_area:event_document_download' document.pk %}">{{ document.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      <form method="post" action="{% url 'private_area:event_document_upload' operation.pk %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ document_form.as_p }}
+        <button class="cta secondary" type="submit">Anexar documento</button>
+      </form>
+    </div>
+    {% endif %}
+    <p><a href="{% url 'private_area:event_calendar' %}">Voltar ao calendário</a></p>
+  </section>
+{% endblock %}

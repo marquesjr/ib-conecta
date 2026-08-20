@@ -21,6 +21,12 @@ class AuditAction:
     ASSIGNMENT_CONFIRMED = "assignment_confirmed"
     ASSIGNMENT_DECLINED = "assignment_declined"
     ASSIGNMENT_SUBSTITUTED = "assignment_substituted"
+    EVENT_OPERATION_CREATED = "event_operation_created"
+    EVENT_BUDGET_APPROVED = "event_budget_approved"
+    EVENT_BUDGET_REJECTED = "event_budget_rejected"
+    EVENT_REGISTRANTS_MESSAGED = "event_registrants_messaged"
+    EVENT_FINAL_REPORT_SAVED = "event_final_report_saved"
+    EVENT_OPERATION_DOCUMENT_UPLOADED = "event_operation_document_uploaded"
 
 
 REDACT_KEYS = {
