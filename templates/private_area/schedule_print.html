@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Imprimir escala de {{ schedule.label }} — IB Conecta{% endblock %}
+
+{% block extra_head %}
+  <style>
+    @media print {
+      .site-header, .site-footer, .no-print { display: none; }
+      body { background: #fff; }
+    }
+  </style>
+{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Escala de {{ schedule.label }}</h1>
+    <p class="lede">{{ schedule.ministry.name }}</p>
+    <p class="no-print">
+      <button class="cta" type="button" onclick="window.print()">Salvar como PDF</button>
+    </p>
+    {% if assignments %}
+      <ul class="news-list">
+        {% for assignment in assignments %}
+          <li>
+            <strong>{{ assignment.function }}</strong> — {{ assignment.participant.username }}
+            <p class="news-meta">
+              {{ assignment.starts_at|date:"d/m/Y H:i" }}
+              · {{ assignment.get_status_display }}
+            </p>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">Nenhum participante nesta escala.</p>
+    {% endif %}
+    <p class="no-print">
+      <a href="{% url 'private_area:schedule_detail' schedule.pk %}">Voltar à escala</a>
+    </p>
+  </section>
+{% endblock %}
