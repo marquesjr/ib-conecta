@@ -18,6 +18,7 @@
       {% endif %}
       <p><a href="{% url 'private_area:home' %}">Área privada</a></p>
       <p><a href="{% url 'private_area:document_library' %}">Biblioteca de documentos</a></p>
+      <p><a href="{% url 'private_area:ministry_list' %}">Ministérios e escalas</a></p>
       {% if can_manage_2fa %}
         <p><a href="{% url 'accounts:two_factor_setup' %}">Configurar autenticação em dois fatores</a></p>
       {% endif %}

@@ -27,3 +27,4 @@ class PrivateAreaAccessTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Área privada")
         self.assertContains(response, "Biblioteca de documentos")
+        self.assertContains(response, "Ministérios")

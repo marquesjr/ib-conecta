@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Escala de {{ schedule.label }} — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Escala de {{ schedule.label }}</h1>
+    <p class="lede">{{ schedule.ministry.name }}</p>
+    {% if schedule.notes %}
+      <p>{{ schedule.notes }}</p>
+    {% endif %}
+
+    {% if share_url %}
+      <p>
+        <a class="cta secondary" href="{{ share_url }}" target="_blank" rel="noopener noreferrer">
+          Compartilhar no WhatsApp
+        </a>
+      </p>
+    {% endif %}
+    <p>
+      <a class="cta secondary" href="{% url 'private_area:schedule_calendar' schedule.pk %}">
+        Adicionar ao calendário
+      </a>
+      <a class="cta secondary" href="{% url 'private_area:schedule_print' schedule.pk %}">
+        Imprimir / salvar PDF
+      </a>
+    </p>
+
+    {% if assignments %}
+      <ul class="news-list">
+        {% for assignment in assignments %}
+          <li>
+            <strong>{{ assignment.function }}</strong> — {{ assignment.participant.username }}
+            <p class="news-meta">
+              {{ assignment.starts_at|date:"d/m/Y H:i" }}
+              · {{ assignment.get_status_display }}
+            </p>
+            {% for substitution in assignment.substitutions.all %}
+              <p class="news-meta">
+                Substituição: {{ substitution.replaced.username }} → {{ substitution.substitute.username }}
+              </p>
+            {% endfor %}
+            {% if request.user == assignment.participant %}
+              <p>
+                <a class="cta secondary" href="{% url 'private_area:assignment_respond' assignment.pk %}">
+                  Confirmar ou recusar
+                </a>
+              </p>
+            {% endif %}
+            {% if can_manage_schedules %}
+              <p>
+                <a href="{% url 'private_area:assignment_substitute' assignment.pk %}">Registrar substituição</a>
+              </p>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">Nenhum participante convocado nesta escala.</p>
+    {% endif %}
+
+    {% if assignment_form %}
+      <div class="panel">
+        <h2>Convocar participante</h2>
+        <form method="post" action="{% url 'private_area:assignment_add' schedule.pk %}">
+          {% csrf_token %}
+          {{ assignment_form.as_p }}
+          <button class="cta" type="submit">Adicionar à escala</button>
+        </form>
+      </div>
+    {% endif %}
+
+    <p><a href="{% url 'private_area:ministry_detail' schedule.ministry_id %}">Voltar ao ministério</a></p>
+  </section>
+{% endblock %}

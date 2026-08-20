@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastrar ministério — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Cadastrar ministério</h1>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="cta" type="submit">Salvar</button>
+    </form>
+    <p><a href="{% url 'private_area:ministry_list' %}">Voltar aos ministérios</a></p>
+  </section>
+{% endblock %}

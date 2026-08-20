@@ -16,6 +16,11 @@ class AuditAction:
     PRAYER_REQUEST_STATUS_CHANGED = "prayer_request_status_changed"
     KNOW_CHURCH_CONTACT_STATUS_CHANGED = "know_church_contact_status_changed"
     DOCUMENT_UPLOADED = "document_uploaded"
+    MINISTRY_CREATED = "ministry_created"
+    SCHEDULE_CREATED = "schedule_created"
+    ASSIGNMENT_CONFIRMED = "assignment_confirmed"
+    ASSIGNMENT_DECLINED = "assignment_declined"
+    ASSIGNMENT_SUBSTITUTED = "assignment_substituted"
 
 
 REDACT_KEYS = {

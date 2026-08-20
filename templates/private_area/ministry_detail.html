@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ ministry.name }} — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>{{ ministry.name }}</h1>
+    {% if ministry.description %}
+      <p class="lede">{{ ministry.description }}</p>
+    {% endif %}
+    {% if can_manage_schedules %}
+      <p>
+        <a class="cta" href="{% url 'private_area:schedule_create' ministry.pk %}">Montar escala mensal</a>
+      </p>
+    {% endif %}
+    {% if schedules %}
+      <ul class="news-list">
+        {% for schedule in schedules %}
+          <li>
+            <a href="{% url 'private_area:schedule_detail' schedule.pk %}">Escala de {{ schedule.label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">Ainda não há escala mensal neste ministério.</p>
+    {% endif %}
+    <p><a href="{% url 'private_area:ministry_list' %}">Voltar aos ministérios</a></p>
+  </section>
+{% endblock %}

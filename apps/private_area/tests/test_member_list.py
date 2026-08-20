@@ -22,7 +22,11 @@ class MemberListPrivacyTests(TestCase):
 
     def test_member_does_not_see_other_members_on_private_pages(self):
         self.client.login(username="ana.silva", password="senha-segura-123")
-        for url_name in ("private_area:home", "private_area:document_library"):
+        for url_name in (
+            "private_area:home",
+            "private_area:document_library",
+            "private_area:ministry_list",
+        ):
             response = self.client.get(reverse(url_name))
             self.assertEqual(response.status_code, 200, url_name)
             self.assertNotContains(response, "bruno.souza")

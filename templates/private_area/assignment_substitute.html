@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Substituição — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Registrar substituição</h1>
+    <p class="lede">
+      {{ assignment.function }} — {{ assignment.participant.username }}
+      em {{ assignment.starts_at|date:"d/m/Y H:i" }}
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="cta" type="submit">Salvar substituição</button>
+    </form>
+    <p>
+      <a href="{% url 'private_area:schedule_detail' assignment.schedule_id %}">Voltar à escala</a>
+    </p>
+  </section>
+{% endblock %}

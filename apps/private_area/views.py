@@ -10,7 +10,7 @@ from apps.accounts.audit import AuditAction, log_audit
 from apps.accounts.decorators import permission_required
 from apps.accounts.permissions import Permission, user_has_permission
 from apps.private_area.forms import PrivateDocumentForm
-from apps.private_area.models import PrivateDocument
+from apps.private_area.models import PrivateDocument, ScheduleAssignment
 
 
 @permission_required(Permission.ACCESS_PRIVATE_AREA)
@@ -22,6 +22,14 @@ def home(request: HttpRequest) -> HttpResponse:
             "can_manage_documents": user_has_permission(
                 request.user, Permission.MANAGE_CONTENT
             ),
+            "can_manage_schedules": user_has_permission(
+                request.user, Permission.MANAGE_MINISTRY_SCHEDULES
+            ),
+            "my_assignments": ScheduleAssignment.objects.filter(
+                participant=request.user
+            )
+            .select_related("schedule__ministry")
+            .order_by("starts_at")[:12],
         },
     )
 

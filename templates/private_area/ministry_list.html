@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Ministérios — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Ministérios</h1>
+    <p class="lede">Escalas e equipes da igreja, visíveis só para membros autenticados.</p>
+    {% if can_manage_schedules %}
+      <p>
+        <a class="cta" href="{% url 'private_area:ministry_create' %}">Cadastrar ministério</a>
+      </p>
+    {% endif %}
+    {% if ministries %}
+      <ul class="news-list">
+        {% for ministry in ministries %}
+          <li>
+            <a href="{% url 'private_area:ministry_detail' ministry.pk %}">{{ ministry.name }}</a>
+            {% if ministry.description %}
+              <p>{{ ministry.description }}</p>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">Nenhum ministério cadastrado ainda.</p>
+    {% endif %}
+    <p><a href="{% url 'private_area:home' %}">Voltar à área privada</a></p>
+  </section>
+{% endblock %}
