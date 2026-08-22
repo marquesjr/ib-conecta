@@ -1,6 +1,6 @@
 from django.urls import path
 
-from apps.private_area import event_views, ministry_views, views
+from apps.private_area import event_views, ministry_views, retreat_views, views
 
 app_name = "private_area"
 
@@ -152,5 +152,25 @@ urlpatterns = [
         "area-privada/eventos/documentos/<int:pk>/",
         event_views.event_document_download,
         name="event_document_download",
+    ),
+    path(
+        "area-privada/eventos/<int:pk>/retiro/",
+        retreat_views.retreat_roster,
+        name="retreat_roster",
+    ),
+    path(
+        "area-privada/inscricoes/<int:pk>/pix/",
+        retreat_views.retreat_pix_status,
+        name="retreat_pix_status",
+    ),
+    path(
+        "area-privada/inscricoes/<int:pk>/check-in/",
+        retreat_views.retreat_check_in,
+        name="retreat_check_in",
+    ),
+    path(
+        "area-privada/familiares/<int:pk>/check-in/",
+        retreat_views.retreat_member_check_in,
+        name="retreat_member_check_in",
     ),
 ]

@@ -27,6 +27,8 @@ class AuditAction:
     EVENT_REGISTRANTS_MESSAGED = "event_registrants_messaged"
     EVENT_FINAL_REPORT_SAVED = "event_final_report_saved"
     EVENT_OPERATION_DOCUMENT_UPLOADED = "event_operation_document_uploaded"
+    RETREAT_PIX_STATUS_CHANGED = "retreat_pix_status_changed"
+    RETREAT_CHECKED_IN = "retreat_checked_in"
 
 
 REDACT_KEYS = {
@@ -43,6 +45,8 @@ REDACT_KEYS = {
     "prayer_body",
     "pastoral_notes",
     "authorization",
+    "medical_notes",
+    "dietary_restrictions",
 }
 
 

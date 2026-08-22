@@ -26,10 +26,28 @@
 
     {% if page.requires_registration %}
       <div class="panel">
-        <h2>Inscrição</h2>
+        {% if page.is_retreat %}
+          <h2>Inscrição individual ou familiar</h2>
+          <p class="muted">
+            Informe o responsável legal pelos menores, um contato de emergência e as
+            informações essenciais. O pagamento é via PIX da igreja — não informe
+            dados bancários neste formulário. A comissão registra só o status do PIX.
+          </p>
+        {% else %}
+          <h2>Inscrição</h2>
+        {% endif %}
         <form method="post" action="{{ page.url }}inscrever/">
           {% csrf_token %}
           {{ registration_form.as_p }}
+          {% if page.is_retreat and family_formset %}
+            {{ family_formset.management_form }}
+            {% for member_form in family_formset %}
+              <fieldset>
+                <legend>Familiar {{ forloop.counter }} (opcional)</legend>
+                {{ member_form.as_p }}
+              </fieldset>
+            {% endfor %}
+          {% endif %}
           <button class="cta" type="submit">Confirmar inscrição</button>
         </form>
       </div>

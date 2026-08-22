@@ -16,6 +16,7 @@
             <a href="{{ event.url }}">
               <strong>{{ event.title }}</strong>
               <p class="news-meta">
+                {% if event.is_retreat %}Retiro · {% endif %}
                 {{ event.starts_at|date:"d/m/Y H:i" }}
                 {% if event.location %} · {{ event.location }}{% endif %}
               </p>

@@ -132,6 +132,23 @@ class EventOperationForm(forms.ModelForm):
         required=False,
         label="Exige inscrição",
     )
+    is_retreat = forms.BooleanField(
+        required=False,
+        label="É retiro",
+        help_text="Inscrição familiar, transporte, PIX e check-in na área privada.",
+    )
+    capacity = forms.IntegerField(
+        required=False,
+        min_value=1,
+        label="Vagas",
+        help_text="Pessoas (titular + familiares). Em branco, sem lista de espera.",
+    )
+    sensitive_retain_days = forms.IntegerField(
+        required=False,
+        min_value=1,
+        initial=30,
+        label="Dias para descarte de dados sensíveis",
+    )
 
     class Meta:
         model = EventOperation

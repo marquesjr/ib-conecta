@@ -25,7 +25,10 @@
             <a href="{% url 'private_area:event_operation_detail' operation.pk %}">
               {{ operation.public_event.title }}
             </a>
-            <p class="news-meta">{{ operation.public_event.starts_at|date:"d/m/Y H:i" }}</p>
+            <p class="news-meta">
+              {% if operation.public_event.is_retreat %}Retiro · {% endif %}
+              {{ operation.public_event.starts_at|date:"d/m/Y H:i" }}
+            </p>
           </li>
         {% endfor %}
       </ul>

@@ -11,6 +11,11 @@
       {{ operation.public_event.starts_at|date:"d/m/Y H:i" }}
       {% if operation.public_event.location %} · {{ operation.public_event.location }}{% endif %}
     </p>
+    {% if operation.public_event.is_retreat and can_manage_operations %}
+      <p>
+        <a class="cta" href="{% url 'private_area:retreat_roster' operation.pk %}">Abrir retiro (check-in e PIX)</a>
+      </p>
+    {% endif %}
     {% if can_manage_operations %}
       <div class="panel">
         <h2>Planejamento</h2>
