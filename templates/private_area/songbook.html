@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Coletânea de louvores — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Coletânea de louvores</h1>
+    <p class="lede">Letras, cifras e partituras para uso autorizado na igreja.</p>
+    <form method="get">
+      <p>
+        <label for="id_q">Buscar</label>
+        <input id="id_q" type="text" name="q" value="{{ query }}">
+      </p>
+      <p>
+        <label for="id_tag">Tag</label>
+        <input id="id_tag" type="text" name="tag" value="{{ tag }}">
+      </p>
+      <button class="cta" type="submit">Filtrar</button>
+    </form>
+    <p class="no-print">
+      {% if can_manage_songbook %}
+        <a class="cta" href="{% url 'private_area:song_create' %}">Cadastrar louvor</a>
+      {% endif %}
+      <a class="cta secondary" href="{% url 'private_area:songbook_print' %}?tag={{ tag|urlencode }}&amp;q={{ query|urlencode }}">Imprimir coletânea</a>
+      <a class="cta secondary" href="{% url 'private_area:songbook_print' %}?layout=lyrics&amp;tag={{ tag|urlencode }}&amp;q={{ query|urlencode }}">Só letras</a>
+      <a class="cta secondary" href="{% url 'private_area:songbook_print' %}?layout=chords&amp;tag={{ tag|urlencode }}&amp;q={{ query|urlencode }}">Letras com cifras</a>
+      <a class="cta secondary" href="{% url 'private_area:songbook_print' %}?layout=index&amp;tag={{ tag|urlencode }}&amp;q={{ query|urlencode }}">Índice</a>
+    </p>
+    {% if songs %}
+      <ul class="news-list">
+        {% for song in songs %}
+          <li>
+            <strong>{{ song.title }}</strong>
+            <p class="news-meta">
+              {% if song.key %}Tom {{ song.key }} · {% endif %}
+              {{ song.get_status_display }}
+              {% if song.tags %} · {{ song.tags }}{% endif %}
+            </p>
+            <p><a href="{% url 'private_area:song_detail' song.slug %}">Abrir louvor</a></p>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">Nenhum louvor nesta coletânea.</p>
+    {% endif %}
+    <p><a href="{% url 'private_area:home' %}">Voltar à área privada</a></p>
+  </section>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}{{ song.title }} — Coletânea de louvores{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>{{ song.title }}</h1>
+    <p class="lede">
+      {% if song.key %}Tom {{ song.key }}{% endif %}
+      {% if song.tempo %} · {{ song.tempo }}{% endif %}
+      · {{ song.get_status_display }}
+    </p>
+    <p>
+      <a class="cta secondary" href="{% url 'private_area:song_print' song.slug %}">Imprimir A4</a>
+      {% if song.score %}
+        <a class="cta secondary" href="{% url 'private_area:song_score' song.slug %}">Baixar partitura</a>
+      {% endif %}
+      {% if can_manage_songbook %}
+        <a class="cta secondary" href="{% url 'private_area:song_edit' song.slug %}">Revisar</a>
+      {% endif %}
+    </p>
+    {% if can_manage_songbook and song.status != "published" %}
+      <form method="post" action="{% url 'private_area:song_publish' song.slug %}">
+        {% csrf_token %}
+        <button class="cta" type="submit">Publicar</button>
+      </form>
+    {% endif %}
+    {% if song.lyrics %}
+      <div class="panel">
+        <h2>Letra</h2>
+        <pre>{{ song.lyrics }}</pre>
+      </div>
+    {% endif %}
+    {% if song.chords %}
+      <div class="panel">
+        <h2>Cifra</h2>
+        <pre>{{ song.chords }}</pre>
+      </div>
+    {% endif %}
+    {% if song.versions.all %}
+      <div class="panel">
+        <h2>Versões</h2>
+        {% for version in song.versions.all %}
+          <h3>{{ version.name }}{% if version.key %} — Tom {{ version.key }}{% endif %}</h3>
+          {% if version.lyrics %}
+            <pre>{{ version.lyrics }}</pre>
+          {% endif %}
+          {% if version.chords %}
+            <pre>{{ version.chords }}</pre>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if song.references.all %}
+      <div class="panel">
+        <h2>Referências</h2>
+        {% for reference in song.references.all %}
+          <p>
+            {{ reference.label }}:
+            <a href="{% url 'private_area:song_reference' reference.token %}">
+              {% url 'private_area:song_reference' reference.token %}
+            </a>
+          </p>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <div class="panel">
+      <h2>Licenciamento</h2>
+      <p>Autoria: {{ song.authors }}</p>
+      <p>Fonte: {{ song.source }}</p>
+      <p>{{ song.license }}</p>
+      <p>Usos permitidos: {{ song.permitted_uses }}</p>
+    </div>
+    <p><a href="{% url 'private_area:songbook' %}">Voltar à coletânea</a></p>
+  </section>
+{% endblock %}

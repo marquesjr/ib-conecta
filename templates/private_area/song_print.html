@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {% if layout == "index" %}Índice da coletânea{% elif songs|length == 1 %}{{ songs.0.title }}{% else %}Coletânea de louvores{% endif %} — imprimir
+{% endblock %}
+
+{% block extra_head %}
+  <style>
+    @page { size: A4; margin: 12mm; }
+    @media print {
+      .site-header, .site-footer, .no-print, .messages { display: none; }
+      body { background: #fff; }
+      .wrap { width: auto; max-width: none; margin: 0; padding: 0; }
+      .song-sheet { page-break-after: always; }
+      .song-sheet:last-child { page-break-after: auto; }
+    }
+    .song-body { white-space: pre-wrap; font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+    .qr-svg svg { width: 96px; height: 96px; }
+    .print-refs { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .print-ref { text-align: center; font-size: 0.85rem; }
+  </style>
+{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <p class="no-print">
+      <button class="cta" type="button" onclick="window.print()">Salvar como PDF</button>
+      <a class="cta secondary" href="{% url 'private_area:songbook' %}">Voltar à coletânea</a>
+    </p>
+    {% if layout == "index" %}
+      <h1>Índice da coletânea</h1>
+      <ol>
+        {% for song in songs %}
+          <li>
+            {{ song.title }}
+            {% if song.key %} — Tom {{ song.key }}{% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+    {% else %}
+      {% for item in print_items %}
+        <article class="song-sheet">
+          <h1>{{ item.song.title }}</h1>
+          <p class="lede">
+            {% if item.song.key %}Tom {{ item.song.key }}{% endif %}
+            {% if item.song.tempo %} · {{ item.song.tempo }}{% endif %}
+            {% if item.song.authors %} · {{ item.song.authors }}{% endif %}
+          </p>
+          {% if item.song.lyrics %}
+            <h2>Letra</h2>
+            <pre class="song-body">{{ item.song.lyrics }}</pre>
+          {% endif %}
+          {% if layout != "lyrics" and item.song.chords %}
+            <h2>Cifra</h2>
+            <pre class="song-body">{{ item.song.chords }}</pre>
+          {% endif %}
+          {% for version in item.song.versions.all %}
+            <h2>Versão: {{ version.name }}{% if version.key %} — Tom {{ version.key }}{% endif %}</h2>
+            {% if version.lyrics %}
+              <pre class="song-body">{{ version.lyrics }}</pre>
+            {% endif %}
+            {% if layout != "lyrics" and version.chords %}
+              <pre class="song-body">{{ version.chords }}</pre>
+            {% endif %}
+          {% endfor %}
+          {% if layout == "full" %}
+            <p>Fonte: {{ item.song.source }} · {{ item.song.license }}</p>
+            <p>Usos permitidos: {{ item.song.permitted_uses }}</p>
+          {% endif %}
+          {% if layout != "lyrics" and item.references %}
+            <h2>Referências</h2>
+            <div class="print-refs">
+              {% for ref in item.references %}
+                <div class="print-ref">
+                  <div class="qr-svg">{{ ref.qr_svg|safe }}</div>
+                  <p>{{ ref.reference.label }}</p>
+                  <p>{{ ref.url }}</p>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </article>
+      {% endfor %}
+    {% endif %}
+  </section>
+{% endblock %}

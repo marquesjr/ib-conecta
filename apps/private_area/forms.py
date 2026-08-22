@@ -18,6 +18,9 @@ from apps.private_area.models import (
     MonthlySchedule,
     PrivateDocument,
     ScheduleAssignment,
+    Song,
+    SongReference,
+    SongVersion,
 )
 
 User = get_user_model()
@@ -269,3 +272,70 @@ class EventOperationDocumentForm(forms.ModelForm):
         if uploaded.size > MAX_UPLOAD_BYTES:
             raise forms.ValidationError("O arquivo deve ter no máximo 20 MB.")
         return uploaded
+
+
+class SongForm(forms.ModelForm):
+    class Meta:
+        model = Song
+        fields = (
+            "title",
+            "key",
+            "tempo",
+            "lyrics",
+            "chords",
+            "tags",
+            "score",
+            "authors",
+            "source",
+            "license",
+            "permitted_uses",
+            "authorized",
+        )
+
+    def clean_score(self):
+        uploaded = self.cleaned_data.get("score")
+        if not uploaded:
+            return uploaded
+        suffix = Path(uploaded.name).suffix.lower()
+        if suffix != ".pdf":
+            raise forms.ValidationError("A partitura deve ser um PDF.")
+        if uploaded.size > MAX_UPLOAD_BYTES:
+            raise forms.ValidationError("O arquivo deve ter no máximo 20 MB.")
+        return uploaded
+
+    def clean(self):
+        cleaned = super().clean()
+        if not cleaned.get("authorized"):
+            raise forms.ValidationError(
+                "Não é permitido armazenar louvor sem autorização de uso."
+            )
+        return cleaned
+
+
+class SongReferenceForm(forms.ModelForm):
+    class Meta:
+        model = SongReference
+        fields = ("label", "target_url")
+
+
+class SongVersionForm(forms.ModelForm):
+    class Meta:
+        model = SongVersion
+        fields = ("name", "key", "lyrics", "chords")
+
+
+SongReferenceFormSet = forms.inlineformset_factory(
+    Song,
+    SongReference,
+    form=SongReferenceForm,
+    extra=1,
+    can_delete=False,
+)
+
+SongVersionFormSet = forms.inlineformset_factory(
+    Song,
+    SongVersion,
+    form=SongVersionForm,
+    extra=1,
+    can_delete=False,
+)

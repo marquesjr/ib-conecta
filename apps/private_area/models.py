@@ -1,5 +1,8 @@
+import secrets
+
 from django.conf import settings
 from django.db import models
+from django.utils.text import slugify
 
 from apps.accounts.permissions import Permission, user_has_permission
 from apps.private_area.storage import private_document_storage
@@ -440,3 +443,113 @@ class EventOperationDocument(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+
+class SongStatus(models.TextChoices):
+    DRAFT = "draft", "Rascunho"
+    PUBLISHED = "published", "Publicado"
+
+
+class Song(models.Model):
+    title = models.CharField(max_length=200, verbose_name="Título")
+    slug = models.SlugField(max_length=220, unique=True)
+    status = models.CharField(
+        max_length=16,
+        choices=SongStatus.choices,
+        default=SongStatus.DRAFT,
+        verbose_name="Situação",
+    )
+    key = models.CharField(max_length=20, blank=True, default="", verbose_name="Tom")
+    tempo = models.CharField(max_length=40, blank=True, default="", verbose_name="Andamento")
+    lyrics = models.TextField(blank=True, default="", verbose_name="Letra")
+    chords = models.TextField(blank=True, default="", verbose_name="Cifra")
+    tags = models.CharField(max_length=200, blank=True, default="", verbose_name="Tags")
+    authors = models.CharField(max_length=200, verbose_name="Autoria")
+    source = models.CharField(max_length=200, verbose_name="Fonte")
+    license = models.TextField(verbose_name="Licença / autorização")
+    permitted_uses = models.TextField(verbose_name="Usos permitidos")
+    authorized = models.BooleanField(
+        default=False,
+        verbose_name="Há autorização para armazenar este louvor",
+    )
+    score = models.FileField(
+        upload_to="songbook/",
+        storage=private_document_storage,
+        blank=True,
+        verbose_name="Partitura PDF",
+    )
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="created_songs",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    published_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["title"]
+        verbose_name = "Louvor"
+        verbose_name_plural = "Louvores"
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(authorized=True),
+                name="song_requires_authorization",
+            )
+        ]
+
+    def __str__(self) -> str:
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = _unique_song_slug(self)
+        super().save(*args, **kwargs)
+
+
+def _unique_song_slug(song: Song) -> str:
+    base = slugify(song.title) or "louvor"
+    slug = base
+    suffix = 2
+    while Song.objects.exclude(pk=song.pk).filter(slug=slug).exists():
+        slug = f"{base}-{suffix}"
+        suffix += 1
+    return slug
+
+
+class SongReference(models.Model):
+    song = models.ForeignKey(Song, on_delete=models.CASCADE, related_name="references")
+    label = models.CharField(max_length=80, verbose_name="Rótulo")
+    token = models.CharField(max_length=32, unique=True, editable=False)
+    target_url = models.URLField(verbose_name="URL externa")
+
+    class Meta:
+        ordering = ["id"]
+        verbose_name = "Referência externa"
+        verbose_name_plural = "Referências externas"
+
+    def __str__(self) -> str:
+        return f"{self.label} ({self.song.title})"
+
+    def save(self, *args, **kwargs):
+        if not self.token:
+            self.token = secrets.token_urlsafe(8)
+        super().save(*args, **kwargs)
+
+
+class SongVersion(models.Model):
+    song = models.ForeignKey(Song, on_delete=models.CASCADE, related_name="versions")
+    name = models.CharField(max_length=80, verbose_name="Versão")
+    key = models.CharField(max_length=20, blank=True, default="", verbose_name="Tom")
+    lyrics = models.TextField(blank=True, default="", verbose_name="Letra")
+    chords = models.TextField(blank=True, default="", verbose_name="Cifra")
+
+    class Meta:
+        ordering = ["id"]
+        verbose_name = "Versão"
+        verbose_name_plural = "Versões"
+
+    def __str__(self) -> str:
+        return f"{self.song.title} — {self.name}"
