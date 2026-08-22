@@ -49,6 +49,7 @@ Em seguida:
 - Comissão de eventos: http://localhost:8000/area-privada/eventos/
 - Retiro (check-in da equipe, quando o evento é retiro): http://localhost:8000/area-privada/eventos/<id>/retiro/
 - Coletânea de louvores: http://localhost:8000/area-privada/louvores/
+- Playlists semanais do louvor: http://localhost:8000/area-privada/playlists/
 - Admin Wagtail: http://localhost:8000/admin/
 
 No admin Wagtail, em **Configurações**, edite WhatsApp, PIX, redes sociais, horários, endereço e o próximo culto (sem hardcode no código). Páginas institucionais (história, crenças, ministérios, liderança), notícias, eventos da agenda, sermões e a página ao vivo são criadas/publicadas pelo CMS; rascunhos não ficam públicos até a publicação. Sermões e a transmissão usam URL externa (YouTube) incorporada sem autoplay — o portal não hospeda o vídeo. Perfis com permissão de conteúdo (Comunicação, Pastor, Administrador) entram no grupo **Editores de conteúdo** e acessam o admin. Comissão de eventos e comunicação gerenciam inscritos pela área da conta. Pastor e comunicação acompanham pedidos de oração e contatos de **Quero conhecer a igreja** na área da conta, sem expor o conteúdo no site público. A página de contribuições mostra a chave PIX configurada pela administração; o portal não processa cartão nem armazena dados bancários de terceiros.
@@ -93,6 +94,8 @@ A **comissão de eventos** opera o calendário anual sobre os eventos da agenda 
 **Retiros** são eventos da agenda pública com inscrição familiar: responsável legal, emergência, restrições alimentares/médicas, transporte/embarque, acomodação, lista de espera e status de pagamento PIX (sem dados bancários). A equipe do retiro faz check-in e lê a programação/documentos privados em `/area-privada/eventos/<id>/retiro/`. Dados médicos e de menores são descartados após o prazo configurado no evento (`python manage.py discard_retreat_sensitive_data`).
 
 A **coletânea de louvores** fica na área privada. Líderes de ministério criam, revisam e publicam cânticos com letra, cifra, partitura PDF, tom, andamento, tags, versões e licenciamento; o portal não armazena material sem autorização de uso. Referências externas (YouTube etc.) saem impressas como QR Code apontando para uma URL interna estável (`/r/<token>/`); trocar o destino não exige reimpressão. A impressão A4 cobre o louvor individual, a coletânea filtrada, só letras, letras com cifras e o índice.
+
+O líder de louvor monta a **escala mensal** com funções de dirigente, vocal, instrumento, sonoplastia e projeção; o convocado confirma ou recusa, e substituições ficam no histórico. A **playlist semanal** (culto ou ensaio) escolhe louvores publicados da coletânea com ordem, tom, versão e observações. Músicos autenticados consultam e imprimem o material; escala e playlist exportam calendário (`.ics`) e PDF, e o compartilhamento via WhatsApp aponta para a URL privada, que continua exigindo login.
 
 ## Parar
 

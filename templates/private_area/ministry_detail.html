@@ -13,6 +13,7 @@
     {% if can_manage_schedules %}
       <p>
         <a class="cta" href="{% url 'private_area:schedule_create' ministry.pk %}">Montar escala mensal</a>
+        <a class="cta secondary" href="{% url 'private_area:playlist_create' ministry.pk %}">Montar playlist semanal</a>
       </p>
     {% endif %}
     {% if schedules %}
@@ -25,6 +26,18 @@
       </ul>
     {% else %}
       <p class="muted">Ainda não há escala mensal neste ministério.</p>
+    {% endif %}
+    {% if playlists %}
+      <h2>Playlists semanais</h2>
+      <ul class="news-list">
+        {% for playlist in playlists %}
+          <li>
+            <a href="{% url 'private_area:playlist_detail' playlist.pk %}">
+              {{ playlist.get_kind_display }} — {{ playlist.starts_at|date:"d/m/Y H:i" }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
     {% endif %}
     <p><a href="{% url 'private_area:ministry_list' %}">Voltar aos ministérios</a></p>
   </section>

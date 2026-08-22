@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}{{ playlist.label }} — {{ playlist.ministry.name }} — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>{{ playlist.get_kind_display }}</h1>
+    <p class="lede">{{ playlist.ministry.name }} · {{ playlist.starts_at|date:"d/m/Y H:i" }}</p>
+    {% if playlist.notes %}
+      <p>{{ playlist.notes }}</p>
+    {% endif %}
+
+    {% if share_url %}
+      <p>
+        <a class="cta secondary" href="{{ share_url }}" target="_blank" rel="noopener noreferrer">
+          Compartilhar no WhatsApp
+        </a>
+      </p>
+    {% endif %}
+    <p>
+      <a class="cta secondary" href="{% url 'private_area:playlist_calendar' playlist.pk %}">
+        Adicionar ao calendário
+      </a>
+      <a class="cta secondary" href="{% url 'private_area:playlist_print' playlist.pk %}">
+        Imprimir / salvar PDF
+      </a>
+      <a class="cta secondary" href="{% url 'private_area:playlist_print' playlist.pk %}?layout=lyrics">
+        Só letras
+      </a>
+    </p>
+
+    {% if items %}
+      <ol class="news-list">
+        {% for item in items %}
+          <li>
+            <strong>{{ item.song.title }}</strong>
+            {% if item.display_key %} — Tom {{ item.display_key }}{% endif %}
+            {% if item.version %} · {{ item.version.name }}{% endif %}
+            {% if item.notes %}
+              <p>{{ item.notes }}</p>
+            {% endif %}
+            <p class="news-meta">
+              <a href="{% url 'private_area:song_detail' item.song.slug %}">Ver na coletânea</a>
+            </p>
+          </li>
+        {% endfor %}
+      </ol>
+    {% else %}
+      <p class="muted">Nenhum louvor nesta playlist ainda.</p>
+    {% endif %}
+
+    {% if item_form %}
+      <div class="panel">
+        <h2>Adicionar louvor</h2>
+        <form method="post" action="{% url 'private_area:playlist_item_add' playlist.pk %}">
+          {% csrf_token %}
+          {{ item_form.as_p }}
+          <button class="cta" type="submit">Incluir na ordem</button>
+        </form>
+      </div>
+    {% endif %}
+
+    <p>
+      <a href="{% url 'private_area:playlist_list' %}">Todas as playlists</a>
+      ·
+      <a href="{% url 'private_area:ministry_detail' playlist.ministry_id %}">Voltar ao ministério</a>
+    </p>
+  </section>
+{% endblock %}

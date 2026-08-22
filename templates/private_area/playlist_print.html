@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Imprimir {{ playlist.label }} — IB Conecta{% endblock %}
+
+{% block extra_head %}
+  <style>
+    @page { size: A4; margin: 12mm; }
+    @media print {
+      .site-header, .site-footer, .no-print, .messages { display: none; }
+      body { background: #fff; }
+      .wrap { width: auto; max-width: none; margin: 0; padding: 0; }
+      .song-sheet { page-break-after: always; }
+      .song-sheet:last-child { page-break-after: auto; }
+    }
+    .song-body { white-space: pre-wrap; font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+  </style>
+{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <p class="no-print">
+      <button class="cta" type="button" onclick="window.print()">Salvar como PDF</button>
+      <a class="cta secondary" href="{% url 'private_area:playlist_detail' playlist.pk %}">Voltar à playlist</a>
+    </p>
+    <h1>{{ playlist.get_kind_display }} — {{ playlist.ministry.name }}</h1>
+    <p class="lede">{{ playlist.starts_at|date:"d/m/Y H:i" }}</p>
+    {% if playlist.notes %}
+      <p>{{ playlist.notes }}</p>
+    {% endif %}
+    <ol>
+      {% for item in items %}
+        <li>
+          {{ item.song.title }}
+          {% if item.display_key %} — Tom {{ item.display_key }}{% endif %}
+          {% if item.version %} · {{ item.version.name }}{% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+    {% for item in items %}
+      <article class="song-sheet">
+        <h1>{{ item.song.title }}</h1>
+        <p class="lede">
+          {% if item.display_key %}Tom {{ item.display_key }}{% endif %}
+          {% if item.version %} · {{ item.version.name }}{% endif %}
+          {% if item.song.authors %} · {{ item.song.authors }}{% endif %}
+        </p>
+        {% if item.notes %}
+          <p>{{ item.notes }}</p>
+        {% endif %}
+        {% if item.print_lyrics %}
+          <h2>Letra</h2>
+          <pre class="song-body">{{ item.print_lyrics }}</pre>
+        {% endif %}
+        {% if layout != "lyrics" and item.print_chords %}
+          <h2>Cifra</h2>
+          <pre class="song-body">{{ item.print_chords }}</pre>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </section>
+{% endblock %}

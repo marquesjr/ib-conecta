@@ -17,6 +17,7 @@ from apps.private_area.forms import (
     SubstitutionForm,
 )
 from apps.private_area.models import (
+    WORSHIP_FUNCTIONS,
     AssignmentStatus,
     Ministry,
     MonthlySchedule,
@@ -69,6 +70,7 @@ def ministry_detail(request: HttpRequest, pk: int) -> HttpResponse:
         {
             "ministry": ministry,
             "schedules": ministry.schedules.all(),
+            "playlists": ministry.playlists.all()[:12],
             "can_manage_schedules": _can_manage_schedules(request.user),
         },
     )
@@ -130,6 +132,7 @@ def schedule_detail(request: HttpRequest, pk: int) -> HttpResponse:
             ),
             "assignment_form": AssignmentForm() if can_manage else None,
             "can_manage_schedules": can_manage,
+            "worship_functions": WORSHIP_FUNCTIONS,
             "share_url": build_whatsapp_share_url(
                 share_title,
                 request.build_absolute_uri(),

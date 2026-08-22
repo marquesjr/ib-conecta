@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Playlists semanais — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Playlists semanais</h1>
+    <p class="lede">
+      Cultos e ensaios do ministério de louvor. Músicos autenticados consultam e imprimem o material.
+    </p>
+    {% if playlists %}
+      <ul class="news-list">
+        {% for playlist in playlists %}
+          <li>
+            <a href="{% url 'private_area:playlist_detail' playlist.pk %}">
+              {{ playlist.get_kind_display }} — {{ playlist.ministry.name }}
+            </a>
+            <p class="news-meta">{{ playlist.starts_at|date:"d/m/Y H:i" }}</p>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">Ainda não há playlist semanal cadastrada.</p>
+    {% endif %}
+    <p>
+      <a href="{% url 'private_area:songbook' %}">Abrir coletânea</a>
+      ·
+      <a href="{% url 'private_area:home' %}">Voltar à área privada</a>
+    </p>
+  </section>
+{% endblock %}

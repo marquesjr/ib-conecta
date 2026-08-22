@@ -1,6 +1,13 @@
 from django.urls import path
 
-from apps.private_area import event_views, ministry_views, retreat_views, song_views, views
+from apps.private_area import (
+    event_views,
+    ministry_views,
+    playlist_views,
+    retreat_views,
+    song_views,
+    views,
+)
 
 app_name = "private_area"
 
@@ -95,6 +102,32 @@ urlpatterns = [
         "area-privada/convocacoes/<int:pk>/substituir/",
         ministry_views.assignment_substitute,
         name="assignment_substitute",
+    ),
+    path("area-privada/playlists/", playlist_views.playlist_list, name="playlist_list"),
+    path(
+        "area-privada/ministerios/<int:pk>/playlists/nova/",
+        playlist_views.playlist_create,
+        name="playlist_create",
+    ),
+    path(
+        "area-privada/playlists/<int:pk>/",
+        playlist_views.playlist_detail,
+        name="playlist_detail",
+    ),
+    path(
+        "area-privada/playlists/<int:pk>/itens/",
+        playlist_views.playlist_item_add,
+        name="playlist_item_add",
+    ),
+    path(
+        "area-privada/playlists/<int:pk>/calendario/",
+        playlist_views.playlist_calendar,
+        name="playlist_calendar",
+    ),
+    path(
+        "area-privada/playlists/<int:pk>/imprimir/",
+        playlist_views.playlist_print,
+        name="playlist_print",
     ),
     path(
         "area-privada/eventos/",

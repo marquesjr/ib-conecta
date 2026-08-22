@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 from apps.private_area.models import (
     MONTH_LABELS,
+    WORSHIP_FUNCTIONS,
     EventBudgetLine,
     EventChecklistItem,
     EventMaterial,
@@ -16,11 +17,14 @@ from apps.private_area.models import (
     EventTeamMember,
     Ministry,
     MonthlySchedule,
+    PlaylistItem,
     PrivateDocument,
     ScheduleAssignment,
     Song,
     SongReference,
+    SongStatus,
     SongVersion,
+    WeeklyPlaylist,
 )
 
 User = get_user_model()
@@ -91,7 +95,10 @@ class AssignmentForm(forms.ModelForm):
         self.fields["participant"].queryset = User.objects.filter(is_active=True).order_by(
             "username"
         )
-        self.fields["function"].help_text = "Ex.: dirigente, vocal, instrumento"
+        self.fields["function"].widget = forms.TextInput(attrs={"list": "worship-functions"})
+        self.fields["function"].help_text = (
+            "Ex.: " + ", ".join(WORSHIP_FUNCTIONS)
+        )
 
 
 class SubstitutionForm(forms.Form):
@@ -339,3 +346,61 @@ SongVersionFormSet = forms.inlineformset_factory(
     extra=1,
     can_delete=False,
 )
+
+
+class WeeklyPlaylistForm(forms.ModelForm):
+    class Meta:
+        model = WeeklyPlaylist
+        fields = ("kind", "starts_at", "notes")
+        widgets = {
+            "starts_at": forms.DateTimeInput(
+                attrs={"type": "datetime-local"},
+                format="%Y-%m-%dT%H:%M",
+            )
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["starts_at"].input_formats = ["%Y-%m-%dT%H:%M", "%Y-%m-%d %H:%M"]
+        self.fields["kind"].help_text = "Culto ou ensaio da semana."
+
+
+class PlaylistItemForm(forms.ModelForm):
+    class Meta:
+        model = PlaylistItem
+        fields = ("song", "version", "key", "notes", "position")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        published = Song.objects.filter(status=SongStatus.PUBLISHED).order_by("title")
+        self.fields["song"].queryset = published
+        self.fields["song"].label = "Louvor"
+        self.fields["version"].queryset = SongVersion.objects.filter(
+            song__status=SongStatus.PUBLISHED
+        ).select_related("song")
+        self.fields["version"].required = False
+        self.fields["key"].required = False
+        self.fields["notes"].required = False
+        self.fields["position"].required = False
+        self.fields["position"].help_text = "Deixe em branco para colocar no fim."
+
+    def clean_song(self):
+        song = self.cleaned_data["song"]
+        if song.status != SongStatus.PUBLISHED:
+            raise forms.ValidationError(
+                "Só é possível incluir louvor publicado na coletânea."
+            )
+        return song
+
+    def clean(self):
+        cleaned = super().clean()
+        song = cleaned.get("song")
+        version = cleaned.get("version")
+        if version and song and version.song_id != song.pk:
+            self.add_error("version", "A versão deve pertencer ao louvor selecionado.")
+        if song and not cleaned.get("key"):
+            if version and version.key:
+                cleaned["key"] = version.key
+            else:
+                cleaned["key"] = song.key
+        return cleaned
