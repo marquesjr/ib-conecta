@@ -29,6 +29,9 @@ class AuditAction:
     EVENT_OPERATION_DOCUMENT_UPLOADED = "event_operation_document_uploaded"
     RETREAT_PIX_STATUS_CHANGED = "retreat_pix_status_changed"
     RETREAT_CHECKED_IN = "retreat_checked_in"
+    SONG_CREATED = "song_created"
+    SONG_UPDATED = "song_updated"
+    SONG_PUBLISHED = "song_published"
 
 
 REDACT_KEYS = {

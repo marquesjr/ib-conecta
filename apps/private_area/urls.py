@@ -1,11 +1,44 @@
 from django.urls import path
 
-from apps.private_area import event_views, ministry_views, retreat_views, views
+from apps.private_area import event_views, ministry_views, retreat_views, song_views, views
 
 app_name = "private_area"
 
 urlpatterns = [
     path("area-privada/", views.home, name="home"),
+    path("area-privada/louvores/", song_views.songbook, name="songbook"),
+    path("area-privada/louvores/novo/", song_views.song_create, name="song_create"),
+    path(
+        "area-privada/louvores/imprimir/",
+        song_views.songbook_print,
+        name="songbook_print",
+    ),
+    path(
+        "area-privada/louvores/<slug:slug>/editar/",
+        song_views.song_edit,
+        name="song_edit",
+    ),
+    path(
+        "area-privada/louvores/<slug:slug>/publicar/",
+        song_views.song_publish,
+        name="song_publish",
+    ),
+    path(
+        "area-privada/louvores/<slug:slug>/imprimir/",
+        song_views.song_print,
+        name="song_print",
+    ),
+    path(
+        "area-privada/louvores/<slug:slug>/partitura/",
+        song_views.song_score,
+        name="song_score",
+    ),
+    path(
+        "area-privada/louvores/<slug:slug>/",
+        song_views.song_detail,
+        name="song_detail",
+    ),
+    path("r/<str:token>/", song_views.song_reference, name="song_reference"),
     path("area-privada/documentos/", views.document_library, name="document_library"),
     path(
         "area-privada/documentos/novo/",

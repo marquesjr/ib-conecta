@@ -36,6 +36,16 @@
         </ul>
       {% endif %}
     </div>
+    <div class="panel">
+      <h2>Coletânea de louvores</h2>
+      <p>Letras, cifras, partituras e impressão A4 com QR Code das referências.</p>
+      <p>
+        <a class="cta" href="{% url 'private_area:songbook' %}">Abrir coletânea</a>
+        {% if can_manage_schedules %}
+          <a class="cta secondary" href="{% url 'private_area:song_create' %}">Cadastrar louvor</a>
+        {% endif %}
+      </p>
+    </div>
     {% if can_access_event_operations or my_event_tasks or my_event_checklist or my_retreats %}
     <div class="panel">
       <h2>Comissão de eventos</h2>

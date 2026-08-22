@@ -28,3 +28,4 @@ class PrivateAreaAccessTests(TestCase):
         self.assertContains(response, "Área privada")
         self.assertContains(response, "Biblioteca de documentos")
         self.assertContains(response, "Ministérios")
+        self.assertContains(response, "Coletânea de louvores")
