@@ -108,6 +108,15 @@ MONTH_LABELS = {
 }
 
 
+WORSHIP_FUNCTIONS = (
+    "Dirigente",
+    "Vocal",
+    "Instrumento",
+    "Sonoplastia",
+    "Projeção",
+)
+
+
 class AssignmentStatus(models.TextChoices):
     PENDING = "pending", "Pendente"
     CONFIRMED = "confirmed", "Confirmado"
@@ -553,3 +562,92 @@ class SongVersion(models.Model):
 
     def __str__(self) -> str:
         return f"{self.song.title} — {self.name}"
+
+
+class PlaylistKind(models.TextChoices):
+    SERVICE = "service", "Culto"
+    REHEARSAL = "rehearsal", "Ensaio"
+
+
+class WeeklyPlaylist(models.Model):
+    ministry = models.ForeignKey(
+        Ministry,
+        on_delete=models.CASCADE,
+        related_name="playlists",
+    )
+    kind = models.CharField(
+        max_length=16,
+        choices=PlaylistKind.choices,
+        verbose_name="Tipo",
+    )
+    starts_at = models.DateTimeField(verbose_name="Data e horário")
+    notes = models.TextField(blank=True, default="", verbose_name="Observações")
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="created_playlists",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-starts_at"]
+        verbose_name = "Playlist semanal"
+        verbose_name_plural = "Playlists semanais"
+
+    def __str__(self) -> str:
+        return self.label()
+
+    def label(self) -> str:
+        return f"{self.get_kind_display()} — {self.starts_at:%d/%m/%Y}"
+
+
+class PlaylistItem(models.Model):
+    playlist = models.ForeignKey(
+        WeeklyPlaylist,
+        on_delete=models.CASCADE,
+        related_name="items",
+    )
+    song = models.ForeignKey(
+        Song,
+        on_delete=models.CASCADE,
+        related_name="playlist_items",
+    )
+    version = models.ForeignKey(
+        SongVersion,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="playlist_items",
+        verbose_name="Versão",
+    )
+    position = models.PositiveIntegerField(verbose_name="Ordem")
+    key = models.CharField(max_length=20, blank=True, default="", verbose_name="Tom")
+    notes = models.TextField(blank=True, default="", verbose_name="Observações")
+
+    class Meta:
+        ordering = ["position", "id"]
+        verbose_name = "Item da playlist"
+        verbose_name_plural = "Itens da playlist"
+
+    def __str__(self) -> str:
+        return f"{self.position}. {self.song}"
+
+    def print_lyrics(self) -> str:
+        if self.version and self.version.lyrics:
+            return self.version.lyrics
+        return self.song.lyrics
+
+    def print_chords(self) -> str:
+        if self.version and self.version.chords:
+            return self.version.chords
+        return self.song.chords
+
+    def display_key(self) -> str:
+        if self.key:
+            return self.key
+        if self.version and self.version.key:
+            return self.version.key
+        return self.song.key

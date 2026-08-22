@@ -16,6 +16,7 @@ from apps.private_area.models import (
     EventTask,
     PrivateDocument,
     ScheduleAssignment,
+    WeeklyPlaylist,
 )
 
 
@@ -40,6 +41,9 @@ def home(request: HttpRequest) -> HttpResponse:
             )
             .select_related("schedule__ministry")
             .order_by("starts_at")[:12],
+            "upcoming_playlists": WeeklyPlaylist.objects.select_related("ministry").order_by(
+                "starts_at"
+            )[:8],
             "my_event_tasks": EventTask.objects.filter(assignee=request.user)
             .select_related("operation__public_event")
             .order_by("done", "title")[:12],

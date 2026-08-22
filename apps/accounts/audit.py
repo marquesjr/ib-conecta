@@ -32,6 +32,8 @@ class AuditAction:
     SONG_CREATED = "song_created"
     SONG_UPDATED = "song_updated"
     SONG_PUBLISHED = "song_published"
+    PLAYLIST_CREATED = "playlist_created"
+    PLAYLIST_ITEM_ADDED = "playlist_item_added"
 
 
 REDACT_KEYS = {

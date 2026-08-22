@@ -67,6 +67,11 @@
         <form method="post" action="{% url 'private_area:assignment_add' schedule.pk %}">
           {% csrf_token %}
           {{ assignment_form.as_p }}
+          <datalist id="worship-functions">
+            {% for function in worship_functions %}
+              <option value="{{ function }}"></option>
+            {% endfor %}
+          </datalist>
           <button class="cta" type="submit">Adicionar à escala</button>
         </form>
       </div>

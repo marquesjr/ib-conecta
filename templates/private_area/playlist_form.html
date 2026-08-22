@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastrar playlist — {{ ministry.name }} — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Playlist semanal</h1>
+    <p class="lede">{{ ministry.name }} — culto ou ensaio a partir da coletânea.</p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="cta" type="submit">Criar playlist</button>
+    </form>
+    <p><a href="{% url 'private_area:ministry_detail' ministry.pk %}">Voltar ao ministério</a></p>
+  </section>
+{% endblock %}
