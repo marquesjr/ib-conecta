@@ -36,7 +36,7 @@
         </ul>
       {% endif %}
     </div>
-    {% if can_access_event_operations or my_event_tasks or my_event_checklist %}
+    {% if can_access_event_operations or my_event_tasks or my_event_checklist or my_retreats %}
     <div class="panel">
       <h2>Comissão de eventos</h2>
       <p>Calendário anual, equipes, tarefas, orçamento e relatório dos eventos da agenda.</p>
@@ -44,6 +44,17 @@
         <p>
           <a class="cta" href="{% url 'private_area:event_calendar' %}">Abrir calendário anual</a>
         </p>
+      {% endif %}
+      {% if my_retreats %}
+        <h3>Retiros da equipe</h3>
+        <ul class="news-list">
+          {% for operation in my_retreats %}
+            <li>
+              <a href="{% url 'private_area:retreat_roster' operation.pk %}">{{ operation.public_event.title }}</a>
+              <p class="news-meta">Check-in, lista de presença e documentos privados</p>
+            </li>
+          {% endfor %}
+        </ul>
       {% endif %}
       {% if my_event_tasks %}
         <h3>Minhas tarefas</h3>

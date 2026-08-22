@@ -36,6 +36,7 @@ from apps.private_area.models import (
     EventTask,
     EventTeam,
 )
+from apps.private_area.retreat_views import user_can_access_event_staff_area
 from apps.public.cms import AGENDA_INDEX_SLUG
 from apps.public.models import EventIndexPage, EventPage, EventRegistration
 
@@ -57,11 +58,27 @@ def _publish_event_page(data: dict) -> EventPage:
         ends_at=data.get("ends_at"),
         location=data.get("location") or "",
         body=data.get("body") or "",
-        requires_registration=bool(data.get("requires_registration")),
+        requires_registration=bool(data.get("requires_registration")) or bool(data.get("is_retreat")),
+        is_retreat=bool(data.get("is_retreat")),
+        capacity=data.get("capacity"),
+        sensitive_retain_days=data.get("sensitive_retain_days") or 30,
     )
     index.add_child(instance=event)
     event.save_revision().publish()
     return event
+
+
+def _apply_retreat_fields(event: EventPage, data: dict) -> None:
+    if not data.get("is_retreat"):
+        return
+    event.is_retreat = True
+    event.requires_registration = True
+    if data.get("capacity"):
+        event.capacity = data["capacity"]
+    if data.get("sensitive_retain_days"):
+        event.sensitive_retain_days = data["sensitive_retain_days"]
+    event.save()
+    event.save_revision().publish()
 
 
 @permission_required(Permission.MANAGE_EVENT_OPERATIONS, Permission.MANAGE_FINANCES)
@@ -99,6 +116,8 @@ def event_operation_create(request: HttpRequest) -> HttpResponse:
         operation = form.save(commit=False)
         if not operation.public_event_id:
             operation.public_event = _publish_event_page(form.cleaned_data)
+        else:
+            _apply_retreat_fields(operation.public_event, form.cleaned_data)
         operation.created_by = request.user
         operation.save()
         log_audit(
@@ -415,9 +434,14 @@ def event_document_upload(request: HttpRequest, pk: int) -> HttpResponse:
     return redirect("private_area:event_operation_detail", pk=operation.pk)
 
 
-@permission_required(Permission.MANAGE_EVENT_OPERATIONS)
+@permission_required(Permission.ACCESS_PRIVATE_AREA)
 def event_document_download(request: HttpRequest, pk: int) -> HttpResponse:
-    document = get_object_or_404(EventOperationDocument, pk=pk)
+    document = get_object_or_404(
+        EventOperationDocument.objects.select_related("operation__public_event"),
+        pk=pk,
+    )
+    if not user_can_access_event_staff_area(request.user, document.operation):
+        raise PermissionDenied
     return FileResponse(
         document.file.open("rb"),
         as_attachment=True,

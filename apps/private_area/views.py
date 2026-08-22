@@ -12,6 +12,7 @@ from apps.accounts.permissions import Permission, user_has_permission
 from apps.private_area.forms import PrivateDocumentForm
 from apps.private_area.models import (
     EventChecklistItem,
+    EventOperation,
     EventTask,
     PrivateDocument,
     ScheduleAssignment,
@@ -45,6 +46,12 @@ def home(request: HttpRequest) -> HttpResponse:
             "my_event_checklist": EventChecklistItem.objects.filter(assignee=request.user)
             .select_related("operation__public_event")
             .order_by("done", "label")[:12],
+            "my_retreats": EventOperation.objects.filter(
+                public_event__is_retreat=True,
+                teams__members__user=request.user,
+            )
+            .select_related("public_event")
+            .distinct(),
         },
     )
 

@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Retiro — {{ operation.public_event.title }} — IB Conecta{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>{{ operation.public_event.title }}</h1>
+    <p class="lede">Lista de presença, transporte, PIX e documentos privados do retiro.</p>
+    {% if operation.notes %}
+      <div class="panel">
+        <h2>Programação</h2>
+        <p>{{ operation.notes|linebreaksbr }}</p>
+      </div>
+    {% endif %}
+    {% if documents %}
+      <div class="panel">
+        <h2>Documentos privados</h2>
+        <ul class="news-list">
+          {% for document in documents %}
+            <li>
+              <a href="{% url 'private_area:event_document_download' document.pk %}">{{ document.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+    <div class="panel">
+      <h2>Lista de presença</h2>
+      {% if confirmed %}
+        <ul class="news-list">
+          {% for item in confirmed %}
+            <li>
+              <strong>{{ item.name }}</strong>
+              <p class="news-meta">
+                {% if item.transport_needed %}Transporte{% endif %}
+                {% if item.boarding_point %} · {{ item.boarding_point }}{% endif %}
+                {% if item.accommodation %} · {{ item.accommodation }}{% endif %}
+                {% if item.pix_status %} · {{ item.get_pix_status_display }}{% endif %}
+                {% if item.checked_in_at %} · Presente{% else %} · Pendente{% endif %}
+              </p>
+              {% if item.guardian_name %}
+                <p class="news-meta">Responsável: {{ item.guardian_name }} · {{ item.guardian_phone }}</p>
+              {% endif %}
+              {% if item.emergency_name %}
+                <p class="news-meta">Emergência: {{ item.emergency_name }} · {{ item.emergency_phone }}</p>
+              {% endif %}
+              {% if item.dietary_restrictions %}
+                <p class="news-meta">Alimentação: {{ item.dietary_restrictions }}</p>
+              {% endif %}
+              {% if item.medical_notes %}
+                <p class="news-meta">Médico: {{ item.medical_notes }}</p>
+              {% endif %}
+              {% for member in item.family_members.all %}
+                <p class="news-meta">
+                  Familiar: {{ member.name }}
+                  {% if member.dietary_restrictions %} · {{ member.dietary_restrictions }}{% endif %}
+                  {% if member.medical_notes %} · {{ member.medical_notes }}{% endif %}
+                  {% if member.checked_in_at %} · Presente{% else %} · Pendente{% endif %}
+                </p>
+                {% if not member.checked_in_at %}
+                  <form method="post" action="{% url 'private_area:retreat_member_check_in' member.pk %}">
+                    {% csrf_token %}
+                    <button class="cta secondary" type="submit">Check-in de {{ member.name }}</button>
+                  </form>
+                {% endif %}
+              {% endfor %}
+              {% if not item.checked_in_at %}
+                <form method="post" action="{% url 'private_area:retreat_check_in' item.pk %}">
+                  {% csrf_token %}
+                  <button class="cta" type="submit">Check-in de {{ item.name }}</button>
+                </form>
+              {% endif %}
+              {% if can_manage_pix %}
+                <form method="post" action="{% url 'private_area:retreat_pix_status' item.pk %}">
+                  {% csrf_token %}
+                  <label>
+                    Status do PIX
+                    <select name="pix_status">
+                      {% for value, label in pix_choices %}
+                        <option value="{{ value }}" {% if item.pix_status == value %}selected{% endif %}>{{ label }}</option>
+                      {% endfor %}
+                    </select>
+                  </label>
+                  <button class="cta secondary" type="submit">Atualizar PIX</button>
+                </form>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted">Nenhuma inscrição confirmada.</p>
+      {% endif %}
+    </div>
+    <div class="panel">
+      <h2>Lista de espera</h2>
+      {% if waitlisted %}
+        <ul class="news-list">
+          {% for item in waitlisted %}
+            <li>
+              <strong>{{ item.name }}</strong>
+              <p class="news-meta">{{ item.email }} · {{ item.get_pix_status_display }}</p>
+              {% if can_manage_pix %}
+                <form method="post" action="{% url 'private_area:retreat_pix_status' item.pk %}">
+                  {% csrf_token %}
+                  <label>
+                    Status do PIX
+                    <select name="pix_status">
+                      {% for value, label in pix_choices %}
+                        <option value="{{ value }}" {% if item.pix_status == value %}selected{% endif %}>{{ label }}</option>
+                      {% endfor %}
+                    </select>
+                  </label>
+                  <button class="cta secondary" type="submit">Atualizar PIX</button>
+                </form>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted">Ninguém na lista de espera.</p>
+      {% endif %}
+    </div>
+    <p>
+      {% if can_manage_pix %}
+        <a href="{% url 'private_area:event_operation_detail' operation.pk %}">Voltar à operação</a>
+      {% else %}
+        <a href="{% url 'private_area:home' %}">Voltar à área privada</a>
+      {% endif %}
+    </p>
+  </section>
+{% endblock %}

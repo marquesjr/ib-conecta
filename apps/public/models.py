@@ -141,6 +141,22 @@ class EventPage(RoutablePageMixin, Page):
         default=False,
         verbose_name="Exige inscrição",
     )
+    is_retreat = models.BooleanField(
+        default=False,
+        verbose_name="É retiro",
+        help_text="Usa inscrição familiar, transporte, PIX e check-in na área privada.",
+    )
+    capacity = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        verbose_name="Vagas",
+        help_text="Conta pessoas (titular + familiares). Sem valor, não há lista de espera.",
+    )
+    sensitive_retain_days = models.PositiveIntegerField(
+        default=30,
+        verbose_name="Dias para descarte de dados sensíveis",
+        help_text="Após o término do retiro, dados médicos e de menores são descartados.",
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel("starts_at"),
@@ -148,6 +164,9 @@ class EventPage(RoutablePageMixin, Page):
         FieldPanel("location"),
         FieldPanel("body"),
         FieldPanel("requires_registration"),
+        FieldPanel("is_retreat"),
+        FieldPanel("capacity"),
+        FieldPanel("sensitive_retain_days"),
     ]
 
     parent_page_types = ["public.EventIndexPage"]
@@ -158,21 +177,52 @@ class EventPage(RoutablePageMixin, Page):
         verbose_name_plural = "Eventos"
 
     def get_context(self, request, *args, **kwargs):
-        from apps.public.forms import EventRegistrationForm
+        from apps.public.forms import EventRegistrationForm, FamilyMemberFormSet, RetreatRegistrationForm
 
         context = super().get_context(request, *args, **kwargs)
-        context["registration_form"] = EventRegistrationForm()
+        if self.is_retreat:
+            context["registration_form"] = RetreatRegistrationForm()
+            context["family_formset"] = FamilyMemberFormSet(prefix="family")
+        else:
+            context["registration_form"] = EventRegistrationForm()
         return context
 
     @path("inscrever/")
     def register_view(self, request):
-        from apps.public.forms import EventRegistrationForm
+        from apps.public.forms import EventRegistrationForm, FamilyMemberFormSet, RetreatRegistrationForm
+        from apps.public.retreats import create_retreat_registration
 
         if not self.requires_registration:
             return HttpResponse(status=404)
 
         if request.method != "POST":
             return redirect(self.url)
+
+        if self.is_retreat:
+            form = RetreatRegistrationForm(request.POST, event=self)
+            formset = FamilyMemberFormSet(request.POST, prefix="family")
+            if form.is_valid() and formset.is_valid():
+                form.require_guardian_if_minors(formset, self)
+            if form.is_valid() and formset.is_valid():
+                registration = create_retreat_registration(self, form, formset)
+                if registration.status == EventRegistration.Status.WAITLISTED:
+                    messages.success(
+                        request,
+                        f"Inscrição na lista de espera. Obrigado, {form.cleaned_data['name']}!",
+                    )
+                else:
+                    messages.success(
+                        request,
+                        f"Inscrição confirmada. Obrigado, {form.cleaned_data['name']}!",
+                    )
+                return redirect(self.url)
+            return self.render(
+                request,
+                context_overrides={
+                    "registration_form": form,
+                    "family_formset": formset,
+                },
+            )
 
         form = EventRegistrationForm(request.POST)
         if form.is_valid():
@@ -206,7 +256,13 @@ class EventPage(RoutablePageMixin, Page):
 class EventRegistration(models.Model):
     class Status(models.TextChoices):
         CONFIRMED = "confirmed", "Confirmada"
+        WAITLISTED = "waitlisted", "Lista de espera"
         CANCELLED = "cancelled", "Cancelada"
+
+    class PixStatus(models.TextChoices):
+        PENDING = "pending", "PIX pendente"
+        PAID = "paid", "PIX pago"
+        WAIVED = "waived", "Isento"
 
     event = models.ForeignKey(
         EventPage,
@@ -217,6 +273,75 @@ class EventRegistration(models.Model):
     name = models.CharField(max_length=120, verbose_name="Nome")
     email = models.EmailField(verbose_name="E-mail")
     phone = models.CharField(max_length=30, blank=True, default="", verbose_name="Telefone")
+    birth_date = models.DateField(blank=True, null=True, verbose_name="Data de nascimento")
+    is_minor = models.BooleanField(default=False, verbose_name="Menor de idade")
+    guardian_name = models.CharField(
+        max_length=120,
+        blank=True,
+        default="",
+        verbose_name="Responsável legal",
+    )
+    guardian_phone = models.CharField(
+        max_length=30,
+        blank=True,
+        default="",
+        verbose_name="Telefone do responsável",
+    )
+    guardian_relationship = models.CharField(
+        max_length=80,
+        blank=True,
+        default="",
+        verbose_name="Parentesco do responsável",
+    )
+    emergency_name = models.CharField(
+        max_length=120,
+        blank=True,
+        default="",
+        verbose_name="Contato de emergência",
+    )
+    emergency_phone = models.CharField(
+        max_length=30,
+        blank=True,
+        default="",
+        verbose_name="Telefone de emergência",
+    )
+    dietary_restrictions = models.TextField(
+        blank=True,
+        default="",
+        verbose_name="Restrições alimentares",
+    )
+    medical_notes = models.TextField(
+        blank=True,
+        default="",
+        verbose_name="Informações médicas",
+    )
+    transport_needed = models.BooleanField(default=False, verbose_name="Precisa de transporte")
+    boarding_point = models.CharField(
+        max_length=120,
+        blank=True,
+        default="",
+        verbose_name="Ponto de embarque",
+    )
+    accommodation = models.CharField(
+        max_length=120,
+        blank=True,
+        default="",
+        verbose_name="Acomodação",
+    )
+    pix_status = models.CharField(
+        max_length=20,
+        choices=PixStatus.choices,
+        blank=True,
+        default="",
+        verbose_name="Status do PIX",
+    )
+    checked_in_at = models.DateTimeField(blank=True, null=True, verbose_name="Check-in")
+    lgpd_consent = models.BooleanField(default=False, verbose_name="Consentimento LGPD")
+    sensitive_discarded_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Dados sensíveis descartados em",
+    )
     status = models.CharField(
         max_length=20,
         choices=Status.choices,
@@ -232,6 +357,40 @@ class EventRegistration(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name} → {self.event}"
+
+    def party_size(self) -> int:
+        return 1 + self.family_members.count()
+
+
+class EventFamilyMember(models.Model):
+    registration = models.ForeignKey(
+        EventRegistration,
+        on_delete=models.CASCADE,
+        related_name="family_members",
+        verbose_name="Inscrição",
+    )
+    name = models.CharField(max_length=120, verbose_name="Nome")
+    birth_date = models.DateField(blank=True, null=True, verbose_name="Data de nascimento")
+    is_minor = models.BooleanField(default=False, verbose_name="Menor de idade")
+    dietary_restrictions = models.TextField(
+        blank=True,
+        default="",
+        verbose_name="Restrições alimentares",
+    )
+    medical_notes = models.TextField(
+        blank=True,
+        default="",
+        verbose_name="Informações médicas",
+    )
+    checked_in_at = models.DateTimeField(blank=True, null=True, verbose_name="Check-in")
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Familiar inscrito"
+        verbose_name_plural = "Familiares inscritos"
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class PrayerRequest(models.Model):

@@ -47,6 +47,7 @@ Em seguida:
 - Biblioteca de documentos: http://localhost:8000/area-privada/documentos/
 - Ministérios e escalas: http://localhost:8000/area-privada/ministerios/
 - Comissão de eventos: http://localhost:8000/area-privada/eventos/
+- Retiro (check-in da equipe, quando o evento é retiro): http://localhost:8000/area-privada/eventos/<id>/retiro/
 - Admin Wagtail: http://localhost:8000/admin/
 
 No admin Wagtail, em **Configurações**, edite WhatsApp, PIX, redes sociais, horários, endereço e o próximo culto (sem hardcode no código). Páginas institucionais (história, crenças, ministérios, liderança), notícias, eventos da agenda, sermões e a página ao vivo são criadas/publicadas pelo CMS; rascunhos não ficam públicos até a publicação. Sermões e a transmissão usam URL externa (YouTube) incorporada sem autoplay — o portal não hospeda o vídeo. Perfis com permissão de conteúdo (Comunicação, Pastor, Administrador) entram no grupo **Editores de conteúdo** e acessam o admin. Comissão de eventos e comunicação gerenciam inscritos pela área da conta. Pastor e comunicação acompanham pedidos de oração e contatos de **Quero conhecer a igreja** na área da conta, sem expor o conteúdo no site público. A página de contribuições mostra a chave PIX configurada pela administração; o portal não processa cartão nem armazena dados bancários de terceiros.
@@ -87,6 +88,8 @@ Membros autenticados entram na **área privada** e veem só os documentos libera
 Líderes de ministério e administradores cadastram ministérios e montam a **escala mensal** (participantes e funções). O convocado confirma ou recusa pelo celular; substituições ficam registradas. A escala exporta para calendário (`.ics`) e tem página de impressão para salvar PDF; o compartilhamento via WhatsApp aponta para a URL privada, que continua exigindo login.
 
 A **comissão de eventos** opera o calendário anual sobre os eventos da agenda pública (sem duplicar inscrição): equipes, tarefas, checklists, fornecedores, materiais, orçamento com aprovação da tesouraria, comunicação com inscritos e relatório/atas privados. Membros só atualizam as tarefas e o checklist que lhes foram designados. Tesouraria vê e aprova o financeiro; relatório e documentos da operação ficam restritos à comissão e à administração.
+
+**Retiros** são eventos da agenda pública com inscrição familiar: responsável legal, emergência, restrições alimentares/médicas, transporte/embarque, acomodação, lista de espera e status de pagamento PIX (sem dados bancários). A equipe do retiro faz check-in e lê a programação/documentos privados em `/area-privada/eventos/<id>/retiro/`. Dados médicos e de menores são descartados após o prazo configurado no evento (`python manage.py discard_retreat_sensitive_data`).
 
 ## Parar
 
