@@ -1,118 +1,27 @@
 <!DOCTYPE html>
-{% load public_tags %}
+{% load static public_tags %}
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{% block title %}IB Conecta — Igreja Batista em Santa Leopoldina{% endblock %}</title>
-    <style>
-      :root {
-        --bg: #f3efe6;
-        --ink: #1f2a24;
-        --accent: #0f5c4c;
-        --muted: #4d5a53;
-        --surface: #fffdf8;
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: "Source Serif 4", "Palatino Linotype", Palatino, serif;
-        color: var(--ink);
-        background:
-          radial-gradient(circle at top left, #dce8e2 0%, transparent 40%),
-          linear-gradient(180deg, #f7f2e8 0%, var(--bg) 100%);
-        line-height: 1.55;
-      }
-      a { color: var(--accent); }
-      .wrap { width: min(720px, calc(100% - 2rem)); margin: 0 auto; padding: 1.5rem 0 3rem; }
-      header.site-header, footer.site-footer { padding: 1rem 0; }
-      .brand { font-size: 1.35rem; font-weight: 700; text-decoration: none; color: var(--ink); }
-      .cta {
-        display: inline-block;
-        margin: 0.35rem 0.35rem 0.35rem 0;
-        padding: 0.7rem 1rem;
-        background: var(--accent);
-        color: #fff;
-        text-decoration: none;
-        border-radius: 4px;
-      }
-      .cta.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
-      button.cta { border: 0; cursor: pointer; font: inherit; }
-      .panel {
-        background: var(--surface);
-        border: 1px solid #ddd4c4;
-        padding: 1rem 1.1rem;
-        margin: 1rem 0;
-      }
-      .muted { color: var(--muted); }
-      .messages { list-style: none; padding: 0; margin: 0 0 1rem; }
-      .messages li { padding: 0.6rem 0.8rem; background: #e7f3ee; border: 1px solid #c5ddd4; }
-      .messages li.error { background: #f8ebe6; border-color: #e2c4b8; }
-      .hp {
-        position: absolute;
-        left: -10000px;
-        top: auto;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-      }
-      form p { margin: 0 0 0.85rem; }
-      form label { display: inline-block; margin-bottom: 0.25rem; }
-      form input[type="text"],
-      form input[type="email"],
-      form input[type="number"],
-      form input[type="date"],
-      form input[type="datetime-local"],
-      form textarea,
-      form select {
-        width: 100%;
-        padding: 0.45rem 0.5rem;
-        font: inherit;
-        border: 1px solid #cfc6b6;
-        background: #fff;
-      }
-      form input[type="checkbox"] { width: auto; margin-right: 0.35rem; }
-      .form-errors, .errorlist { color: #8a2b12; padding-left: 1.1rem; }
-      .pix-key {
-        display: inline-block;
-        margin-top: 0.25rem;
-        padding: 0.35rem 0.5rem;
-        font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
-        background: #eef4f1;
-        user-select: all;
-      }
-      .social-links a { margin-right: 0.9rem; }
-      nav a { margin-right: 0.9rem; text-decoration: none; }
-      .cms-page h1 { font-size: clamp(1.6rem, 4vw, 2.1rem); line-height: 1.25; margin: 0 0 0.6rem; }
-      .cms-page .lede { font-size: 1.1rem; color: var(--muted); margin: 0 0 1.2rem; }
-      .cms-page .rich-text :first-child { margin-top: 0; }
-      .cms-page .rich-text img { max-width: 100%; height: auto; }
-      .news-list { list-style: none; padding: 0; margin: 1rem 0 0; }
-      .news-list li { margin: 0 0 1rem; padding-bottom: 1rem; border-bottom: 1px solid #ddd4c4; }
-      .news-list a { text-decoration: none; color: var(--ink); }
-      .news-meta { color: var(--muted); font-size: 0.95rem; }
-      .media-embed {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        margin: 0 0 1.2rem;
-        background: #1a1a1a;
-      }
-      .media-embed iframe {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        border: 0;
-      }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/ib-conecta.css' %}" />
     {% block extra_head %}{% endblock %}
   </head>
-  <body>
+  <body{% if body_class %} class="{{ body_class }}"{% endif %}{% block body_attrs %}{% endblock %}>
+    <!--
+      THESIS: The home is a chapel door sign — next service on enamel, the visit as a brass plate — not a cream letter column and not a worship-hero church site.
+      OWN-WORLD: Limewash wall #D6CCB7, enamel plates #353B33 with cream caps and corner screws, brass primary #947A57 with oxblood type, Overpass wayfinding, plates lift with offset shadow.
+      STORY: You are welcome this Sunday; here is when, where, and how to come; WhatsApp is human, not 24h.
+      FIRST VIEWPORT: Centered enamel plate (wordmark, church, huge next-service time, address); brass Planeje sua visita below; painted nav on the wall under the plates.
+      FORM: Plaquinha da Porta — seed 757cf6f6.
+      FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+    -->
+    <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
     <div class="wrap">
       <header class="site-header">
         <a class="brand" href="{% url 'home' %}">IB Conecta</a>
-        <nav>
+        <nav aria-label="Principal">
           <a href="{% url 'plan_visit' %}">Planeje sua visita</a>
           <a href="{% url 'prayer_request' %}">Pedido de oração</a>
           <a href="{% url 'know_church' %}">Quero conhecer</a>
@@ -141,7 +50,7 @@
         </nav>
       </header>
 
-      <main>
+      <main id="conteudo">
         {% if messages %}
           <ul class="messages">
             {% for message in messages %}
@@ -155,6 +64,8 @@
         {% endblock %}
       </main>
 
+      {% block after_nav %}{% endblock %}
+
       <footer class="site-footer">
         <p><strong>Igreja Batista em Santa Leopoldina</strong></p>
         {% if church_settings and church_settings.social_links %}
@@ -165,7 +76,7 @@
           </p>
         {% endif %}
         {% if church_settings and church_settings.whatsapp_welcome_text %}
-          <p class="muted">{{ church_settings.whatsapp_welcome_text }}</p>
+          {% whatsapp_welcome church_settings.whatsapp_welcome_text %}
         {% endif %}
         {% if whatsapp_url %}
           <p>
@@ -173,6 +84,9 @@
               Falar no WhatsApp da igreja
             </a>
           </p>
+        {% endif %}
+        {% if church_settings and church_settings.whatsapp_welcome_text %}
+          {% whatsapp_welcome church_settings.whatsapp_welcome_text part="note" %}
         {% endif %}
       </footer>
     </div>

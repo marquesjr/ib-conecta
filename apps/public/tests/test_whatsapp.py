@@ -3,7 +3,11 @@ from django.urls import reverse
 from wagtail.models import Site
 
 from apps.public.models import ChurchSettings, NewsIndexPage, NewsPage
-from apps.public.whatsapp import build_whatsapp_share_url, build_whatsapp_url
+from apps.public.whatsapp import (
+    build_whatsapp_share_url,
+    build_whatsapp_url,
+    split_whatsapp_welcome,
+)
 
 
 class WhatsAppUrlTests(SimpleTestCase):
@@ -24,6 +28,40 @@ class WhatsAppUrlTests(SimpleTestCase):
             "https://wa.me/?text=Culto%20especial%0Ahttp%3A//testserver/noticias/culto-especial/",
         )
         self.assertNotIn("wa.me/55", url)
+
+
+class WhatsAppWelcomeSplitTests(SimpleTestCase):
+    def test_splits_default_em_dash_disclaimer(self):
+        lead, note = split_whatsapp_welcome(
+            "Fale conosco pelo WhatsApp para dúvidas, conversa, desabafo ou pedido de oração. "
+            "Responderemos assim que possível — não é um canal de plantão 24 horas."
+        )
+        self.assertEqual(
+            lead,
+            "Fale conosco pelo WhatsApp para dúvidas, conversa, desabafo ou pedido de oração. "
+            "Responderemos assim que possível",
+        )
+        self.assertEqual(note, "não é um canal de plantão 24 horas.")
+
+    def test_splits_trailing_sem_plantao(self):
+        lead, note = split_whatsapp_welcome(
+            "Use o WhatsApp para dúvidas, conversa ou oração. "
+            "Atendimento conforme disponibilidade da equipe, sem plantão 24h."
+        )
+        self.assertEqual(
+            lead,
+            "Use o WhatsApp para dúvidas, conversa ou oração. "
+            "Atendimento conforme disponibilidade da equipe",
+        )
+        self.assertEqual(note, "sem plantão 24h.")
+
+    def test_leaves_text_without_disclaimer_intact(self):
+        text = "Fale conosco pelo WhatsApp quando puder."
+        self.assertEqual(split_whatsapp_welcome(text), (text, ""))
+
+    def test_empty_text_has_no_note(self):
+        self.assertEqual(split_whatsapp_welcome(""), ("", ""))
+        self.assertEqual(split_whatsapp_welcome(None), ("", ""))
 
 
 class WhatsAppSharePageTests(TestCase):
@@ -47,8 +85,7 @@ class WhatsAppSharePageTests(TestCase):
 
     def test_public_pages_can_be_shared_via_whatsapp(self):
         home = self.client.get(reverse("home"))
-        self.assertContains(home, "Compartilhar no WhatsApp")
-        self.assertContains(home, "wa.me/?text=")
+        self.assertNotContains(home, "Compartilhar no WhatsApp")
 
         news = self.client.get("/noticias/culto-especial/")
         self.assertContains(news, "Compartilhar no WhatsApp")

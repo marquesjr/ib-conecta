@@ -1,26 +1,25 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>2FA — IB Conecta</title>
-  </head>
-  <body>
-    <main>
-      <h1>Autenticação em dois fatores</h1>
+{% extends "base.html" %}
+
+{% block title %}2FA — IB Conecta{% endblock %}
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Autenticação em dois fatores</h1>
+    <div class="panel">
       {% if enabled %}
         <p>2FA já está ativo nesta conta.</p>
       {% else %}
         <p>Escaneie ou informe o segredo no app autenticador:</p>
         <p><code>{{ secret }}</code></p>
-        <p><small>{{ provisioning_uri }}</small></p>
+        <p class="muted"><small>{{ provisioning_uri }}</small></p>
         <form method="post">
           {% csrf_token %}
           {{ form.as_p }}
-          <button type="submit">Ativar 2FA</button>
+          <button class="cta" type="submit">Ativar 2FA</button>
         </form>
       {% endif %}
       <p><a href="{% url 'accounts:account_home' %}">Voltar</a></p>
-    </main>
-  </body>
-</html>
+    </div>
+  </section>
+{% endblock %}

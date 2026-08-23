@@ -1,4 +1,47 @@
+import re
 from urllib.parse import quote
+
+_PLANTON = r"plant[aã]o\s*24(?:\s*horas|h)?"
+_DASH_NOTE = re.compile(
+    rf"\s*[—–]\s*(?P<note>[^—–\n]*{_PLANTON}[^\n]*)\s*$",
+    re.IGNORECASE,
+)
+_INLINE_NOTE = re.compile(
+    rf"(?P<lead>.*?)(?:,|\s)+(?P<note>(?:não é um canal de {_PLANTON}|sem {_PLANTON})[.!]?)\s*$",
+    re.IGNORECASE | re.DOTALL,
+)
+_LAST_SENTENCE_NOTE = re.compile(
+    rf"(?P<lead>.*?[.!?])\s+(?P<note>[^.!?]*{_PLANTON}[^.!?]*[.!]?)\s*$",
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def split_whatsapp_welcome(text: str | None) -> tuple[str, str]:
+    """Split a 24h-duty disclaimer out of WhatsApp welcome copy.
+
+    Returns (lead, note). If the CMS text has no plantão-24 clause, note is
+    empty and the full string stays in lead — we do not invent a disclaimer.
+    """
+    raw = (text or "").strip()
+    if not raw:
+        return "", ""
+
+    dash = _DASH_NOTE.search(raw)
+    if dash:
+        lead = raw[: dash.start()].strip().rstrip(" —–-")
+        note = dash.group("note").strip()
+        if lead and note:
+            return lead, note
+
+    for pattern in (_INLINE_NOTE, _LAST_SENTENCE_NOTE):
+        match = pattern.search(raw)
+        if match:
+            lead = match.group("lead").strip().rstrip(" —–-")
+            note = match.group("note").strip()
+            if lead and note:
+                return lead, note
+
+    return raw, ""
 
 
 def build_whatsapp_url(number: str, message: str = "") -> str:

@@ -1,21 +1,13 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Minha conta — IB Conecta</title>
-  </head>
-  <body>
-    <main>
-      <h1>Olá, {{ user.username }}</h1>
-      <p>Perfil: {{ profile.get_role_display }}</p>
-      {% if messages %}
-        <ul>
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
+{% extends "base.html" %}
+
+{% block title %}Minha conta — IB Conecta{% endblock %}
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Olá, {{ user.username }}</h1>
+    <p class="lede">Perfil: {{ profile.get_role_display }}</p>
+    <div class="panel">
       <p><a href="{% url 'private_area:home' %}">Área privada</a></p>
       <p><a href="{% url 'private_area:document_library' %}">Biblioteca de documentos</a></p>
       <p><a href="{% url 'private_area:ministry_list' %}">Ministérios e escalas</a></p>
@@ -34,8 +26,8 @@
       {% endif %}
       <form method="post" action="{% url 'accounts:logout' %}">
         {% csrf_token %}
-        <button type="submit">Sair</button>
+        <button class="cta" type="submit">Sair</button>
       </form>
-    </main>
-  </body>
-</html>
+    </div>
+  </section>
+{% endblock %}

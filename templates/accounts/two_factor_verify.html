@@ -1,18 +1,17 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Verificar 2FA — IB Conecta</title>
-  </head>
-  <body>
-    <main>
-      <h1>Digite o código do autenticador</h1>
+{% extends "base.html" %}
+
+{% block title %}Verificar 2FA — IB Conecta{% endblock %}
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Digite o código do autenticador</h1>
+    <div class="panel">
       <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Confirmar</button>
+        <button class="cta" type="submit">Confirmar</button>
       </form>
-    </main>
-  </body>
-</html>
+    </div>
+  </section>
+{% endblock %}

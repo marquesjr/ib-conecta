@@ -1,8 +1,14 @@
 from django import template
 
-from apps.public.whatsapp import build_whatsapp_share_url
+from apps.public.whatsapp import build_whatsapp_share_url, split_whatsapp_welcome
 
 register = template.Library()
+
+
+@register.inclusion_tag("public/_whatsapp_welcome.html")
+def whatsapp_welcome(text, part="lead"):
+    lead, note = split_whatsapp_welcome(text)
+    return {"lead": lead, "note": note, "part": part}
 
 
 @register.inclusion_tag("public/_whatsapp_share.html", takes_context=True)

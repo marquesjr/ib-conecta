@@ -30,6 +30,8 @@ class HomePageTests(TestCase):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "IB Conecta")
+        self.assertContains(response, "css/ib-conecta.css")
+        self.assertContains(response, "Ir para o conteúdo")
 
     def test_home_shows_next_service_and_visit_cta_within_two_clicks(self):
         response = self.client.get(reverse("home"))
@@ -55,6 +57,8 @@ class HomePageTests(TestCase):
         self.assertContains(response, "Ol%C3%A1%2C%20gostaria%20de%20conversar%20com%20a%20igreja")
 
         self.assertContains(response, "não é um canal de plantão 24 horas")
+        self.assertContains(response, 'href="#nota-whatsapp"')
+        self.assertContains(response, 'id="nota-whatsapp"')
         self.assertNotContains(response, "autoplay")
         self.assertNotContains(response, "<video")
 

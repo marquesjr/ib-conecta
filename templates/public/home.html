@@ -2,31 +2,42 @@
 
 {% block title %}IB Conecta — Igreja Batista em Santa Leopoldina{% endblock %}
 
+{% block body_attrs %} class="home"{% endblock %}
+
+{% block share %}{% endblock %}
+
 {% block content %}
-  <section>
-    <p class="muted">Igreja Batista em Santa Leopoldina</p>
-    <h1>{{ church_settings.evangelistic_headline }}</h1>
-    <p>{{ church_settings.evangelistic_message }}</p>
+  <section class="cms-page">
+    <article class="panel door-plate">
+      <a class="plate-mark" href="{% url 'home' %}">IB Conecta</a>
+      <div class="plate-rule" aria-hidden="true"><span></span></div>
+      <p class="plate-host">Igreja Batista em Santa Leopoldina</p>
+      <h1>
+        {% if church_settings.next_service_when == "Consulte os horários" %}
+          {{ church_settings.service_times|truncatechars:40 }}
+        {% else %}
+          {{ church_settings.next_service_when }}
+        {% endif %}
+      </h1>
+      <div class="plate-rule" aria-hidden="true"><span></span></div>
+      <p class="plate-venue">{{ church_settings.address_line }}</p>
+    </article>
 
-    <div class="panel">
-      <h2>{{ church_settings.next_service_label }}</h2>
-      <p><strong>{{ church_settings.next_service_when }}</strong></p>
-      {% if church_settings.next_service_description %}
-        <p>{{ church_settings.next_service_description }}</p>
-      {% endif %}
-      <p class="muted">{{ church_settings.address_line }}</p>
-    </div>
-
-    <p>
+    <p class="actions">
       <a class="cta" href="{% url 'plan_visit' %}">Planeje sua visita</a>
-      <a class="cta secondary" href="{% url 'prayer_request' %}">Pedido de oração</a>
-      <a class="cta secondary" href="{% url 'know_church' %}">Quero conhecer a igreja</a>
-      <a class="cta secondary" href="{% url 'contribute' %}">Contribuir</a>
-      {% if whatsapp_url %}
-        <a class="cta secondary" href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer">
-          Falar no WhatsApp
-        </a>
-      {% endif %}
     </p>
   </section>
+{% endblock %}
+
+{% block after_nav %}
+  <p class="lede home-lede">
+    <strong>{{ church_settings.evangelistic_headline }}</strong>
+    {{ church_settings.evangelistic_message }}
+    {% if church_settings.next_service_label %}
+      {{ church_settings.next_service_label }}.
+    {% endif %}
+    {% if church_settings.next_service_description %}
+      {{ church_settings.next_service_description }}
+    {% endif %}
+  </p>
 {% endblock %}

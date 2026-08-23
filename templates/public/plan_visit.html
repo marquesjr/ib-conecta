@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load public_tags %}
 
 {% block title %}Planeje sua visita — IB Conecta{% endblock %}
 
 {% block content %}
-  <section>
+  <section class="cms-page">
     <h1>Planeje sua visita</h1>
-    <p class="muted">
+    <p class="lede">
       Tudo o que você precisa para chegar com tranquilidade — especialmente se vem da zona rural.
     </p>
 
@@ -46,7 +47,7 @@
     <div class="panel">
       <h2>Fale conosco</h2>
       {% if church_settings.whatsapp_welcome_text %}
-        <p>{{ church_settings.whatsapp_welcome_text }}</p>
+        {% whatsapp_welcome church_settings.whatsapp_welcome_text %}
       {% endif %}
       {% if whatsapp_url %}
         <p>

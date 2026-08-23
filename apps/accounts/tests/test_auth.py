@@ -18,6 +18,13 @@ class AuthFlowTests(TestCase):
         self.user.profile.role = Role.MEMBER
         self.user.profile.save()
 
+    def test_login_uses_shared_shell(self):
+        response = self.client.get(reverse("accounts:login"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "css/ib-conecta.css")
+        self.assertContains(response, "IB Conecta")
+        self.assertContains(response, "Entrar")
+
     def test_login_and_logout(self):
         login_url = reverse("accounts:login")
         response = self.client.post(

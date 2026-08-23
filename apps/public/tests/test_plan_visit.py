@@ -37,4 +37,6 @@ class PlanVisitPageTests(TestCase):
         self.assertContains(response, "zona rural")
         self.assertContains(response, "wa.me/5527999999999")
         self.assertContains(response, "sem plantão 24h")
+        self.assertContains(response, 'href="#nota-whatsapp"')
+        self.assertContains(response, 'id="nota-whatsapp"')
         self.assertNotContains(response, "autoplay")

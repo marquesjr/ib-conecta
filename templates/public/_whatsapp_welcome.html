@@ -1,0 +1,6 @@
+{% if part != "note" and lead %}
+  <p class="whatsapp-welcome">{{ lead }}{% if note %}<a class="footnote-ref" href="#nota-whatsapp" aria-label="Ver nota sobre o atendimento">*</a>{% endif %}</p>
+{% endif %}
+{% if part == "note" and note %}
+  <p class="footnote" id="nota-whatsapp"><span aria-hidden="true">*</span> {{ note }}</p>
+{% endif %}
