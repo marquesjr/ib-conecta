@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load state_tags %}
 
 {% block title %}Retiro — {{ operation.public_event.title }} — IB Conecta{% endblock %}
 
@@ -37,8 +38,8 @@
                 {% if item.transport_needed %}Transporte{% endif %}
                 {% if item.boarding_point %} · {{ item.boarding_point }}{% endif %}
                 {% if item.accommodation %} · {{ item.accommodation }}{% endif %}
-                {% if item.pix_status %} · {{ item.get_pix_status_display }}{% endif %}
-                {% if item.checked_in_at %} · Presente{% else %} · Pendente{% endif %}
+                {% if item.pix_status %}{% state item.pix_status item.get_pix_status_display %}{% endif %}
+                {% if item.checked_in_at %}{% state "checked_in" "Presente" %}{% else %}{% state "pending" "Pendente" %}{% endif %}
               </p>
               {% if item.guardian_name %}
                 <p class="news-meta">Responsável: {{ item.guardian_name }} · {{ item.guardian_phone }}</p>
@@ -57,7 +58,7 @@
                   Familiar: {{ member.name }}
                   {% if member.dietary_restrictions %} · {{ member.dietary_restrictions }}{% endif %}
                   {% if member.medical_notes %} · {{ member.medical_notes }}{% endif %}
-                  {% if member.checked_in_at %} · Presente{% else %} · Pendente{% endif %}
+                  {% if member.checked_in_at %}{% state "checked_in" "Presente" %}{% else %}{% state "pending" "Pendente" %}{% endif %}
                 </p>
                 {% if not member.checked_in_at %}
                   <form method="post" action="{% url 'private_area:retreat_member_check_in' member.pk %}">
@@ -100,7 +101,7 @@
           {% for item in waitlisted %}
             <li>
               <strong>{{ item.name }}</strong>
-              <p class="news-meta">{{ item.email }} · {{ item.get_pix_status_display }}</p>
+              <p class="news-meta">{{ item.email }} {% state item.pix_status item.get_pix_status_display %}</p>
               {% if can_manage_pix %}
                 <form method="post" action="{% url 'private_area:retreat_pix_status' item.pk %}">
                   {% csrf_token %}

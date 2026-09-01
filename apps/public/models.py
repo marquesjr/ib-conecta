@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.db import models
 from django.http import HttpResponse
@@ -8,6 +10,7 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, path
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import RichTextField
 from wagtail.models import Page
+from wagtail.snippets.models import register_snippet
 
 
 class InstitutionalPage(Page):
@@ -697,6 +700,41 @@ class ChurchSettings(BaseSiteSetting):
         verbose_name="YouTube",
     )
 
+    class InstagramMode(models.TextChoices):
+        OFF = "off", "Desligado — usar apenas a galeria curada"
+        INSTAGRAM_LOGIN = "instagram_login", "Login Empresarial do Instagram (conta Criador ou Empresa, sem Página)"
+        FACEBOOK_LOGIN = "facebook_login", "Login do Facebook (conta Empresa ligada a uma Página)"
+
+    instagram_handle = models.CharField(
+        max_length=60,
+        blank=True,
+        default="",
+        verbose_name="Arroba do Instagram",
+        help_text="Sem o @. Ex.: igrejabatista.santaleopoldina",
+    )
+    instagram_mode = models.CharField(
+        max_length=20,
+        default=InstagramMode.OFF,
+        choices=InstagramMode.choices,
+        verbose_name="Origem do acervo",
+        help_text=(
+            "A API oficial exige conta Profissional (Criador ou Empresa). "
+            "Conta pessoal não tem acesso a nenhuma API oficial."
+        ),
+    )
+    instagram_user_id = models.CharField(
+        max_length=40,
+        blank=True,
+        default="",
+        verbose_name="ID da conta do Instagram",
+        help_text="Necessário apenas no Login do Facebook. O token é cadastrado fora desta tela.",
+    )
+    archive_frame_count = models.PositiveSmallIntegerField(
+        default=12,
+        verbose_name="Quadros no acervo da home",
+        help_text="Quantas fotografias a folha de contato exibe.",
+    )
+
     panels = [
         MultiFieldPanel(
             [
@@ -745,6 +783,15 @@ class ChurchSettings(BaseSiteSetting):
             ],
             heading="Redes sociais",
         ),
+        MultiFieldPanel(
+            [
+                FieldPanel("instagram_handle"),
+                FieldPanel("instagram_mode"),
+                FieldPanel("instagram_user_id"),
+                FieldPanel("archive_frame_count"),
+            ],
+            heading="Acervo do Instagram",
+        ),
     ]
 
     class Meta:
@@ -760,3 +807,134 @@ class ChurchSettings(BaseSiteSetting):
             if url:
                 links.append({"label": label, "url": url})
         return links
+
+
+@register_snippet
+class ArchiveFrame(models.Model):
+    """Uma fotografia da folha de contato — vinda da API do Instagram ou curada no CMS.
+
+    A imagem é guardada localmente porque as URLs do CDN da Meta expiram, e nesta
+    superfície a fotografia é o material principal: imagem quebrada seria a falha
+    mais visível da página.
+    """
+
+    class Source(models.TextChoices):
+        INSTAGRAM = "instagram", "Instagram"
+        CURATED = "curated", "Curado no CMS"
+
+    source = models.CharField(
+        max_length=20,
+        default=Source.CURATED,
+        choices=Source.choices,
+        verbose_name="Origem",
+    )
+    remote_id = models.CharField(
+        max_length=80,
+        blank=True,
+        default="",
+        verbose_name="ID no Instagram",
+        help_text="Preenchido pela sincronização. Deixe vazio em quadros curados.",
+    )
+    image = models.ImageField(
+        upload_to="archive/",
+        verbose_name="Fotografia",
+    )
+    alt_text = models.CharField(
+        max_length=250,
+        blank=True,
+        default="",
+        verbose_name="Descrição para leitor de tela",
+        help_text="Descreva a cena. Sem isso a fotografia fica inacessível.",
+    )
+    caption = models.CharField(
+        max_length=120,
+        blank=True,
+        default="",
+        verbose_name="Legenda",
+        help_text="Legenda curta, escrita como anotação a nanquim sob o quadro.",
+    )
+    permalink = models.URLField(
+        blank=True,
+        default="",
+        verbose_name="Link do post",
+    )
+    taken_at = models.DateTimeField(
+        default=timezone.now,
+        verbose_name="Data",
+    )
+    is_visible = models.BooleanField(
+        default=True,
+        verbose_name="Exibir no site",
+    )
+
+    panels = [
+        FieldPanel("image"),
+        FieldPanel("alt_text"),
+        FieldPanel("caption"),
+        FieldPanel("permalink"),
+        FieldPanel("taken_at"),
+        FieldPanel("is_visible"),
+    ]
+
+    class Meta:
+        ordering = ["-taken_at", "-pk"]
+        verbose_name = "Quadro do acervo"
+        verbose_name_plural = "Quadros do acervo"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["remote_id"],
+                condition=models.Q(source="instagram"),
+                name="unique_instagram_remote_id",
+            )
+        ]
+
+    def __str__(self):
+        return self.caption or f"Quadro {self.pk}"
+
+
+class InstagramCredential(models.Model):
+    """Token de longa duração da API do Instagram, guardado fora do painel de configurações.
+
+    Fica num modelo próprio para que o segredo não apareça na tela que a comunicação
+    usa no dia a dia, e para que a renovação programada possa reescrevê-lo — o que um
+    token só em variável de ambiente não permitiria, deixando o acervo morrer a cada
+    60 dias sem aviso.
+    """
+
+    access_token = models.TextField(verbose_name="Token de acesso")
+    expires_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Expira em",
+    )
+    refreshed_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Renovado em",
+    )
+    last_sync_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Última sincronização",
+    )
+    last_sync_error = models.TextField(
+        blank=True,
+        default="",
+        verbose_name="Último erro de sincronização",
+    )
+
+    class Meta:
+        verbose_name = "Credencial do Instagram"
+        verbose_name_plural = "Credenciais do Instagram"
+
+    def __str__(self):
+        return "Credencial do Instagram"
+
+    @classmethod
+    def current(cls):
+        return cls.objects.order_by("pk").first()
+
+    def is_expiring(self, within_days=10):
+        if not self.expires_at:
+            return True
+        return self.expires_at - timezone.now() <= timedelta(days=within_days)

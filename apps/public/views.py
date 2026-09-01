@@ -1,10 +1,19 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
+from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from wagtail.models import Site
 
+from apps.public.archive import archive_frames
 from apps.public.forms import KnowChurchForm, PrayerRequestForm
-from apps.public.models import ChurchSettings, KnowChurchContact, PrayerRequest
+from apps.public.models import (
+    ChurchSettings,
+    EventPage,
+    KnowChurchContact,
+    NewsPage,
+    PrayerRequest,
+    SermonPage,
+)
 from apps.public.spam import RATE_LIMIT_MESSAGE, honeypot_triggered, is_rate_limited
 from apps.public.whatsapp import build_whatsapp_url
 
@@ -34,7 +43,34 @@ def _submit_or_reject_spam(request, form, *, scope: str, success_url: str, succe
 
 
 def home(request):
-    return render(request, "public/home.html")
+    """A home é a folha de contato: o acervo e os fatos datados dividem a primeira tela.
+
+    As três listas curtas existem porque a densidade da composição aprovada é um
+    compromisso — uma folha com células vazias seria um desenho diferente.
+    """
+    site = Site.find_for_request(request) or Site.objects.filter(is_default_site=True).first()
+    count = ChurchSettings.for_site(site).archive_frame_count if site else 12
+    frames = archive_frames(count)
+
+    return render(
+        request,
+        "public/home.html",
+        {
+            "archive_frames": frames,
+            # Imagem gerada não pode passar por prova: a home diz quando o acervo é de exemplo.
+            "archive_is_seeded": any(frame["synthetic"] for frame in frames),
+            "upcoming_events": EventPage.objects.live()
+            .public()
+            .filter(starts_at__gte=timezone.now())
+            .order_by("starts_at")[:3],
+            "recent_sermons": SermonPage.objects.live()
+            .public()
+            .order_by("-first_published_at")[:3],
+            "recent_news": NewsPage.objects.live()
+            .public()
+            .order_by("-first_published_at")[:3],
+        },
+    )
 
 
 def plan_visit(request):

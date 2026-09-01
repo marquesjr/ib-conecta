@@ -10,16 +10,31 @@
     {% endif %}
 
     {% if event_pages %}
-      <ul class="news-list">
+      <ul class="register">
         {% for event in event_pages %}
           <li>
-            <a href="{{ event.url }}">
-              <strong>{{ event.title }}</strong>
-              <p class="news-meta">
-                {% if event.is_retreat %}Retiro · {% endif %}
-                {{ event.starts_at|date:"d/m/Y H:i" }}
-                {% if event.location %} · {{ event.location }}{% endif %}
-              </p>
+            <a class="register-entry" href="{{ event.url }}">
+              <time class="register-date" datetime="{{ event.starts_at|date:'c' }}">
+                <span class="register-day">{{ event.starts_at|date:"d" }}</span>
+                <span class="register-month">{{ event.starts_at|date:"M Y" }}</span>
+                <span class="register-time">{{ event.starts_at|date:"H:i" }}</span>
+              </time>
+              <span class="register-body">
+                <span class="register-title">{{ event.title }}</span>
+                {% if event.location %}
+                  <span class="register-where">{{ event.location }}</span>
+                {% endif %}
+                {% if event.is_retreat or event.requires_registration %}
+                  <span class="register-tags">
+                    {% if event.is_retreat %}
+                      <span class="register-tag">Retiro</span>
+                    {% endif %}
+                    {% if event.requires_registration %}
+                      <span class="register-tag register-tag--asks">Exige inscrição</span>
+                    {% endif %}
+                  </span>
+                {% endif %}
+              </span>
             </a>
           </li>
         {% endfor %}

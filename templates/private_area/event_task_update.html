@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load state_tags %}
 
 {% block title %}Tarefa — IB Conecta{% endblock %}
 
@@ -8,7 +9,7 @@
   <section class="cms-page">
     <h1>{{ task.title }}</h1>
     <p class="lede">{{ task.operation.public_event.title }}</p>
-    <p>Situação: {% if task.done %}Concluída{% else %}Pendente{% endif %}</p>
+    <p>Situação: {% if task.done %}{% state "done" "Concluída" %}{% else %}{% state "pending" "Pendente" %}{% endif %}</p>
     {% if not task.done %}
       <form method="post">
         {% csrf_token %}

@@ -26,6 +26,14 @@ db.sqlite3
 .vscode/
 *.log
 
+# Artefatos de desenho. Versionamos o sistema e o comp aprovado que o DESIGN.md cita
+# como origem das cores amostradas; a rodada de exploração de direções e as capturas
+# de verificação somam ~63 MB de raster descartável e ficam de fora.
+.impeccable/mocks/*
+!.impeccable/mocks/comp-arquivo-b-folha.png
+!.impeccable/mocks/comp-arquivo-b-folha.png.json
+.impeccable/review/
+
 # OS
 .DS_Store
 Thumbs.db

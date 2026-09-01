@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load state_tags %}
 
 {% block title %}Área privada — IB Conecta{% endblock %}
 
@@ -29,7 +30,7 @@
               </a>
               <p class="news-meta">
                 {{ assignment.starts_at|date:"d/m/Y H:i" }}
-                · {{ assignment.get_status_display }}
+                {% state assignment.status assignment.get_status_display %}
               </p>
             </li>
           {% endfor %}
@@ -88,7 +89,7 @@
               <a href="{% url 'private_area:event_task_update' task.pk %}">{{ task.title }}</a>
               <p class="news-meta">
                 {{ task.operation.public_event.title }}
-                · {% if task.done %}Concluída{% else %}Pendente{% endif %}
+                {% if task.done %}{% state "done" "Concluída" %}{% else %}{% state "pending" "Pendente" %}{% endif %}
               </p>
             </li>
           {% endfor %}
@@ -102,7 +103,7 @@
               <a href="{% url 'private_area:event_checklist_update' item.pk %}">{{ item.label }}</a>
               <p class="news-meta">
                 {{ item.operation.public_event.title }}
-                · {% if item.done %}Concluído{% else %}Pendente{% endif %}
+                {% if item.done %}{% state "done" "Concluído" %}{% else %}{% state "pending" "Pendente" %}{% endif %}
               </p>
             </li>
           {% endfor %}

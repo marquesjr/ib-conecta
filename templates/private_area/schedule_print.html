@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load state_tags %}
 
 {% block title %}Imprimir escala de {{ schedule.label }} — IB Conecta{% endblock %}
 
@@ -27,7 +28,7 @@
             <strong>{{ assignment.function }}</strong> — {{ assignment.participant.username }}
             <p class="news-meta">
               {{ assignment.starts_at|date:"d/m/Y H:i" }}
-              · {{ assignment.get_status_display }}
+              {% state assignment.status assignment.get_status_display %}
             </p>
           </li>
         {% endfor %}

@@ -10,17 +10,24 @@
     {% endif %}
 
     {% if news_pages %}
-      <ul class="news-list">
+      <ul class="register">
         {% for news in news_pages %}
           <li>
-            <a href="{{ news.url }}">
-              <strong>{{ news.title }}</strong>
-              {% if news.intro %}
-                <p class="muted">{{ news.intro }}</p>
-              {% endif %}
+            <a class="register-entry" href="{{ news.url }}">
               {% if news.first_published_at %}
-                <p class="news-meta">{{ news.first_published_at|date:"d/m/Y" }}</p>
+                <time class="register-date" datetime="{{ news.first_published_at|date:'c' }}">
+                  <span class="register-day">{{ news.first_published_at|date:"d" }}</span>
+                  <span class="register-month">{{ news.first_published_at|date:"M Y" }}</span>
+                </time>
+              {% else %}
+                <span class="register-date" aria-hidden="true"></span>
               {% endif %}
+              <span class="register-body">
+                <span class="register-title">{{ news.title }}</span>
+                {% if news.intro %}
+                  <span class="register-note">{{ news.intro }}</span>
+                {% endif %}
+              </span>
             </a>
           </li>
         {% endfor %}

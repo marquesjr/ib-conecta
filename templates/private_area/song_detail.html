@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load state_tags %}
 
 {% block title %}{{ song.title }} — Coletânea de louvores{% endblock %}
 
@@ -10,7 +11,7 @@
     <p class="lede">
       {% if song.key %}Tom {{ song.key }}{% endif %}
       {% if song.tempo %} · {{ song.tempo }}{% endif %}
-      · {{ song.get_status_display }}
+      {% state song.status song.get_status_display %}
     </p>
     <p>
       <a class="cta secondary" href="{% url 'private_area:song_print' song.slug %}">Imprimir A4</a>

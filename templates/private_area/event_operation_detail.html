@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load state_tags %}
 
 {% block title %}{{ operation.public_event.title }} — IB Conecta{% endblock %}
 
@@ -70,7 +71,7 @@
               <strong>{{ task.title }}</strong>
               <p class="news-meta">
                 {{ task.assignee.username }}
-                · {% if task.done %}Concluída{% else %}Pendente{% endif %}
+                {% if task.done %}{% state "done" "Concluída" %}{% else %}{% state "pending" "Pendente" %}{% endif %}
               </p>
             </li>
           {% endfor %}
@@ -95,7 +96,7 @@
               <strong>{{ item.label }}</strong>
               <p class="news-meta">
                 {{ item.assignee.username }}
-                · {% if item.done %}Concluído{% else %}Pendente{% endif %}
+                {% if item.done %}{% state "done" "Concluído" %}{% else %}{% state "pending" "Pendente" %}{% endif %}
               </p>
             </li>
           {% endfor %}
@@ -171,7 +172,7 @@
               <strong>{{ line.description }}</strong>
               <p class="news-meta">
                 {{ line.amount }}
-                · {{ line.get_status_display }}
+                {% state line.status line.get_status_display %}
               </p>
               {% if can_review_finances and line.status == "pending" %}
                 <form method="post" action="{% url 'private_area:event_budget_review' line.pk %}">
@@ -206,7 +207,7 @@
               <p class="news-meta">
                 {{ item.email }}
                 {% if item.phone %} · {{ item.phone }}{% endif %}
-                · {{ item.get_status_display }}
+                {% state item.status item.get_status_display %}
               </p>
             </li>
           {% endfor %}

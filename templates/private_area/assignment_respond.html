@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load state_tags %}
 
 {% block title %}Confirmar convocação — IB Conecta{% endblock %}
 
@@ -11,7 +12,7 @@
       {{ assignment.schedule.ministry.name }} — {{ assignment.function }}
     </p>
     <p>{{ assignment.starts_at|date:"d/m/Y H:i" }}</p>
-    <p>Situação: {{ assignment.get_status_display }}</p>
+    <p>Situação: {% state assignment.status assignment.get_status_display %}</p>
     {% if assignment.status == "pending" %}
       <form method="post">
         {% csrf_token %}

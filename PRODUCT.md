@@ -48,7 +48,8 @@ Confirmado no produto:
 - Retiros: inscrição familiar, dados médicos e de menores com descarte após prazo (`discard_retreat_sensitive_data`).
 - Coletânea: não armazena material sem autorização de uso; referências externas saem impressas como QR para URL interna estável.
 - Idioma da interface: português (`pt-BR`).
-- Páginas públicas devem permanecer leves no celular e em conexão limitada; nenhum vídeo inicia automaticamente.
+- Nenhum vídeo inicia automaticamente.
+- Peso das páginas públicas: o visual rico tem precedência sobre a leveza, por decisão explícita do responsável pelo produto, e vale igual em qualquer aparelho. A home carrega o acervo fotográfico da congregação (doze quadros) porque a fotografia *é* a página nesta direção — ver `DESIGN.md`. O custo aceito é celular mais pesado e primeira carga mais lenta em conexão limitada. Isto substitui a regra anterior de manter as páginas públicas leves; se a leveza voltar a ser prioridade, é o desenho que muda, não só a compressão das imagens.
 
 Aberto:
 

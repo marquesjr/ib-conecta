@@ -10,17 +10,31 @@
     {% endif %}
 
     {% if sermon_pages %}
-      <ul class="news-list">
+      <ul class="register">
         {% for sermon in sermon_pages %}
           <li>
-            <a href="{{ sermon.url }}">
-              <strong>{{ sermon.title }}</strong>
-              {% if sermon.intro %}
-                <p class="muted">{{ sermon.intro }}</p>
-              {% endif %}
+            <a class="register-entry" href="{{ sermon.url }}">
               {% if sermon.first_published_at %}
-                <p class="news-meta">{{ sermon.first_published_at|date:"d/m/Y" }}</p>
+                <time class="register-date" datetime="{{ sermon.first_published_at|date:'c' }}">
+                  <span class="register-day">{{ sermon.first_published_at|date:"d" }}</span>
+                  <span class="register-month">{{ sermon.first_published_at|date:"M Y" }}</span>
+                </time>
+              {% else %}
+                <span class="register-date" aria-hidden="true"></span>
               {% endif %}
+              <span class="register-body">
+                <span class="register-title">{{ sermon.title }}</span>
+                {% if sermon.intro %}
+                  <span class="register-note">{{ sermon.intro }}</span>
+                {% endif %}
+                {# Sermão com áudio ou vídeo é a norma; quem varre precisa saber
+                   quando *não* há o que ouvir. Marcar a exceção, não a regra. #}
+                {% if not sermon.media_url %}
+                  <span class="register-tags">
+                    <span class="register-tag">Somente texto</span>
+                  </span>
+                {% endif %}
+              </span>
             </a>
           </li>
         {% endfor %}

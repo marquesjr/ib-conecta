@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load state_tags %}
 
 {% block title %}Coletânea de louvores — IB Conecta{% endblock %}
 
@@ -34,9 +35,12 @@
           <li>
             <strong>{{ song.title }}</strong>
             <p class="news-meta">
-              {% if song.key %}Tom {{ song.key }} · {% endif %}
-              {{ song.get_status_display }}
-              {% if song.tags %} · {{ song.tags }}{% endif %}
+              {% if song.key %}Tom {{ song.key }}{% endif %}
+              {% if song.tags %}{% if song.key %} · {% endif %}{{ song.tags }}{% endif %}
+              {# Publicado é a norma da coletânea: só a exceção ganha selo. #}
+              {% if song.status != "published" %}
+                {% state song.status song.get_status_display %}
+              {% endif %}
             </p>
             <p><a href="{% url 'private_area:song_detail' song.slug %}">Abrir louvor</a></p>
           </li>

@@ -123,6 +123,12 @@ EMAIL_BACKEND = os.environ.get(
 )
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "noreply@ibsantaleopoldina.com.br")
 
+# App da Meta, usado só para renovar o token pelo Login do Facebook. O token em si
+# não mora aqui: ele fica no banco, em InstagramCredential, para que a renovação
+# programada possa reescrevê-lo.
+INSTAGRAM_APP_ID = os.environ.get("INSTAGRAM_APP_ID", "")
+INSTAGRAM_APP_SECRET = os.environ.get("INSTAGRAM_APP_SECRET", "")
+
 WAGTAIL_SITE_NAME = "IB Conecta"
 
 WAGTAILADMIN_BASE_URL = os.environ.get("WAGTAILADMIN_BASE_URL", "http://localhost:8000")

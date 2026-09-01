@@ -7,35 +7,123 @@
 {% block share %}{% endblock %}
 
 {% block content %}
-  <section class="cms-page">
-    <article class="panel door-plate">
-      <a class="plate-mark" href="{% url 'home' %}">IB Conecta</a>
-      <div class="plate-rule" aria-hidden="true"><span></span></div>
-      <p class="plate-host">Igreja Batista em Santa Leopoldina</p>
-      <h1>
+  <div class="contact-sheet">
+    <article class="plate plate--mount sheet-mount">
+      <span class="mounts" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span class="label">{{ church_settings.next_service_label|default:"Próximo culto" }}</span>
+      <h1 class="service-when">
         {% if church_settings.next_service_when == "Consulte os horários" %}
           {{ church_settings.service_times|truncatechars:40 }}
         {% else %}
           {{ church_settings.next_service_when }}
         {% endif %}
       </h1>
-      <div class="plate-rule" aria-hidden="true"><span></span></div>
-      <p class="plate-venue">{{ church_settings.address_line }}</p>
+      <p class="service-where">{{ church_settings.address_line }}</p>
+      <p class="service-host">Igreja Batista em Santa Leopoldina</p>
     </article>
 
-    <p class="actions">
-      <a class="cta" href="{% url 'plan_visit' %}">Planeje sua visita</a>
+    <a class="plate plate--ink sheet-action sheet-action--primary" href="{% url 'plan_visit' %}">
+      Planeje sua visita
+    </a>
+
+    {% if whatsapp_url %}
+      <a class="plate plate--graphite sheet-action sheet-action--secondary"
+         href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer">
+        Falar no WhatsApp da igreja
+      </a>
+    {% else %}
+      <a class="plate plate--graphite sheet-action sheet-action--secondary" href="{% url 'know_church' %}">
+        Quero conhecer
+      </a>
+    {% endif %}
+
+    <section class="plate sheet-list sheet-list--agenda">
+      <h2 class="cell-heading">Agenda</h2>
+      {% if upcoming_events %}
+        <ul>
+          {% for event in upcoming_events %}
+            <li>
+              <span class="when">{{ event.starts_at|date:"d.m" }}</span>
+              <a href="{{ event.url }}">{{ event.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="empty">Nenhum evento publicado no momento.</p>
+      {% endif %}
+    </section>
+
+    <section class="plate sheet-list sheet-list--sermons">
+      <h2 class="cell-heading">Sermões</h2>
+      {% if recent_sermons %}
+        <ul>
+          {% for sermon in recent_sermons %}
+            <li>
+              <span class="when">{{ sermon.first_published_at|date:"d.m" }}</span>
+              <a href="{{ sermon.url }}">{{ sermon.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="empty">Nenhum sermão publicado no momento.</p>
+      {% endif %}
+    </section>
+
+    <section class="plate sheet-list sheet-list--news">
+      <h2 class="cell-heading">Notícias</h2>
+      {% if recent_news %}
+        <ul>
+          {% for item in recent_news %}
+            <li>
+              <span class="when">{{ item.first_published_at|date:"d.m" }}</span>
+              <a href="{{ item.url }}">{{ item.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="empty">Nenhuma notícia publicada no momento.</p>
+      {% endif %}
+    </section>
+
+    {% for frame in archive_frames %}
+      <figure class="sheet-frame" style="--frame-index: {{ forloop.counter0 }}">
+        {% if frame.permalink %}
+          <a href="{{ frame.permalink }}" target="_blank" rel="noopener noreferrer">
+        {% endif %}
+        <img src="{{ frame.url }}" alt="{{ frame.alt }}" width="800" height="800"
+             decoding="async"{% if forloop.counter0 >= 6 %} loading="lazy"{% endif %} />
+        {% if frame.permalink %}</a>{% endif %}
+        <figcaption>
+          <span>{{ frame.caption }}</span>
+          {% if frame.date %}<span class="frame-date">{{ frame.date }}</span>{% endif %}
+        </figcaption>
+      </figure>
+    {% endfor %}
+
+    {% if church_settings.instagram_url %}
+      <a class="plate sheet-handle" href="{{ church_settings.instagram_url }}"
+         target="_blank" rel="noopener noreferrer">
+        <span>@{{ church_settings.instagram_handle|default:"igrejabatista.santaleopoldina" }}</span>
+      </a>
+    {% else %}
+      <p class="plate sheet-handle">
+        <span>Acervo da congregação</span>
+      </p>
+    {% endif %}
+  </div>
+
+  {% if archive_is_seeded %}
+    <p class="footnote" id="acervo-exemplo">
+      As fotografias acima são imagens de exemplo geradas para o desenho, não fotos da igreja.
+      Elas serão substituídas pelo acervo real assim que o Instagram da congregação for conectado.
     </p>
-  </section>
+  {% endif %}
 {% endblock %}
 
 {% block after_nav %}
   <p class="lede home-lede">
     <strong>{{ church_settings.evangelistic_headline }}</strong>
     {{ church_settings.evangelistic_message }}
-    {% if church_settings.next_service_label %}
-      {{ church_settings.next_service_label }}.
-    {% endif %}
     {% if church_settings.next_service_description %}
       {{ church_settings.next_service_description }}
     {% endif %}

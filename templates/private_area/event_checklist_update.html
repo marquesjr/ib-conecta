@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load state_tags %}
 
 {% block title %}Checklist — IB Conecta{% endblock %}
 
@@ -8,7 +9,7 @@
   <section class="cms-page">
     <h1>{{ item.label }}</h1>
     <p class="lede">{{ item.operation.public_event.title }}</p>
-    <p>Situação: {% if item.done %}Concluído{% else %}Pendente{% endif %}</p>
+    <p>Situação: {% if item.done %}{% state "done" "Concluído" %}{% else %}{% state "pending" "Pendente" %}{% endif %}</p>
     {% if not item.done %}
       <form method="post">
         {% csrf_token %}
