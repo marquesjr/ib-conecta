@@ -1,5 +1,6 @@
 provider "oci" {
-  region = var.region
+  region              = var.region
+  config_file_profile = var.oci_config_profile
 }
 
 data "oci_identity_availability_domains" "ads" {

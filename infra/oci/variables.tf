@@ -4,6 +4,12 @@ variable "region" {
   default     = "sa-saopaulo-1"
 }
 
+variable "oci_config_profile" {
+  description = "Profile em ~/.oci/config usado pelo provider OCI."
+  type        = string
+  default     = "ib_conecta"
+}
+
 variable "tenancy_ocid" {
   description = "OCID do tenancy OCI."
   type        = string
