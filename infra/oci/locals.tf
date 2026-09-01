@@ -1,0 +1,14 @@
+locals {
+  name_prefix = "${var.project_name}-${var.environment}"
+
+  common_tags = merge(
+    {
+      project     = var.project_name
+      environment = var.environment
+      managed_by  = "terraform"
+    },
+    var.tags,
+  )
+
+  bucket_name = var.object_storage_bucket_name != "" ? var.object_storage_bucket_name : "${local.name_prefix}-storage"
+}

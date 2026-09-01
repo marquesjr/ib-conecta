@@ -1,0 +1,40 @@
+# Copie para terraform.tfvars e preencha com valores reais.
+# Nunca commite terraform.tfvars (contém dados sensíveis).
+
+region             = "sa-saopaulo-1"
+tenancy_ocid       = "ocid1.tenancy.oc1..aaaaaaaaxxxxx"
+compartment_ocid   = "ocid1.compartment.oc1..aaaaaaaaxxxxx"
+
+project_name = "ib-conecta"
+environment  = "prod"
+
+# Shape Always Free Ampere A1 (ajuste dentro dos limites da conta)
+instance_shape        = "VM.Standard.A1.Flex"
+instance_ocpus        = 2
+instance_memory_gbs   = 12
+boot_volume_size_gbs  = 50
+
+# Deixe vazio para usar o primeiro AD disponível
+availability_domain = ""
+
+# Imagem ARM compatível com A1 Flex
+operating_system         = "Canonical Ubuntu"
+operating_system_version = "22.04"
+
+# Cole a chave pública OpenSSH (uma linha)
+ssh_public_key = "ssh-ed25519 AAAA... usuario@host"
+
+# Restrinja SSH ao seu IP ou VPN — não use 0.0.0.0/0
+ssh_allowed_cidrs = [
+  "203.0.113.10/32",
+]
+
+# Opcional: nome fixo do bucket (senão: ib-conecta-prod-storage)
+# object_storage_bucket_name = "ib-conecta-prod-storage"
+
+tags = {
+  project     = "ib-conecta"
+  environment = "prod"
+  managed_by  = "terraform"
+  owner       = "igreja-batista-santa-leopoldina"
+}
