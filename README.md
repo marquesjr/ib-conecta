@@ -111,6 +111,29 @@ A **coletânea de louvores** fica na área privada. Líderes de ministério cria
 
 O líder de louvor monta a **escala mensal** com funções de dirigente, vocal, instrumento, sonoplastia e projeção; o convocado confirma ou recusa, e substituições ficam no histórico. A **playlist semanal** (culto ou ensaio) escolhe louvores publicados da coletânea com ordem, tom, versão e observações. Músicos autenticados consultam e imprimem o material; escala e playlist exportam calendário (`.ics`) e PDF, e o compartilhamento via WhatsApp aponta para a URL privada, que continua exigindo login.
 
+## Produção (Docker Compose + Caddy)
+
+O stack de produção sobe **web (Gunicorn) + PostgreSQL + Caddy**. Não usa `runserver` nem bind-mount do código. Caddy escuta 80/443, redireciona HTTP → HTTPS e faz proxy para a aplicação.
+
+```bash
+cp .env.prod.example .env.prod
+# Preencha DJANGO_SECRET_KEY (32+ caracteres), senhas e o domínio
+docker compose -f docker-compose.prod.yml --env-file .env.prod up --build
+```
+
+Na VM OCI (Ampere A1, ARM), depois de `git pull`, o mesmo par de comandos — com `SITE_ADDRESS` público e `CADDY_TLS` vazio (Let's Encrypt). Suba em background com `-d`.
+
+O entrypoint já roda `migrate`, `collectstatic`, bootstrap do CMS e cria o superusuário se `DJANGO_SUPERUSER_*` estiver definido.
+
+- Saúde da aplicação: `https://<domínio>/healthz/` (JSON `{"status":"ok"}`; o Compose também usa essa rota no healthcheck do `web`)
+- Mídia pública: volume Docker `media_data`, servida pelo Caddy em `/media/`
+- Arquivos privados (documentos, partituras): volume `private_media_data` (nunca em Object Storage público)
+- Object Storage S3-compatible (OCI): preencha `OCI_S3_*` no `.env` para gravar uploads públicos no bucket privado da #32 (URLs assinadas). Sem essas variáveis, vale o volume persistente.
+
+Na VM pública, deixe `CADDY_TLS` vazio no `.env` para o Let's Encrypt. Com `SITE_ADDRESS=localhost` o padrão é `tls internal`.
+
+Infra da VM: `infra/oci/README.md`. DNS canônico: issue #35.
+
 ## Parar
 
 ```bash

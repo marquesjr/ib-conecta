@@ -1,0 +1,21 @@
+{
+	email {$ACME_EMAIL:acme@localhost}
+}
+
+{$SITE_ADDRESS} {
+	{$CADDY_TLS:}
+	encode gzip zstd
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+	# Public uploads when using the filesystem backend (Object Storage URLs bypass this).
+	handle /media/* {
+		root * /srv
+		file_server
+	}
+	handle {
+		reverse_proxy web:8000
+	}
+}

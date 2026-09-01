@@ -106,7 +106,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = Path(os.environ.get("MEDIA_ROOT", BASE_DIR / "media"))
 PRIVATE_MEDIA_ROOT = Path(
     os.environ.get("PRIVATE_MEDIA_ROOT", BASE_DIR / "private_media")
 )
