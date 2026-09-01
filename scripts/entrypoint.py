@@ -40,10 +40,21 @@ bootstrap_cms()
     run([sys.executable, "manage.py", "shell", "-c", script])
 
 
+def seed_demo_if_enabled() -> None:
+    flag = os.environ.get("DJANGO_SEED_DEMO", "").lower()
+    if flag not in {"1", "true", "yes", "on"}:
+        return
+    debug = os.environ.get("DJANGO_DEBUG", "").lower() in {"1", "true", "yes", "on"}
+    if not debug:
+        return
+    run([sys.executable, "manage.py", "seed_demo"])
+
+
 def main() -> None:
     run([sys.executable, "manage.py", "migrate", "--noinput"])
     ensure_superuser()
     bootstrap_cms()
+    seed_demo_if_enabled()
     os.execvp(sys.argv[1], sys.argv[1:])
 
 

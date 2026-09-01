@@ -62,6 +62,20 @@ Credenciais iniciais (definidas em `.env`):
 
 Altere a senha após o primeiro acesso.
 
+## Dados de demonstração (local)
+
+O ambiente Docker pode popular notícias, agenda, sermões e a área privada com conteúdo fictício, para revisar o visual com páginas preenchidas. Isso **não** é o conteúdo da igreja.
+
+```bash
+docker compose exec web python manage.py seed_demo
+```
+
+Com `DJANGO_SEED_DEMO=true` (padrão no Compose local), o seed também roda ao subir o ambiente, sem sobrescrever WhatsApp/PIX já configurados.
+
+Contas de preview (senha `demo-ibconecta`): `membro`, `lider`, `comunicacao`, `pastor`, `tesouraria`, `comissao`, `joao`, `maria`, `carla`.
+
+PIX e WhatsApp do seed são fictícios — não envie dinheiro nem mensagens.
+
 ## Persistência do banco
 
 O PostgreSQL usa o volume Docker `postgres_data`. Reiniciar ou recriar o container `web` **não** apaga os dados. Para zerar o banco local:

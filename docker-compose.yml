@@ -23,6 +23,7 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: config.settings.local
       POSTGRES_HOST: db
+      DJANGO_SEED_DEMO: ${DJANGO_SEED_DEMO:-true}
     volumes:
       - .:/app
     depends_on:
