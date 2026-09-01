@@ -2,6 +2,7 @@
 # Nunca commite terraform.tfvars (contém dados sensíveis).
 
 region             = "sa-saopaulo-1"
+oci_config_profile = "ib_conecta"
 tenancy_ocid       = "ocid1.tenancy.oc1..aaaaaaaaxxxxx"
 compartment_ocid   = "ocid1.compartment.oc1..aaaaaaaaxxxxx"
 

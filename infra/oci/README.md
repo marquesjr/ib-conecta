@@ -18,7 +18,7 @@ Relacionado à issue [#32](https://github.com/marquesjr/ib-conecta/issues/32) (�
 
 ## Autenticação
 
-O provider `oracle/oci` lê credenciais do arquivo padrão `~/.oci/config` (profile `DEFAULT`) ou das variáveis de ambiente:
+O provider `oracle/oci` lê credenciais do arquivo padrão `~/.oci/config`. O profile padrão da stack é `ib_conecta` (`oci_config_profile`). Alternativa: variáveis de ambiente:
 
 ```bash
 export OCI_CLI_USER="<user-ocid>"
@@ -58,6 +58,7 @@ Use o IP público na issue [#35 — DNS e domínio canônico](https://github.com
 | Variável | Descrição |
 |----------|-----------|
 | `region` | Região OCI (padrão: `sa-saopaulo-1`) |
+| `oci_config_profile` | Profile em `~/.oci/config` (padrão: `ib_conecta`) |
 | `tenancy_ocid` | OCID do tenancy |
 | `compartment_ocid` | OCID do compartment |
 | `instance_shape` | Shape da VM (padrão: `VM.Standard.A1.Flex`) |
