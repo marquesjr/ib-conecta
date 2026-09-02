@@ -50,8 +50,16 @@ def seed_demo_if_enabled() -> None:
     run([sys.executable, "manage.py", "seed_demo"])
 
 
+def collectstatic_if_enabled() -> None:
+    flag = os.environ.get("DJANGO_COLLECTSTATIC", "").lower()
+    if flag not in {"1", "true", "yes", "on"}:
+        return
+    run([sys.executable, "manage.py", "collectstatic", "--noinput"])
+
+
 def main() -> None:
     run([sys.executable, "manage.py", "migrate", "--noinput"])
+    collectstatic_if_enabled()
     ensure_superuser()
     bootstrap_cms()
     seed_demo_if_enabled()

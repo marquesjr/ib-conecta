@@ -102,5 +102,5 @@ infra/oci/
 
 ## Próximos passos
 
-- [#34 — Stack de produção (Docker Compose + Caddy)](https://github.com/marquesjr/ib-conecta/issues/34): deploy da aplicação na VM provisionada aqui
+- [#34 — Stack de produção (Docker Compose + Caddy)](https://github.com/marquesjr/ib-conecta/issues/34): na VM, `git pull`, copie `.env.prod.example` para `.env.prod`, preencha secrets e rode `docker compose -f docker-compose.prod.yml --env-file .env.prod up --build -d`. Detalhes no README da raiz.
 - [#35 — DNS](https://github.com/marquesjr/ib-conecta/issues/35): apontar `www.ibsantaleopoldina.com.br` para `instance_public_ip`

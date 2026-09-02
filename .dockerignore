@@ -5,7 +5,9 @@ venv
 __pycache__
 *.pyc
 .env
+.env.prod
 media
+private_media
 staticfiles
 *.sqlite3
 .pytest_cache
@@ -14,3 +16,7 @@ htmlcov
 README.md
 docs
 LICENSE
+infra/.terraform
+**/.terraform
+*.tfstate
+.impeccable
