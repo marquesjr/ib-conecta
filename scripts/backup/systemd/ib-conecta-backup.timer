@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily IB Conecta encrypted backup
+
+[Timer]
+OnCalendar=*-*-* 06:00:00
+Persistent=true
+RandomizedDelaySec=10m
+Unit=ib-conecta-backup.service
+
+[Install]
+WantedBy=timers.target

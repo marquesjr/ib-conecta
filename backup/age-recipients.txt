@@ -1,0 +1,4 @@
+# Destinatário age dos backups do IB Conecta.
+# A identidade (AGE-SECRET-KEY) NÃO entra no git. Guarde-a no gerenciador de senhas.
+# Sem essa chave privada os artefatos em S3 não abrem.
+age1xewpt0fmha2gwjxdcn8fj2qnxmhw3820xpwuw3z0luc27kulf39swuzflk

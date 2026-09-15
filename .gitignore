@@ -15,6 +15,7 @@ htmlcov/
 # Django / Wagtail
 .env
 .env.prod
+.env.backup
 *.sqlite3
 media/
 private_media/

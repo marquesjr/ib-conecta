@@ -128,7 +128,7 @@ O entrypoint já roda `migrate`, `collectstatic`, bootstrap do CMS e cria o supe
 - Saúde da aplicação: `https://<domínio>/healthz/` (JSON `{"status":"ok"}`; o Compose também usa essa rota no healthcheck do `web`)
 - Mídia pública: volume Docker `media_data`, servida pelo Caddy em `/media/`
 - Arquivos privados (documentos, partituras): volume `private_media_data` (nunca em S3)
-- Backups: bucket S3 privado da stack Terraform (issue #33); mídia não vai para o S3
+- Backups: bucket S3 privado da stack Terraform; procedimento em `docs/backup.md` (issue #33). Mídia não vai para o S3 em operação normal.
 
 Na VM pública, deixe `CADDY_TLS` vazio no `.env` para o Let's Encrypt. Com `SITE_ADDRESS=localhost` o padrão é `tls internal`.
 
@@ -160,6 +160,14 @@ scripts\deploy-local.bat
 ```
 
 Sobe `docker-compose.yml` + LocalStack (`localhost:4566`), cria `s3://ib-conecta-backups` e deixa o portal em http://localhost:8000/. Terraform de produção continua apontando para `us-east-2` de verdade.
+
+Backup local (identidade em `.scratch/ib-conecta-backup.age.key`):
+
+```bat
+scripts\backup-local.bat
+```
+
+Restauração passo a passo: `docs/backup.md`.
 
 ## Parar
 
