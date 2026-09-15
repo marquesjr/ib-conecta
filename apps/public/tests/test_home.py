@@ -43,6 +43,8 @@ class HomePageTests(TestCase):
         self.assertContains(response, reverse("prayer_request"))
         self.assertContains(response, "Quero conhecer")
         self.assertContains(response, reverse("know_church"))
+        self.assertContains(response, reverse("privacy"))
+        self.assertContains(response, "Privacidade")
 
         # Second click: visit page has address/references and contact.
         visit = self.client.get(reverse("plan_visit"))

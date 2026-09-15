@@ -15,6 +15,8 @@ A chave **privada** age não está no servidor. Sem ela, o artefato não abre �
 
 Criptografia em camadas: age no arquivo + SSE-S3 AES256 no bucket.
 
+Antes do `pg_dump`, o script dispara `discard_retreat_sensitive_data` no container `web` (dados médicos e de menores já vencidos não entram no artefato novo). Para pular: `BACKUP_SKIP_DISCARD=1`. Prazos e responsáveis: `docs/privacidade.md`.
+
 ## Produção (EC2)
 
 Na VM (`/home/ubuntu/ib-conecta`), depois de `git pull`:

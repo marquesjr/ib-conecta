@@ -88,6 +88,9 @@
         {% if church_settings and church_settings.whatsapp_welcome_text %}
           {% whatsapp_welcome church_settings.whatsapp_welcome_text part="note" %}
         {% endif %}
+        <p>
+          <a href="{% url 'privacy' %}">Privacidade</a>
+        </p>
       </footer>
     </div>
   </body>

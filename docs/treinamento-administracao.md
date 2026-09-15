@@ -62,6 +62,8 @@ IB Conecta (raiz)
 └── Ao vivo                 →  /ao-vivo/
 ```
 
+A **Privacidade** (`/privacidade/`) não está nesta árvore: o texto é do código, aparece no rodapé, e **não** deve nascer como página do CMS (não crie um slug `privacidade`).
+
 Regra de ouro: **notícia só nasce debaixo de Notícias**; **evento só debaixo de Agenda**; **sermão só debaixo de Sermões**. A página **Ao vivo** já existe — edite-a; não crie outra.
 
 ## Publicar, revisar e despublicar
@@ -122,6 +124,10 @@ Já existem quatro: **Nossa história**, **Crenças**, **Ministérios**, **Lider
 O texto-semente do sistema **não** é a voz final da igreja. Substitua-o. Em dúvida teológica, o **pastor** revisa antes de publicar.
 
 Não altere o slug (`historia`, `crencas`, `ministerios`, `lideranca`): o menu e os links da congregação dependem deles.
+
+## Privacidade
+
+A política pública (`/privacidade/`) não se edita neste painel. Pedido de oração, Quero conhecer e retiro já pedem consentimento e apontam para ela. Não publique pedido de oração, dado médico ou nome/foto de menor na vitrine. Prazos e o comando de descarte de retiro: `docs/privacidade.md`.
 
 ## Agenda e eventos
 
@@ -197,6 +203,7 @@ Imprima ou copie. Marque **antes** de clicar em **Publicar**.
 | Culto “no ar” fora de hora | URL de live antiga na página **Ao vivo** | Atualizar ou limpar a URL e publicar |
 | Duas páginas “Ao vivo” ou dois índices de notícias | **Adicionar** na raiz em vez de editar | Não publique a duplicata; chame TI para remover |
 | Foto “invisível” no celular leitor de tela | Imagem sem texto alternativo | Editar a imagem e preencher o texto alternativo |
+| Foto de menor ou dado médico na vitrine | Publicou conteúdo que pertence à área da conta / retiro | **Despublicar** na hora; falar com o pastor. A política está em `/privacidade/` |
 
 ## Quem acionar
 

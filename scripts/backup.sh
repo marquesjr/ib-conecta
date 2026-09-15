@@ -23,6 +23,7 @@ Optional:
   BACKUP_S3_REGION          default us-east-2
   AWS_ENDPOINT_URL          LocalStack, e.g. http://localhost:4566
   BACKUP_WORKDIR            scratch directory (deleted on exit)
+  BACKUP_SKIP_DISCARD=1     skip discard_retreat_sensitive_data before the dump
 EOF
   exit 0
 fi
@@ -153,6 +154,11 @@ cleanup() {
 trap cleanup EXIT
 
 echo "Backing up into $WORK"
+
+if [[ "${BACKUP_SKIP_DISCARD:-}" != "1" ]]; then
+  echo "Discarding due retreat sensitive data..."
+  compose exec -T web python manage.py discard_retreat_sensitive_data
+fi
 
 echo "Dumping PostgreSQL..."
 POSTGRES_USER="$(compose exec -T db printenv POSTGRES_USER | tr -d '\r')"

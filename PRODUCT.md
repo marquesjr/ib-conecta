@@ -35,17 +35,17 @@ O produto acolhe quem chega de fora — zona rural, celular, conexão limitada �
 - Conteúdo institucional, notícias, agenda, sermões e ao vivo saem do CMS Wagtail; rascunhos não são públicos até a publicação.
 - Visita: horários, endereço, referências, mapa externo leve, acessibilidade física e transporte/carona para a zona rural — tudo configurável, sem hardcode.
 - Área privada no celular: confirmação/recusa de escala, impressão A4, `.ics`, QR Code de referências de louvor (`/r/<token>/`), WhatsApp apontando para URL que continua exigindo login.
-- Operação local: Django + Wagtail + PostgreSQL via Docker Compose; S3 de backups pode ser emulado com LocalStack (`scripts/deploy-local.bat`). Produção na AWS (`t4g.small` em Ohio, Caddy/HTTPS em `https://www.ibsantaleopoldina.com.br`, S3 só para backups criptografados com age — `docs/backup.md`). Fatias restantes do go-live (monitoramento, LGPD, treinamento) estão no épico #17.
+- Operação local: Django + Wagtail + PostgreSQL via Docker Compose; S3 de backups pode ser emulado com LocalStack (`scripts/deploy-local.bat`). Produção na AWS (`t4g.small` em Ohio, Caddy/HTTPS em `https://www.ibsantaleopoldina.com.br`, S3 só para backups criptografados com age — `docs/backup.md`). Fatias restantes do go-live (acessibilidade WCAG, validação final) estão no épico #17.
 
 ## Capabilities and Constraints
 
 Confirmado no produto:
 
-- Superfícies públicas: home evangelística, Planeje sua visita, pedido de oração, Quero conhecer, contribuições PIX, notícias, agenda com inscrição, sermões, ao vivo.
-- Pedidos de oração e contatos de Quero conhecer ficam na área da conta (pastor/comunicação); o conteúdo do pedido não é publicado.
+- Superfícies públicas: home evangelística, Planeje sua visita, pedido de oração, Quero conhecer, contribuições PIX, notícias, agenda com inscrição, sermões, ao vivo, política de privacidade (`/privacidade/`).
+- Pedidos de oração e contatos de Quero conhecer ficam na área da conta (pastor/comunicação); o conteúdo do pedido não é publicado. Consentimento LGPD nesses fluxos e no retiro aponta para `/privacidade/`.
 - Área privada: biblioteca de documentos por perfil, ministérios e escalas mensais, comissão de eventos, check-in de retiro, coletânea de louvores, playlists semanais.
 - Papéis: membro, líder de ministério, comunicação, pastor, tesouraria, comissão de eventos, administrador. 2FA para administradores. Ações sensíveis geram auditoria sem gravar senhas ou conteúdo pastoral.
-- Retiros: inscrição familiar, dados médicos e de menores com descarte após prazo (`discard_retreat_sensitive_data`).
+- Retiros: inscrição familiar, dados médicos e de menores com descarte após prazo (`discard_retreat_sensitive_data`). Prazos, responsáveis e cookies mínimos: `docs/privacidade.md`.
 - Coletânea: não armazena material sem autorização de uso; referências externas saem impressas como QR para URL interna estável.
 - Idioma da interface: português (`pt-BR`).
 - Nenhum vídeo inicia automaticamente.

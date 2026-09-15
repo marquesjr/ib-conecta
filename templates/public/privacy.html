@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}Privacidade — IB Conecta{% endblock %}
+
+{% block content %}
+  <article class="cms-page">
+    <h1>Política de privacidade</h1>
+    <p class="lede">
+      Como a Igreja Batista em Santa Leopoldina trata os dados que você nos
+      confia no IB Conecta — pedidos de oração, contato, inscrições e cookies mínimos.
+    </p>
+
+    <div class="rich-text">
+      <h2>Quem controla os dados</h2>
+      <p>
+        O controlador é a <strong>Igreja Batista em Santa Leopoldina</strong>,
+        no município de Santa Leopoldina (ES). O portal público vive em
+        <a href="https://www.ibsantaleopoldina.com.br">www.ibsantaleopoldina.com.br</a>.
+      </p>
+      <p>
+        A <strong>administração da igreja</strong> responde pelo tratamento.
+        Pastor e comunicação operam pedidos de oração e o formulário
+        Quero conhecer. A comissão de eventos opera inscrições e retiros.
+        O operador técnico cuida de backups e da infraestrutura.
+      </p>
+      <p>
+        Para exercer seus direitos (acesso, correção, exclusão, revogação do
+        consentimento), fale pelo WhatsApp institucional da igreja
+        {% if whatsapp_url %}
+          (<a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer">abrir conversa</a>)
+        {% endif %}
+        ou com a administração após o culto. Não é um canal de plantão 24 horas.
+      </p>
+
+      <h2>O que coletamos</h2>
+      <p>Só o necessário para cada conversa ou inscrição:</p>
+      <ul>
+        <li>
+          <strong>Pedido de oração:</strong> o texto do pedido; se você não
+          marcar envio anônimo, também nome e, se informar, e-mail e telefone.
+          O conteúdo não é publicado no site.
+        </li>
+        <li>
+          <strong>Quero conhecer:</strong> nome, e-mail ou telefone, e a
+          mensagem opcional, para acolhimento pastoral e evangelístico.
+        </li>
+        <li>
+          <strong>Inscrição em evento:</strong> nome, e-mail e telefone.
+        </li>
+        <li>
+          <strong>Retiro:</strong> além do contato, data de nascimento,
+          responsável legal pelos menores, emergência, restrições
+          alimentares e informações médicas, transporte/embarque, acomodação
+          e só o <em>status</em> do PIX (pago, pendente ou isento). O portal
+          não pede nem guarda dados bancários de terceiros.
+        </li>
+        <li>
+          <strong>Conta autenticada:</strong> usuário, e-mail, papel na igreja
+          e, para administradores, o segundo fator. A trilha de auditoria
+          registra a ação, não a senha nem o texto pastoral.
+        </li>
+      </ul>
+      <p>
+        Sermões e a transmissão usam URL externa (YouTube) incorporada sem
+        autoplay, pelo domínio sem cookies de publicidade
+        (<code>youtube-nocookie.com</code>). O portal não hospeda o vídeo.
+      </p>
+
+      <h2>Consentimento</h2>
+      <p>
+        Pedido de oração identificado, Quero conhecer e inscrição em retiro
+        só são gravados com o seu aceite explícito nesta política (LGPD).
+        Pedido anônimo não usa seus dados de contato: o texto segue só para
+        a equipe pastoral orar com confidencialidade.
+      </p>
+      <p>
+        Membros autenticados usam a área privada na medida do papel que a
+        igreja lhes atribuiu (escalas, documentos, operação de eventos).
+        Isso não substitui o consentimento dos formulários públicos.
+      </p>
+
+      <h2>Proteção de menores</h2>
+      <p>
+        Menor de 18 anos só se inscreve em retiro com <strong>responsável
+        legal</strong> (nome e telefone). O formulário pede isso quando o
+        titular ou algum familiar é menor na data do evento.
+      </p>
+      <p>
+        Dados médicos, restrições alimentares, dados do responsável e a data
+        de nascimento de menores são <strong>descartados após o prazo do
+        retiro</strong> (padrão de
+        {{ default_retreat_retain_days }} dias depois do término, configurável
+        no evento). O primeiro nome pode permanecer no rol operacional da
+        comissão. Não publique foto, nome ou dado de menor nas páginas
+        públicas sem o pastor.
+      </p>
+
+      <h2>Retenção e descarte</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Dado</th>
+            <th>Prazo</th>
+            <th>Como descarta</th>
+            <th>Quem responde</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Pedido de oração</td>
+            <td>Enquanto o acompanhamento estiver aberto; {{ inbox_retention_months }} meses após marcado como concluído</td>
+            <td>Pastor ou comunicação encerram o pedido na área da conta e pedem a exclusão à administração quando o prazo vencer</td>
+            <td>Pastor e comunicação</td>
+          </tr>
+          <tr>
+            <td>Quero conhecer</td>
+            <td>{{ inbox_retention_months }} meses após o contato marcado como concluído</td>
+            <td>O mesmo fluxo da área da conta</td>
+            <td>Pastor e comunicação</td>
+          </tr>
+          <tr>
+            <td>Inscrição em evento (nome, e-mail, telefone)</td>
+            <td>{{ event_registration_retention_days }} dias após o evento</td>
+            <td>Comissão de eventos, com a administração</td>
+            <td>Comissão de eventos</td>
+          </tr>
+          <tr>
+            <td>Dados médicos e de menores no retiro</td>
+            <td>{{ default_retreat_retain_days }} dias após o término (ou o prazo do evento)</td>
+            <td>Comando <code>discard_retreat_sensitive_data</code>, no arranque do portal e antes do backup diário</td>
+            <td>Comissão de eventos e administração</td>
+          </tr>
+          <tr>
+            <td>Conta de membro</td>
+            <td>Enquanto a pessoa permanecer na igreja</td>
+            <td>Administração remove o usuário</td>
+            <td>Administração</td>
+          </tr>
+          <tr>
+            <td>Cópia criptografada de backup</td>
+            <td>30 dias (cópia diária) e 366 dias (cópia mensal) no S3</td>
+            <td>Expiração automática do bucket</td>
+            <td>Operador técnico</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Cópias de backup feitas <em>antes</em> do descarte ainda podem conter
+        o dado até a expiração do artefato. O backup diário dispara o descarte
+        do retiro <em>antes</em> de copiar o banco, para não renovar o prazo
+        de dados já vencidos.
+      </p>
+
+      <h2>Cookies mínimos</h2>
+      <p>
+        O portal usa apenas cookies <strong>essenciais</strong>: o da sessão
+        quando você entra na conta, e o de proteção de formulários (CSRF).
+        Não há cookies de publicidade, analytics ou redes sociais próprios.
+        Por isso não exibimos um banner de cookies: nada além do necessário
+        para o site funcionar com segurança.
+      </p>
+
+      <h2>Seus direitos</h2>
+      <p>
+        Nos termos da Lei 13.709/2018 (LGPD), você pode pedir confirmação do
+        tratamento, acesso, correção, anonimização ou exclusão, informação
+        sobre compartilhamentos e revogação do consentimento. A igreja não
+        vende dados e não compartilha o conteúdo pastoral com terceiros
+        para marketing. Prestadores técnicos (hospedagem AWS, transmissão
+        YouTube) recebem só o indispensável a cada serviço.
+      </p>
+
+      <h2>Segurança</h2>
+      <p>
+        Tráfego público em HTTPS. Senhas não são gravadas em texto. Ações
+        sensíveis na conta geram auditoria sem o pedido de oração. Arquivos
+        privados não ficam em <code>/media/</code>. Backups saem cifrados
+        para um bucket privado; a chave de abertura não fica no servidor.
+      </p>
+    </div>
+  </article>
+{% endblock %}
+
+{% block share %}{% endblock %}

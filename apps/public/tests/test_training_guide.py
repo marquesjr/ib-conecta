@@ -24,6 +24,7 @@ REQUIRED_HEADINGS = (
     "Checklist de publicação",
     "Erros comuns",
     "Quem acionar",
+    "Privacidade",
 )
 
 REQUIRED_PHRASES = (
@@ -44,6 +45,7 @@ REQUIRED_PHRASES = (
     "/agenda/",
     "/sermoes/",
     "/ao-vivo/",
+    "/privacidade/",
 )
 
 
