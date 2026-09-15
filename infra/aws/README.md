@@ -34,7 +34,7 @@ terraform output backup_bucket_name
 terraform output ssh_command
 ```
 
-O IP público vai para a issue [#35](https://github.com/marquesjr/ib-conecta/issues/35).
+O IP público vai para os registros A no Registro.br (procedimento no README da raiz, seção DNS). Elastic IP atual de produção: veja `terraform output instance_public_ip`.
 
 ## Depois do apply
 
