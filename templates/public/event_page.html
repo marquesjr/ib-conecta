@@ -33,8 +33,20 @@
             informações essenciais. O pagamento é via PIX da igreja — não informe
             dados bancários neste formulário. A comissão registra só o status do PIX.
           </p>
+          <p class="muted">
+            <strong>Proteção de menores:</strong> quem tiver menos de 18 anos na data
+            do retiro só se inscreve com responsável legal e telefone. Dados médicos
+            e a data de nascimento de menores são descartados
+            {{ page.sensitive_retain_days }} dias após o término.
+            Detalhes na
+            <a href="{% url 'privacy' %}">política de privacidade</a>.
+          </p>
         {% else %}
           <h2>Inscrição</h2>
+          <p class="muted">
+            Nome, e-mail e telefone ficam com a igreja para organizar este evento.
+            Veja a <a href="{% url 'privacy' %}">política de privacidade</a>.
+          </p>
         {% endif %}
         <form method="post" action="{{ page.url }}inscrever/">
           {% csrf_token %}

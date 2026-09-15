@@ -90,6 +90,8 @@ class RetreatPublicAgendaTests(TestCase):
         self.assertNotContains(detail, 'name="bank_account"')
         self.assertNotContains(detail, 'name="agencia"')
         self.assertContains(detail, "PIX")
+        self.assertContains(detail, "Proteção de menores")
+        self.assertContains(detail, "/privacidade/")
 
         response = self.client.post(
             "/agenda/retiro-familias/inscrever/",

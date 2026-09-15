@@ -41,6 +41,7 @@ class EventRegistrationPublicTests(TestCase):
         self.assertContains(detail, "Inscrição")
         self.assertContains(detail, 'name="name"')
         self.assertContains(detail, 'name="email"')
+        self.assertContains(detail, "/privacidade/")
 
         response = self.client.post(
             "/agenda/retiro-jovens/inscrever/",

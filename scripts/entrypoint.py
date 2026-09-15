@@ -40,6 +40,10 @@ bootstrap_cms()
     run([sys.executable, "manage.py", "shell", "-c", script])
 
 
+def discard_due_sensitive_data() -> None:
+    run([sys.executable, "manage.py", "discard_retreat_sensitive_data"])
+
+
 def seed_demo_if_enabled() -> None:
     flag = os.environ.get("DJANGO_SEED_DEMO", "").lower()
     if flag not in {"1", "true", "yes", "on"}:
@@ -62,6 +66,7 @@ def main() -> None:
     collectstatic_if_enabled()
     ensure_superuser()
     bootstrap_cms()
+    discard_due_sensitive_data()
     seed_demo_if_enabled()
     os.execvp(sys.argv[1], sys.argv[1:])
 

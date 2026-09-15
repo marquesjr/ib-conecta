@@ -674,7 +674,8 @@ a.sheet-action.plate--graphite:hover {
   margin: 0.5rem 0 0;
 }
 
-.cms-page .rich-text {
+.cms-page .rich-text,
+.cms-page table {
   max-width: var(--measure);
 }
 

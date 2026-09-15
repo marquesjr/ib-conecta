@@ -31,6 +31,7 @@ class KnowChurchPublicTests(TestCase):
         self.assertEqual(page.status_code, 200)
         self.assertContains(page, "Quero conhecer a igreja")
         self.assertContains(page, "LGPD")
+        self.assertContains(page, reverse("privacy"))
         self.assertContains(page, "wa.me/5527999999999")
         self.assertContains(page, "WhatsApp")
 

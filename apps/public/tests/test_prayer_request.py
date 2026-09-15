@@ -33,6 +33,7 @@ class PrayerRequestPublicTests(TestCase):
         self.assertContains(page, "anônima")
         self.assertContains(page, "wa.me/5527999999999")
         self.assertContains(page, "WhatsApp")
+        self.assertContains(page, reverse("privacy"))
 
         response = self.client.post(
             reverse("prayer_request"),

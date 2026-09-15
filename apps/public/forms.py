@@ -1,5 +1,6 @@
 from django import forms
 
+from apps.public.privacy import consent_label
 from apps.public.retreats import event_reference_date, is_minor
 from apps.public.spam import HONEYPOT_FIELD
 
@@ -36,7 +37,7 @@ class PrayerRequestForm(HoneypotForm):
     )
     lgpd_consent = forms.BooleanField(
         required=False,
-        label="Autorizo o uso dos meus dados para contato pastoral (LGPD).",
+        label=consent_label("Autorizo o uso dos meus dados para contato pastoral."),
     )
 
     def clean(self):
@@ -79,7 +80,7 @@ class KnowChurchForm(HoneypotForm):
         max_length=2000,
     )
     lgpd_consent = forms.BooleanField(
-        label="Autorizo o uso dos meus dados para contato da igreja (LGPD).",
+        label=consent_label("Autorizo o uso dos meus dados para contato da igreja."),
     )
 
     def clean(self):
@@ -184,7 +185,9 @@ class RetreatRegistrationForm(forms.Form):
         required=False,
     )
     lgpd_consent = forms.BooleanField(
-        label="Autorizo o uso dos dados da inscrição (incluindo menores) só para este retiro (LGPD).",
+        label=consent_label(
+            "Autorizo o uso dos dados da inscrição (incluindo menores) só para este retiro."
+        ),
     )
 
     def __init__(self, *args, event=None, **kwargs):

@@ -14,6 +14,11 @@ from apps.public.models import (
     PrayerRequest,
     SermonPage,
 )
+from apps.public.privacy import (
+    DEFAULT_RETREAT_SENSITIVE_RETAIN_DAYS,
+    EVENT_REGISTRATION_RETENTION_DAYS,
+    INBOX_RETENTION_MONTHS,
+)
 from apps.public.spam import RATE_LIMIT_MESSAGE, honeypot_triggered, is_rate_limited
 from apps.public.whatsapp import build_whatsapp_url
 
@@ -79,6 +84,18 @@ def plan_visit(request):
 
 def contribute(request):
     return render(request, "public/contribute.html")
+
+
+def privacy(request):
+    return render(
+        request,
+        "public/privacy.html",
+        {
+            "default_retreat_retain_days": DEFAULT_RETREAT_SENSITIVE_RETAIN_DAYS,
+            "inbox_retention_months": INBOX_RETENTION_MONTHS,
+            "event_registration_retention_days": EVENT_REGISTRATION_RETENTION_DAYS,
+        },
+    )
 
 
 @require_http_methods(["GET", "POST"])
