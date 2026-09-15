@@ -132,7 +132,24 @@ O entrypoint já roda `migrate`, `collectstatic`, bootstrap do CMS e cria o supe
 
 Na VM pública, deixe `CADDY_TLS` vazio no `.env` para o Let's Encrypt. Com `SITE_ADDRESS=localhost` o padrão é `tls internal`.
 
-Infra da VM: `infra/aws/README.md`. DNS canônico: issue #35.
+Infra da VM: `infra/aws/README.md`.
+
+## DNS (Registro.br)
+
+Domínio canônico: `https://www.ibsantaleopoldina.com.br`.
+
+No painel do Registro.br use **Configurar zona DNS** (modo avançado). Não altere os servidores DNS — o domínio permanece nos nameservers do Registro.br.
+
+Dois registros **A** para o Elastic IP (`terraform output instance_public_ip` em `infra/aws`):
+
+| Nome | Dados |
+|---|---|
+| `ibsantaleopoldina.com.br` | IPv4 do Elastic IP |
+| `www.ibsantaleopoldina.com.br` | o mesmo IPv4 |
+
+O Caddyfile redireciona o apex para `https://www.ibsantaleopoldina.com.br` (301). Let's Encrypt exige `SITE_ADDRESS=www.ibsantaleopoldina.com.br` e `CADDY_TLS` vazio no `.env.prod`.
+
+Para trocar o IP: atualize os dois A, espere o DNS e recrie o Caddy se o certificado falhar.
 
 ## Local (atalho Windows + LocalStack)
 

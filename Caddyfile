@@ -2,6 +2,11 @@
 	email {$ACME_EMAIL:acme@localhost}
 }
 
+ibsantaleopoldina.com.br {
+	{$CADDY_TLS:}
+	redir https://www.ibsantaleopoldina.com.br{uri} permanent
+}
+
 {$SITE_ADDRESS} {
 	{$CADDY_TLS:}
 	encode gzip zstd
