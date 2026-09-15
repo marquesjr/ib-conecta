@@ -1,0 +1,123 @@
+# Monitoramento externo do portal (issue #36).
+# O cron só dispara depois que este arquivo está em `master`.
+name: Monitoramento do portal
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  pull_request:
+    paths:
+      - ".github/workflows/uptime.yml"
+      - "scripts/check-uptime.py"
+      - "docs/ops/uptime.md"
+  workflow_dispatch:
+    inputs:
+      simulate_failure:
+        description: "Simular queda e disparar um alerta de teste"
+        type: boolean
+        default: false
+
+concurrency:
+  group: portal-uptime
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checar https://www.ibsantaleopoldina.com.br
+        id: check
+        continue-on-error: true
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.simulate_failure }}" = "true" ]; then
+            echo "::error::Simulação de queda solicitada no workflow_dispatch"
+            exit 1
+          fi
+          python scripts/check-uptime.py
+
+      - name: Disparar alerta de teste
+        if: ${{ steps.check.outcome != 'success' && inputs.simulate_failure }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          gh label create "uptime-incident" --color "B60205" --description "Queda detectada pelo monitoramento externo" || true
+          body=$(cat <<EOF
+          Teste do monitoramento externo (issue #36). Não é uma queda real.
+
+          - Workflow: ${RUN_URL}
+          - Runbook: \`docs/ops/uptime.md\`
+          EOF
+          )
+          url=$(gh issue create \
+            --title "Teste de alerta: monitoramento do portal" \
+            --label "uptime-incident" \
+            --body "$body")
+          number="${url##*/}"
+          gh issue close "$number" --comment "Teste concluído. Quem observa Issues neste repositório deve ter recebido a notificação."
+
+      - name: Abrir ou atualizar incidente
+        if: ${{ steps.check.outcome != 'success' && inputs.simulate_failure != true }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          gh label create "uptime-incident" --color "B60205" --description "Queda detectada pelo monitoramento externo" || true
+          existing=$(gh issue list \
+            --label "uptime-incident" \
+            --state open \
+            --json number,title \
+            --jq '.[] | select(.title == "Incidente: portal IB Conecta fora do ar") | .number' \
+            | head -n1)
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "Continua indisponível. Checagem: ${RUN_URL}"
+            exit 0
+          fi
+          body=$(cat <<EOF
+          O monitoramento externo (GitHub Actions, a cada 5 minutos) não conseguiu obter resposta saudável de \`https://www.ibsantaleopoldina.com.br\`.
+
+          - Checagem: ${RUN_URL}
+          - O que fazer: \`docs/ops/uptime.md\`
+          EOF
+          )
+          gh issue create \
+            --title "Incidente: portal IB Conecta fora do ar" \
+            --label "uptime-incident" \
+            --body "$body"
+
+      - name: Encerrar incidente
+        if: ${{ steps.check.outcome == 'success' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          numbers=$(gh issue list \
+            --label "uptime-incident" \
+            --state open \
+            --json number,title \
+            --jq '.[] | select(.title == "Incidente: portal IB Conecta fora do ar") | .number')
+          if [ -z "$numbers" ]; then
+            exit 0
+          fi
+          for number in $numbers; do
+            gh issue close "$number" --comment "Portal voltou a responder. Checagem: ${RUN_URL}"
+          done
+
+      - name: Falhar a job em queda real
+        if: ${{ steps.check.outcome != 'success' && inputs.simulate_failure != true }}
+        run: |
+          echo "Portal indisponível; alerta registrado."
+          exit 1
