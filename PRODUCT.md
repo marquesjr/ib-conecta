@@ -35,7 +35,7 @@ O produto acolhe quem chega de fora — zona rural, celular, conexão limitada �
 - Conteúdo institucional, notícias, agenda, sermões e ao vivo saem do CMS Wagtail; rascunhos não são públicos até a publicação.
 - Visita: horários, endereço, referências, mapa externo leve, acessibilidade física e transporte/carona para a zona rural — tudo configurável, sem hardcode.
 - Área privada no celular: confirmação/recusa de escala, impressão A4, `.ics`, QR Code de referências de louvor (`/r/<token>/`), WhatsApp apontando para URL que continua exigindo login.
-- Operação local: Django + Wagtail + PostgreSQL via Docker Compose; S3 de backups pode ser emulado com LocalStack (`scripts/deploy-local.bat`). Produção na AWS (`t4g.small` em Ohio, Caddy/HTTPS em `https://www.ibsantaleopoldina.com.br`, S3 só para backups). Fatias restantes do go-live (backup, monitoramento, LGPD, treinamento) estão no épico #17.
+- Operação local: Django + Wagtail + PostgreSQL via Docker Compose; S3 de backups pode ser emulado com LocalStack (`scripts/deploy-local.bat`). Produção na AWS (`t4g.small` em Ohio, Caddy/HTTPS em `https://www.ibsantaleopoldina.com.br`, S3 só para backups criptografados com age — `docs/backup.md`). Fatias restantes do go-live (monitoramento, LGPD, treinamento) estão no épico #17.
 
 ## Capabilities and Constraints
 

@@ -72,4 +72,6 @@ Esvazie o bucket de backups antes se o destroy falhar em objetos versionados.
 
 ## LocalStack
 
-S3 local (não a VPC/EC2): na raiz do repo, `scripts\deploy-local.bat`. Ver README da raiz.
+S3 local (não a VPC/EC2): na raiz do repo, `scripts\deploy-local.bat`. Backup/restore: `docs/backup.md`.
+
+Lifecycle do bucket: prefixo `daily/` expira em 30 dias; `monthly/` em 366 dias.

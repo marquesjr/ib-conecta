@@ -23,6 +23,57 @@ resource "aws_s3_bucket_versioning" "backups" {
   }
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "backups" {
+  bucket = aws_s3_bucket.backups.id
+
+  depends_on = [aws_s3_bucket_versioning.backups]
+
+  rule {
+    id     = "expire-daily"
+    status = "Enabled"
+
+    filter {
+      prefix = "daily/"
+    }
+
+    expiration {
+      days = 30
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 7
+    }
+  }
+
+  rule {
+    id     = "expire-monthly"
+    status = "Enabled"
+
+    filter {
+      prefix = "monthly/"
+    }
+
+    expiration {
+      days = 366
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 30
+    }
+  }
+
+  rule {
+    id     = "abort-incomplete-uploads"
+    status = "Enabled"
+
+    filter {}
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+  }
+}
+
 resource "aws_s3_bucket_server_side_encryption_configuration" "backups" {
   bucket = aws_s3_bucket.backups.id
 

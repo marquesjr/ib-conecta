@@ -1,0 +1,18 @@
+[Unit]
+Description=IB Conecta encrypted backup to S3
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/ib-conecta
+EnvironmentFile=-/home/ubuntu/ib-conecta/.env.backup
+ExecStart=/home/ubuntu/ib-conecta/scripts/backup.sh
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+
+[Install]
+WantedBy=multi-user.target
