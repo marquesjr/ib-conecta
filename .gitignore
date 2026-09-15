@@ -35,7 +35,7 @@ db.sqlite3
 !.impeccable/mocks/comp-arquivo-b-folha.png.json
 .impeccable/review/
 
-# Terraform (state local; lock file versionado em infra/oci/)
+# Terraform (state local; lock file versionado em infra/aws/)
 **/.terraform/
 *.tfstate
 *.tfstate.*

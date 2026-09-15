@@ -121,18 +121,28 @@ cp .env.prod.example .env.prod
 docker compose -f docker-compose.prod.yml --env-file .env.prod up --build
 ```
 
-Na VM OCI (Ampere A1, ARM), depois de `git pull`, o mesmo par de comandos — com `SITE_ADDRESS` público e `CADDY_TLS` vazio (Let's Encrypt). Suba em background com `-d`.
+Na VM AWS (`t4g.small`, ARM, Ohio), depois de `git pull`, o mesmo par de comandos — com `SITE_ADDRESS` público, `WEB_CONCURRENCY=1` e `CADDY_TLS` vazio (Let's Encrypt). Suba em background com `-d`.
 
 O entrypoint já roda `migrate`, `collectstatic`, bootstrap do CMS e cria o superusuário se `DJANGO_SUPERUSER_*` estiver definido.
 
 - Saúde da aplicação: `https://<domínio>/healthz/` (JSON `{"status":"ok"}`; o Compose também usa essa rota no healthcheck do `web`)
 - Mídia pública: volume Docker `media_data`, servida pelo Caddy em `/media/`
-- Arquivos privados (documentos, partituras): volume `private_media_data` (nunca em Object Storage público)
-- Object Storage S3-compatible (OCI): preencha `OCI_S3_*` no `.env` para gravar uploads públicos no bucket privado da #32 (URLs assinadas). Sem essas variáveis, vale o volume persistente.
+- Arquivos privados (documentos, partituras): volume `private_media_data` (nunca em S3)
+- Backups: bucket S3 privado da stack Terraform (issue #33); mídia não vai para o S3
 
 Na VM pública, deixe `CADDY_TLS` vazio no `.env` para o Let's Encrypt. Com `SITE_ADDRESS=localhost` o padrão é `tls internal`.
 
-Infra da VM: `infra/oci/README.md`. DNS canônico: issue #35.
+Infra da VM: `infra/aws/README.md`. DNS canônico: issue #35.
+
+## Local (atalho Windows + LocalStack)
+
+O Compose local do Django não fala com a AWS. Para emular o **S3 de backups** no notebook:
+
+```bat
+scripts\deploy-local.bat
+```
+
+Sobe `docker-compose.yml` + LocalStack (`localhost:4566`), cria `s3://ib-conecta-backups` e deixa o portal em http://localhost:8000/. Terraform de produção continua apontando para `us-east-2` de verdade.
 
 ## Parar
 

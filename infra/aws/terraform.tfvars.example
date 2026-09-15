@@ -1,0 +1,27 @@
+# Copie para terraform.tfvars e preencha. Não commite terraform.tfvars.
+
+aws_profile = "default"
+region      = "us-east-2"
+
+project_name = "ib-conecta"
+environment  = "prod"
+
+instance_type         = "t4g.small"
+boot_volume_size_gbs  = 30
+
+# Cole a chave pública OpenSSH (uma linha)
+ssh_public_key = "ssh-ed25519 AAAA... usuario@host"
+
+# Restrinja SSH ao seu IP — não use 0.0.0.0/0
+ssh_allowed_cidrs = [
+  "203.0.113.10/32",
+]
+
+# E-mail do alerta de 80% do teto de US$ 20/mês
+budget_alert_email = "voce@example.com"
+
+# enable_budget = false
+
+tags = {
+  owner = "igreja-batista-santa-leopoldina"
+}
