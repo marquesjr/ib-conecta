@@ -79,6 +79,7 @@ def account_home(request: HttpRequest) -> HttpResponse:
     can_access_event_operations = user_has_permission(
         request.user, Permission.MANAGE_EVENT_OPERATIONS
     ) or user_has_permission(request.user, Permission.MANAGE_FINANCES)
+    can_manage_content = user_has_permission(request.user, Permission.MANAGE_CONTENT)
     return render(
         request,
         "accounts/account_home.html",
@@ -88,6 +89,7 @@ def account_home(request: HttpRequest) -> HttpResponse:
             "can_manage_event_registrations": can_manage_event_registrations,
             "can_manage_prayer_requests": can_manage_prayer_requests,
             "can_access_event_operations": can_access_event_operations,
+            "can_manage_content": can_manage_content,
         },
     )
 

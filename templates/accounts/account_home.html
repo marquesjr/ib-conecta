@@ -11,6 +11,9 @@
       <p><a href="{% url 'private_area:home' %}">Área privada</a></p>
       <p><a href="{% url 'private_area:document_library' %}">Biblioteca de documentos</a></p>
       <p><a href="{% url 'private_area:ministry_list' %}">Ministérios e escalas</a></p>
+      {% if can_manage_content %}
+        <p><a href="{% url 'wagtailadmin_home' %}">Publicar conteúdo (CMS)</a></p>
+      {% endif %}
       {% if can_access_event_operations %}
         <p><a href="{% url 'private_area:event_calendar' %}">Comissão de eventos</a></p>
       {% endif %}

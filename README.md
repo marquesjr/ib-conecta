@@ -52,6 +52,8 @@ Em seguida:
 - Playlists semanais do louvor: http://localhost:8000/area-privada/playlists/
 - Admin Wagtail: http://localhost:8000/admin/
 
+Roteiro de treinamento da administração (login, notícias, páginas institucionais, agenda, sermões, ao vivo, publicar/revisar/despublicar): [`docs/treinamento-administracao.md`](docs/treinamento-administracao.md).
+
 No admin Wagtail, em **Configurações**, edite WhatsApp, PIX, redes sociais, horários, endereço e o próximo culto (sem hardcode no código). Páginas institucionais (história, crenças, ministérios, liderança), notícias, eventos da agenda, sermões e a página ao vivo são criadas/publicadas pelo CMS; rascunhos não ficam públicos até a publicação. Sermões e a transmissão usam URL externa (YouTube) incorporada sem autoplay — o portal não hospeda o vídeo. Perfis com permissão de conteúdo (Comunicação, Pastor, Administrador) entram no grupo **Editores de conteúdo** e acessam o admin. Comissão de eventos e comunicação gerenciam inscritos pela área da conta. Pastor e comunicação acompanham pedidos de oração e contatos de **Quero conhecer a igreja** na área da conta, sem expor o conteúdo no site público. A página de contribuições mostra a chave PIX configurada pela administração; o portal não processa cartão nem armazena dados bancários de terceiros.
 
 

@@ -37,6 +37,7 @@ class AuthFlowTests(TestCase):
         follow = self.client.get(reverse("accounts:account_home"))
         self.assertEqual(follow.status_code, 200)
         self.assertContains(follow, "membro1")
+        self.assertNotContains(follow, "Publicar conteúdo (CMS)")
 
         logout_response = self.client.post(reverse("accounts:logout"))
         self.assertEqual(logout_response.status_code, 302)
