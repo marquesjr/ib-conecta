@@ -45,6 +45,26 @@ class AgendaPublicTests(TestCase):
         self.assertContains(detail, "Venha adorar conosco.")
         self.assertContains(detail, 'name="viewport"')
 
+    def test_past_event_is_hidden_from_agenda_index_but_detail_stays_live(self):
+        event = EventPage(
+            title="Culto da semana passada",
+            slug="culto-passado",
+            starts_at=timezone.now() - timedelta(days=2),
+            location="Templo — Santa Leopoldina",
+            body="<p>Já aconteceu.</p>",
+            requires_registration=False,
+        )
+        self.index.add_child(instance=event)
+        event.save_revision().publish()
+
+        agenda = self.client.get("/agenda/")
+        self.assertEqual(agenda.status_code, 200)
+        self.assertNotContains(agenda, "Culto da semana passada")
+
+        detail = self.client.get("/agenda/culto-passado/")
+        self.assertEqual(detail.status_code, 200)
+        self.assertContains(detail, "Culto da semana passada")
+
     def test_draft_event_is_hidden_from_agenda(self):
         event = EventPage(
             title="Ensaio interno",
