@@ -58,6 +58,7 @@ Depois de `terraform apply` nesta pasta, anote também:
 
 ```bash
 terraform output github_actions_deploy_role_arn
+terraform output github_oidc_sub_master
 ```
 
 ## Variáveis principais
@@ -69,6 +70,7 @@ terraform output github_actions_deploy_role_arn
 | `instance_type` | Padrão `t4g.small` |
 | `ssh_public_key` | Chave pública OpenSSH |
 | `github_repository` | Repo do OIDC de deploy (padrão `marquesjr/ib-conecta`) |
+| `github_oidc_sub_prefix` | Prefixo imutável do claim `sub` (padrão `repo:marquesjr@2216233/ib-conecta@1314311915`) |
 | `ssh_allowed_cidrs` | CIDRs da porta 22 |
 | `budget_alert_email` | Destino do alerta de 80% de US$ 20 |
 | `enable_budget` | `false` se o IAM não tiver `budgets:*` |

@@ -47,3 +47,8 @@ output "github_oidc_provider_arn" {
   description = "Provider OIDC do GitHub Actions nesta conta."
   value       = aws_iam_openid_connect_provider.github.arn
 }
+
+output "github_oidc_sub_master" {
+  description = "Claim sub que a trust policy da role de deploy aceita (push e workflow_dispatch em master)."
+  value       = local.github_oidc_sub_master
+}

@@ -50,8 +50,15 @@ from pathlib import Path
 
 workflow = Path(".github/workflows/deploy.yml").read_text()
 assert "id-token: write" in workflow
+assert "audience: sts.amazonaws.com" in workflow
 assert "scripts/deploy-prod-ssm.sh" in workflow
 assert "scripts/test-deploy-scripts.sh" in workflow
+tf = Path("infra/aws/deploy.tf").read_text()
+assert "repo:marquesjr@2216233/ib-conecta@1314311915" in Path("infra/aws/variables.tf").read_text()
+assert "local.github_oidc_sub_master" in tf
+assert "token.actions.githubusercontent.com:aud" in tf
+assert "sts.amazonaws.com" in tf
+print("oidc assertions ok")
 
 install = Path("scripts/install-ssm-agent.sh").read_text()
 assert "snap.amazon-ssm-agent.amazon-ssm-agent.service" in install
