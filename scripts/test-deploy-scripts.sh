@@ -45,6 +45,22 @@ if [[ "$status" -eq 0 ]]; then
 fi
 printf '%s\n' "$out" | grep -qi 'inválido\|invalido'
 
-python3 -c "import pathlib; t=pathlib.Path('.github/workflows/deploy.yml').read_text(); assert 'id-token: write' in t; assert 'scripts/deploy-prod-ssm.sh' in t; assert 'scripts/test-deploy-scripts.sh' in t"
+python3 - <<'PY'
+from pathlib import Path
+
+workflow = Path(".github/workflows/deploy.yml").read_text()
+assert "id-token: write" in workflow
+assert "scripts/deploy-prod-ssm.sh" in workflow
+assert "scripts/test-deploy-scripts.sh" in workflow
+
+install = Path("scripts/install-ssm-agent.sh").read_text()
+assert "snap.amazon-ssm-agent.amazon-ssm-agent.service" in install
+assert "pulando o pacote .deb" in install
+assert "snap list amazon-ssm-agent" in install
+docs = Path("docs/ops/deploy.md").read_text()
+assert "snap.amazon-ssm-agent.amazon-ssm-agent" in docs
+assert "pula o .deb" in docs
+print("snap-unit assertions ok")
+PY
 
 echo "OK test-deploy-scripts"

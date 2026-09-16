@@ -40,7 +40,11 @@ Se o apply imprimir outro ARN, grave em GitHub → Settings → Secrets and vari
 
 ### 2. Agente SSM na VM (SSH uma vez)
 
-O `user_data` novo instala o agente em instâncias futuras. A VM atual ignora mudança de `user_data`, então:
+A VM de produção **já tem** o agente pelo snap (`amazon-ssm-agent` classic). A unit systemd **não** é `amazon-ssm-agent` — essa não existe — e sim `snap.amazon-ssm-agent.amazon-ssm-agent`. Instalar o `.deb` em cima falha: o preinst do dpkg recusa porque o snap é o dono.
+
+`scripts/install-ssm-agent.sh` detecta o snap, **pula o .deb**, faz `enable`/`start` da unit do snap e sai 0.
+
+O `user_data` novo ainda instala o `.deb` em instâncias futuras sem snap. A VM atual ignora mudança de `user_data`, então:
 
 ```bash
 ssh -i ~/.ssh/id_ed25519_ib_conecta ubuntu@52.14.75.54
@@ -49,7 +53,9 @@ git pull origin master
 sudo scripts/install-ssm-agent.sh
 ```
 
-Se o `git pull` ainda não tiver este commit, baixe o instalador do `master` depois do merge:
+O script deve imprimir `OK snap.amazon-ssm-agent.amazon-ssm-agent.service`. `systemctl status amazon-ssm-agent` continuar “unit could not be found” é esperado.
+
+Se o `git pull` ainda não tiver este commit, baixe o instalador do `master` depois do merge (ou desta branch, enquanto o PR não mergeou):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/marquesjr/ib-conecta/master/scripts/install-ssm-agent.sh | sudo bash
@@ -58,7 +64,10 @@ curl -fsSL https://raw.githubusercontent.com/marquesjr/ib-conecta/master/scripts
 Reinicie o agente se o Terraform/IAM tiver sido aplicado **depois** da instalação:
 
 ```bash
-sudo systemctl restart amazon-ssm-agent
+# VM atual (snap):
+sudo systemctl restart snap.amazon-ssm-agent.amazon-ssm-agent
+# Instância nova com o pacote .deb:
+# sudo systemctl restart amazon-ssm-agent
 ```
 
 Do laptop (profile `default`, região `us-east-2`):
