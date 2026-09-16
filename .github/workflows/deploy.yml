@@ -1,0 +1,60 @@
+# Deploy produção (issue #17, ADR 0012).
+# Push em master atualiza a EC2 via SSM; não abre SSH e não usa runner na VM.
+name: Deploy produção
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    paths:
+      - ".github/workflows/deploy.yml"
+      - "scripts/deploy-prod.sh"
+      - "scripts/deploy-prod-ssm.sh"
+      - "scripts/install-ssm-agent.sh"
+      - "scripts/test-deploy-scripts.sh"
+      - "docs/ops/deploy.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sintaxe e guardas
+        run: bash scripts/test-deploy-scripts.sh
+
+  deploy:
+    needs: verify
+    if: github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    concurrency:
+      group: production-deploy
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AWS_REGION: us-east-2
+      AWS_DEPLOY_ROLE_ARN: ${{ vars.AWS_DEPLOY_ROLE_ARN || 'arn:aws:iam::354354997468:role/ib-conecta-prod-github-deploy' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assumir role de deploy (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Publicar na EC2 via SSM
+        env:
+          DEPLOY_SHA: ${{ github.sha }}
+        run: bash scripts/deploy-prod-ssm.sh "$DEPLOY_SHA"
+
+      - name: Checar o portal público
+        run: python scripts/check-uptime.py

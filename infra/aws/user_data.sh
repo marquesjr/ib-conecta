@@ -22,3 +22,11 @@ curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "$tmp/
 unzip -q "$tmp/awscliv2.zip" -d "$tmp"
 "$tmp/aws/install" -i /usr/local/aws-cli -b /usr/local/bin
 rm -rf "$tmp"
+
+# SSM Agent: GitHub Actions publica sem SSH inbound (docs/ops/deploy.md).
+# Instâncias já existentes ignoram mudanças de user_data; nelas rode scripts/install-ssm-agent.sh.
+tmp_ssm="$(mktemp -d)"
+curl -fsSL "https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_arm64/amazon-ssm-agent.deb" -o "$tmp_ssm/amazon-ssm-agent.deb"
+dpkg -i "$tmp_ssm/amazon-ssm-agent.deb"
+rm -rf "$tmp_ssm"
+systemctl enable --now amazon-ssm-agent

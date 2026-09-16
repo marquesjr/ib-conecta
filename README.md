@@ -124,7 +124,9 @@ cp .env.prod.example .env.prod
 docker compose -f docker-compose.prod.yml --env-file .env.prod up --build
 ```
 
-Na VM AWS (`t4g.small`, ARM, Ohio), depois de `git pull`, o mesmo par de comandos — com `SITE_ADDRESS` público, `WEB_CONCURRENCY=1` e `CADDY_TLS` vazio (Let's Encrypt). Suba em background com `-d`.
+Na VM AWS (`t4g.small`, ARM, Ohio), o mesmo par de comandos — com `SITE_ADDRESS` público, `WEB_CONCURRENCY=1` e `CADDY_TLS` vazio (Let's Encrypt). Suba em background com `-d`.
+
+Atualização: **push em `master` dispara o deploy** (GitHub Actions → SSM → o Compose acima). Passos únicos (IAM/OIDC + agente SSM na VM) e o fallback SSH: [`docs/ops/deploy.md`](docs/ops/deploy.md). Sem o bootstrap único, merge em `master` **não** atualiza o site.
 
 O entrypoint já roda `migrate`, `collectstatic`, bootstrap do CMS, descarte de dados sensíveis de retiro vencidos e cria o superusuário se `DJANGO_SUPERUSER_*` estiver definido.
 

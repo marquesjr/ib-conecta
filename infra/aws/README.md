@@ -48,7 +48,17 @@ cp .env.prod.example .env.prod
 docker compose -f docker-compose.prod.yml --env-file .env.prod up --build -d
 ```
 
-O `user_data` já instala Docker Engine + plugin Compose na primeira inicialização (pode levar alguns minutos).
+O `user_data` já instala Docker Engine + plugin Compose e o Amazon SSM Agent na primeira inicialização (pode levar alguns minutos). Instâncias criadas antes desse change precisam de `sudo scripts/install-ssm-agent.sh` uma vez.
+
+## Deploy contínuo (GitHub Actions)
+
+Push em `master` publica a VM via SSM (sem abrir SSH). Runbook: [`docs/ops/deploy.md`](../../docs/ops/deploy.md). ADR 0012.
+
+Depois de `terraform apply` nesta pasta, anote também:
+
+```bash
+terraform output github_actions_deploy_role_arn
+```
 
 ## Variáveis principais
 
@@ -58,6 +68,7 @@ O `user_data` já instala Docker Engine + plugin Compose na primeira inicializa�
 | `aws_profile` | Profile AWS CLI (padrão `default`) |
 | `instance_type` | Padrão `t4g.small` |
 | `ssh_public_key` | Chave pública OpenSSH |
+| `github_repository` | Repo do OIDC de deploy (padrão `marquesjr/ib-conecta`) |
 | `ssh_allowed_cidrs` | CIDRs da porta 22 |
 | `budget_alert_email` | Destino do alerta de 80% de US$ 20 |
 | `enable_budget` | `false` se o IAM não tiver `budgets:*` |

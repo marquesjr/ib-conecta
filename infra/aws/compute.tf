@@ -12,7 +12,7 @@ resource "aws_instance" "app" {
   iam_instance_profile        = aws_iam_instance_profile.app.name
   associate_public_ip_address = true
   user_data                   = file("${path.module}/user_data.sh")
-  depends_on                  = [aws_iam_role_policy.backup_s3]
+  depends_on                  = [aws_iam_role_policy.backup_s3, aws_iam_role_policy_attachment.ssm_core]
 
   credit_specification {
     cpu_credits = "standard"
