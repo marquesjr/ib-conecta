@@ -41,7 +41,7 @@ Não há canal SMS. Complementos gratuitos (UptimeRobot, [Pulsetic](https://puls
 
 1. Confirmar: abra `https://www.ibsantaleopoldina.com.br/healthz/` e a home. Se só o seu computador falha, não é incidente.
 2. Ver a Action vermelha em *Actions → Monitoramento do portal* (corpo da issue aponta o run).
-3. SSH na VM: `terraform output ssh_command` em `infra/aws/` (usuário `ubuntu`).
+3. SSH na VM: `terraform output ssh_command` em `infra/aws/` (usuário `ubuntu`). Publicar código novo **não** é este runbook — isso é o workflow **Deploy produção** (`docs/ops/deploy.md`).
 4. Na pasta do clone:
 
    ```bash

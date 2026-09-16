@@ -71,6 +71,12 @@ variable "ssh_public_key" {
   sensitive   = true
 }
 
+variable "github_repository" {
+  description = "org/name cujo workflow em master pode assumir a role de deploy (ADR 0012)."
+  type        = string
+  default     = "marquesjr/ib-conecta"
+}
+
 variable "ssh_allowed_cidrs" {
   description = "CIDRs autorizados na porta 22. Não use 0.0.0.0/0."
   type        = list(string)

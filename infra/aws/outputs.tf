@@ -37,3 +37,13 @@ output "ssh_command" {
   description = "Comando SSH sugerido (usuário ubuntu, chave local)."
   value       = "ssh -i ~/.ssh/id_ed25519_ib_conecta ubuntu@${aws_eip.app.public_ip}"
 }
+
+output "github_actions_deploy_role_arn" {
+  description = "Role assumida pelo workflow Deploy produção (OIDC). Override: variável AWS_DEPLOY_ROLE_ARN."
+  value       = aws_iam_role.github_deploy.arn
+}
+
+output "github_oidc_provider_arn" {
+  description = "Provider OIDC do GitHub Actions nesta conta."
+  value       = aws_iam_openid_connect_provider.github.arn
+}
