@@ -12,8 +12,9 @@ boot_volume_size_gbs  = 30
 # Cole a chave pública OpenSSH (uma linha)
 ssh_public_key = "ssh-ed25519 AAAA... usuario@host"
 
-# Repo cujo workflow em master assume a role de deploy (ADR 0012)
-# github_repository = "marquesjr/ib-conecta"
+# Repo cujo workflow em master assume a role de deploy (ADR 0012).
+# Prefixo do claim sub (Settings → Actions → OIDC). Este repo é posterior a 15/07/2026:
+# github_oidc_sub_prefix = "repo:marquesjr@2216233/ib-conecta@1314311915"
 
 # Restrinja SSH ao seu IP — não use 0.0.0.0/0
 ssh_allowed_cidrs = [

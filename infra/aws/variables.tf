@@ -77,6 +77,12 @@ variable "github_repository" {
   default     = "marquesjr/ib-conecta"
 }
 
+variable "github_oidc_sub_prefix" {
+  description = "Prefixo do claim sub do GitHub Actions OIDC (Settings → Actions → OIDC, ou GET .../actions/oidc/customization/sub). Repos criados após 15/07/2026 incluem owner_id e repo_id."
+  type        = string
+  default     = "repo:marquesjr@2216233/ib-conecta@1314311915"
+}
+
 variable "ssh_allowed_cidrs" {
   description = "CIDRs autorizados na porta 22. Não use 0.0.0.0/0."
   type        = list(string)
