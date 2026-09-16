@@ -18,6 +18,15 @@ if [[ ! "$DEPLOY_SHA" =~ ^[0-9a-f]{40}$ ]]; then
   exit 1
 fi
 
+# AWS-RunShellScript + JSON flatten newlines. A multiline `bash -lc $(printf %q "$INNER")`
+# turned `>/dev/null\ngit` into `/dev/nullngit` (run 35142349685). Keep this ONE line.
+REMOTE="sudo -u ubuntu -H env DEPLOY_SHA=${DEPLOY_SHA} bash -c 'set -euo pipefail; cd /home/ubuntu/ib-conecta; git fetch --prune origin master; git checkout -B master \"\$DEPLOY_SHA\"; exec bash scripts/deploy-prod.sh'"
+
+if [[ "${DEPLOY_SSM_PRINT_REMOTE:-}" == "1" ]]; then
+  printf '%s\n' "$REMOTE"
+  exit 0
+fi
+
 if ! command -v aws >/dev/null 2>&1; then
   echo "aws CLI não encontrado" >&2
   exit 1
@@ -53,14 +62,6 @@ if [[ "$PING" != "Online" ]]; then
   echo "Na VM: sudo scripts/install-ssm-agent.sh  — e confira docs/ops/deploy.md" >&2
   exit 1
 fi
-
-INNER="set -euo pipefail
-cd /home/ubuntu/ib-conecta
-git fetch --prune origin master
-git rev-parse --verify ${DEPLOY_SHA}^{commit} >/dev/null
-git checkout -B master ${DEPLOY_SHA}
-exec bash scripts/deploy-prod.sh"
-REMOTE="sudo -u ubuntu -H env DEPLOY_SHA=${DEPLOY_SHA} bash -lc $(printf '%q' "$INNER")"
 
 PAYLOAD="$(jq -n \
   --arg instance "$INSTANCE_ID" \
