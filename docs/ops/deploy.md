@@ -32,6 +32,14 @@ terraform output github_oidc_provider_arn
 
 Isso **não** recria a EC2 (`user_data` está em `ignore_changes`). Só entra: policy `AmazonSSMManagedInstanceCore` na role da VM, provider OIDC do GitHub e a role de deploy.
 
+A trust policy aceita **somente** o `sub` imutável deste repositório (criado em 27/07/2026, depois do corte do GitHub de 15/07/2026):
+
+`repo:marquesjr@2216233/ib-conecta@1314311915:ref:refs/heads/master`
+
+O formato antigo `repo:marquesjr/ib-conecta:ref:refs/heads/master` **não** casa com o token. Sintoma: `Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWebIdentity` com `id-token: write` e `aud=sts.amazonaws.com` já corretos (run [35139727929](https://github.com/marquesjr/ib-conecta/actions/runs/35139727929)). Depois de puxar este commit: `terraform apply` de novo e conferir `terraform output github_oidc_sub_master`.
+
+Prefixo atual (API): `GET /repos/marquesjr/ib-conecta/actions/oidc/customization/sub` → `sub_claim_prefix`.
+
 A Action usa, por padrão:
 
 `arn:aws:iam::354354997468:role/ib-conecta-prod-github-deploy`

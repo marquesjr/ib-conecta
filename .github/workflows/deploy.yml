@@ -13,10 +13,13 @@ on:
       - "scripts/install-ssm-agent.sh"
       - "scripts/test-deploy-scripts.sh"
       - "docs/ops/deploy.md"
+      - "infra/aws/deploy.tf"
+      - "infra/aws/variables.tf"
   workflow_dispatch:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   verify:
@@ -45,11 +48,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Conferir claims OIDC esperados
+        run: |
+          echo "ref=${GITHUB_REF} event=${GITHUB_EVENT_NAME}"
+          echo "esperado sub=repo:marquesjr@2216233/ib-conecta@1314311915:ref:${GITHUB_REF}"
+          echo "esperado aud=sts.amazonaws.com"
+
       - name: Assumir role de deploy (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
+          audience: sts.amazonaws.com
 
       - name: Publicar na EC2 via SSM
         env:
