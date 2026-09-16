@@ -45,6 +45,21 @@ if [[ "$status" -eq 0 ]]; then
 fi
 printf '%s\n' "$out" | grep -qi 'inválido\|invalido'
 
+sha="$(git rev-parse HEAD)"
+remote="$(DEPLOY_SSM_PRINT_REMOTE=1 scripts/deploy-prod-ssm.sh "$sha")"
+printf '%s\n' "$remote"
+if grep -E 'nullngit|/dev/nulln' <<<"$remote"; then
+  echo "comando SSM colou newline em /dev/null" >&2
+  exit 1
+fi
+if [[ "$remote" == *$'\n'* ]]; then
+  echo "comando SSM deve ser uma linha só" >&2
+  exit 1
+fi
+grep -q "DEPLOY_SHA=${sha}" <<<"$remote"
+grep -q "scripts/deploy-prod.sh" <<<"$remote"
+echo "ssm remote command ok"
+
 python3 - <<'PY'
 from pathlib import Path
 
