@@ -24,7 +24,7 @@ fi
 printf '%s\n' "$out" | grep -q '\.env\.prod'
 
 set +e
-out="$(scripts/deploy-prod-ssm.sh 2>&1)"
+out="$(env -u GITHUB_SHA -u DEPLOY_SHA scripts/deploy-prod-ssm.sh 2>&1)"
 status=$?
 set -e
 printf '%s\n' "$out"
@@ -32,6 +32,7 @@ if [[ "$status" -eq 0 ]]; then
   echo "deploy-prod-ssm.sh deveria falhar sem SHA" >&2
   exit 1
 fi
+printf '%s\n' "$out" | grep -q 'passe o SHA'
 
 set +e
 out="$(scripts/deploy-prod-ssm.sh deadbeef 2>&1)"
