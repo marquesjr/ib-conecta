@@ -76,7 +76,7 @@ class ArchiveFramesTests(TestCase):
 
 
 @override_settings(MEDIA_ROOT=MEDIA_ROOT)
-class HomeContactSheetTests(TestCase):
+class HomeEditorialTests(TestCase):
     def setUp(self):
         site = Site.objects.get(is_default_site=True)
         self.settings = ChurchSettings.for_site(site)
@@ -85,23 +85,20 @@ class HomeContactSheetTests(TestCase):
         self.settings.instagram_handle = "igrejabatista.santaleopoldina"
         self.settings.save()
 
-    def test_home_renders_the_contact_sheet_with_every_region(self):
+    def test_home_keeps_visitor_actions_and_content_sections(self):
         response = self.client.get(reverse("home"))
-
-        self.assertContains(response, 'class="contact-sheet"')
-        self.assertContains(response, "sheet-mount")
-        self.assertContains(response, "sheet-action--primary")
-        self.assertContains(response, "sheet-list--agenda")
-        self.assertContains(response, "sheet-list--sermons")
-        self.assertContains(response, "sheet-list--news")
-        self.assertContains(response, "sheet-handle")
+        for title in ("Próximos encontros", "Palavra para a vida", "Notícias da igreja", "A vida em comunidade"):
+            self.assertContains(response, title)
+        self.assertContains(response, reverse("plan_visit"))
+        self.assertContains(response, reverse("prayer_request"))
+        self.assertContains(response, "Domingo, 19h")
         self.assertContains(response, "@igrejabatista.santaleopoldina")
 
     def test_home_shows_the_configured_number_of_frames(self):
         self.settings.archive_frame_count = 6
         self.settings.save()
         response = self.client.get(reverse("home"))
-        self.assertEqual(response.content.decode().count('class="sheet-frame"'), 6)
+        self.assertEqual(response.content.decode().count('class="community-photo"') + response.content.decode().count('class="welcome-photo"'), 6)
 
     def test_seeded_archive_is_disclosed_as_example_imagery(self):
         """Imagem gerada não passa por prova: a página diz que é exemplo."""

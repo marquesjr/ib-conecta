@@ -1,0 +1,4 @@
+User-supplied church logo. Copied unchanged on 2026-09-16.
+Source: codex-clipboard-f1bdeb80-c462-4826-8bcd-4a681cdcfab4.png
+SHA256 (both source and output): 24A37BED2DF30637274ABED1883D1DE8A61912FD4F310997080BA0F92A2AAEC3
+No pixel edits or generated content. Original intrinsic dimensions and padding retained by explicit instruction.

@@ -17,7 +17,7 @@
         {% if form.non_field_errors %}
           <ul class="form-errors">{{ form.non_field_errors }}</ul>
         {% endif %}
-        <p>
+        <p class="check-field">
           {{ form.is_anonymous }}
           {{ form.is_anonymous.label_tag }}
         </p>
@@ -41,11 +41,11 @@
           {{ form.body }}
           {{ form.body.errors }}
         </p>
-        <p>
+        <div class="check-field">
           {{ form.lgpd_consent }}
           {{ form.lgpd_consent.label_tag }}
           {{ form.lgpd_consent.errors }}
-        </p>
+        </div>
         <p class="muted">
           Uso, prazos e direitos estão na
           <a href="{% url 'privacy' %}">política de privacidade</a>.

@@ -1,447 +1,209 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-23T17:40:00Z",
-  "title": "Design System: IB Conecta",
+  "generatedAt": "2026-09-17T14:39:01.7733605Z",
+  "title": "Design System: IB Conecta — Editorial acolhedor",
   "extensions": {
     "colorMeta": {
-      "paper": {
-        "role": "neutral",
-        "displayName": "Papel de Arquivo",
-        "canonical": "#ece8e2",
-        "note": "Chão de toda tela, com o raster de grão static/img/paper.png tileado a 512px. Amostrado do comp aprovado (cluster dominante, ~36% de cobertura).",
-        "tonalRamp": [
-          "oklch(15% 0.006 80)",
-          "oklch(26% 0.006 80)",
-          "oklch(37% 0.006 80)",
-          "oklch(48% 0.006 80)",
-          "oklch(60% 0.006 80)",
-          "oklch(71% 0.006 80)",
-          "oklch(83% 0.006 80)",
-          "oklch(95% 0.006 80)"
-        ]
-      },
-      "paper-shade": {
-        "role": "neutral",
-        "displayName": "Fio e Goteira",
-        "canonical": "#d4d0ca",
-        "note": "Todo fio de 1px dentro da folha e o fundo de reserva de fotografia não carregada. Na impressão é promovido a archive-gray porque desaparece na impressora.",
-        "tonalRamp": [
-          "oklch(15% 0.007 80)",
-          "oklch(26% 0.007 80)",
-          "oklch(37% 0.007 80)",
-          "oklch(49% 0.007 80)",
-          "oklch(60% 0.007 80)",
-          "oklch(72% 0.007 80)",
-          "oklch(84% 0.007 80)",
-          "oklch(95% 0.007 80)"
-        ]
-      },
-      "paper-warm": {
-        "role": "neutral",
-        "displayName": "Papel Morno",
-        "canonical": "#f4f1ec",
-        "note": "Derivado dos amostrados. Interior de chapa, painel e mount de quadro: um papel um passo mais claro que o chão, o que faz a chapa ler como montada sem nenhuma sombra.",
-        "tonalRamp": [
-          "oklch(15% 0.005 80)",
-          "oklch(26% 0.005 80)",
-          "oklch(38% 0.005 80)",
-          "oklch(49% 0.005 80)",
-          "oklch(61% 0.005 80)",
-          "oklch(72% 0.005 80)",
-          "oklch(84% 0.005 80)",
-          "oklch(95% 0.005 80)"
-        ]
-      },
-      "mount": {
-        "role": "neutral",
-        "displayName": "Branco de Montagem",
-        "canonical": "#f9f9f9",
-        "note": "O valor mais alto do sistema e por isso o mais escasso: chapa do próximo culto, interior de campo, chave PIX, caixa de mensagem, e texto sobre vermelho de nanquim.",
-        "tonalRamp": [
-          "oklch(15% 0 0)",
-          "oklch(26% 0 0)",
-          "oklch(38% 0 0)",
-          "oklch(49% 0 0)",
-          "oklch(61% 0 0)",
-          "oklch(72% 0 0)",
-          "oklch(84% 0 0)",
-          "oklch(96% 0 0)"
-        ]
-      },
-      "graphite": {
-        "role": "secondary",
-        "displayName": "Grafite",
-        "canonical": "#222527",
-        "note": "A tinta do sistema: corpo, link em repouso, wordmark, navegação, chapa da ação secundária, chip do skip-link. Sobre grafite o texto é papel.",
-        "tonalRamp": [
-          "oklch(15% 0.005 220)",
-          "oklch(26% 0.005 220)",
-          "oklch(37% 0.005 220)",
-          "oklch(49% 0.005 220)",
-          "oklch(60% 0.005 220)",
-          "oklch(72% 0.005 220)",
-          "oklch(83% 0.005 220)",
-          "oklch(95% 0.005 220)"
-        ]
-      },
-      "graphite-hover": {
-        "role": "secondary",
-        "displayName": "Grafite Escuro",
-        "canonical": "#15181a",
-        "note": "Derivado. Exclusivamente hover de chapa grafite. Escurece o material; não levanta.",
-        "tonalRamp": [
-          "oklch(15% 0.006 230)",
-          "oklch(26% 0.006 230)",
-          "oklch(37% 0.006 230)",
-          "oklch(49% 0.006 230)",
-          "oklch(60% 0.006 230)",
-          "oklch(72% 0.006 230)",
-          "oklch(83% 0.006 230)",
-          "oklch(95% 0.006 230)"
-        ]
-      },
-      "photo-black": {
-        "role": "secondary",
-        "displayName": "Preto de Fotografia",
-        "canonical": "#111313",
-        "note": "A tinta mais funda, reservada ao buraco de vídeo do .media-embed e ao texto na impressão. Não é cor de superfície nem de texto em tela.",
-        "tonalRamp": [
-          "oklch(15% 0.002 200)",
-          "oklch(26% 0.002 200)",
-          "oklch(38% 0.002 200)",
-          "oklch(49% 0.002 200)",
-          "oklch(61% 0.002 200)",
-          "oklch(72% 0.002 200)",
-          "oklch(84% 0.002 200)",
-          "oklch(95% 0.002 200)"
-        ]
-      },
-      "archive-gray": {
-        "role": "neutral",
-        "displayName": "Cinza de Arquivo",
-        "canonical": "#74706c",
-        "note": "Texto secundário (rótulo, legenda manuscrita, lede, meta, helptext, rodapé, th), régua de estrutura de página, e o traço da cantoneira e da cruz de registro.",
-        "tonalRamp": [
-          "oklch(15% 0.006 75)",
-          "oklch(26% 0.006 75)",
-          "oklch(38% 0.006 75)",
-          "oklch(49% 0.006 75)",
-          "oklch(61% 0.006 75)",
-          "oklch(72% 0.006 75)",
-          "oklch(84% 0.006 75)",
-          "oklch(95% 0.006 75)"
-        ]
-      },
       "ink-red": {
         "role": "primary",
-        "displayName": "Vermelho de Nanquim",
-        "canonical": "#8b211a",
-        "note": "O único sinal do sistema: ação primária, data de linha datada, caret, anel de foco, accent-color, chamada de nota, link em hover, e o tom open do selo. Sua raridade é o mecanismo.",
-        "tonalRamp": [
-          "oklch(15% 0.145 30)",
-          "oklch(26% 0.145 30)",
-          "oklch(37% 0.145 30)",
-          "oklch(49% 0.145 30)",
-          "oklch(60% 0.145 30)",
-          "oklch(72% 0.145 30)",
-          "oklch(83% 0.145 30)",
-          "oklch(95% 0.145 30)"
-        ]
+        "displayName": "Vinho"
       },
       "ink-red-hover": {
         "role": "primary",
-        "displayName": "Vermelho de Nanquim Escuro",
-        "canonical": "#6f1a14",
-        "note": "Derivado. Exclusivamente hover da ação primária; é um corte mais escuro do mesmo vermelho, não um segundo sinal.",
-        "tonalRamp": [
-          "oklch(15% 0.130 30)",
-          "oklch(26% 0.130 30)",
-          "oklch(37% 0.130 30)",
-          "oklch(49% 0.130 30)",
-          "oklch(60% 0.130 30)",
-          "oklch(72% 0.130 30)",
-          "oklch(83% 0.130 30)",
-          "oklch(95% 0.130 30)"
-        ]
+        "displayName": "Vinho profundo"
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Branco morno"
+      },
+      "paper-warm": {
+        "role": "neutral",
+        "displayName": "Papel quente"
+      },
+      "paper-shade": {
+        "role": "neutral",
+        "displayName": "Fio de papel"
+      },
+      "mount": {
+        "role": "neutral",
+        "displayName": "Branco"
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Tinta escura"
+      },
+      "archive-gray": {
+        "role": "neutral",
+        "displayName": "Cinza de leitura"
       }
     },
     "typographyMeta": {
       "display": {
-        "displayName": "Display",
-        "purpose": "O horário do próximo culto na chapa branca da home (h1.service-when). O maior tipo do sistema; existe só ali."
+        "displayName": "Display editorial",
+        "purpose": "Títulos de página em serifada local."
       },
       "headline": {
-        "displayName": "Headline",
-        "purpose": "Título de página interna (h1), dentro de um .page-head fechado por régua de cinza de arquivo. Sem chapa atrás."
+        "displayName": "Seção editorial",
+        "purpose": "Títulos de seção; escala mais contida em painéis."
       },
       "title": {
-        "displayName": "Title",
-        "purpose": "h2 de conteúdo dentro de texto rico. Não é o cabeçalho de célula."
-      },
-      "section-label": {
-        "displayName": "Rótulo de Gaveta",
-        "purpose": "Cabeçalho de célula da folha (.cell-heading) e de painel, com régua de 1px embaixo. A voz padrão de título de bloco — mais frequente que o Title."
-      },
-      "lede": {
-        "displayName": "Lede",
-        "purpose": "Frase de apoio sob um título de página, e o endereço na chapa do próximo culto (em peso 500 e grafite)."
+        "displayName": "Subtítulo operacional",
+        "purpose": "Hierarquia intermediária em Archivo."
       },
       "body": {
-        "displayName": "Body",
-        "purpose": "Leitura padrão, com algarismos tabulares ligados no body. Prosa mede no máximo 66ch mesmo com a casca de borda a borda."
+        "displayName": "Leitura",
+        "purpose": "Prosa, controles e operação."
       },
       "label": {
-        "displayName": "Rótulo de Dado",
-        "purpose": "Rótulo de dado sobre chapa e de campo de formulário. Sobre chapa grafite ou vermelha, vira papel a 70%. Nunca é chapéu acima de um título."
-      },
-      "nav": {
-        "displayName": "Navegação",
-        "purpose": "Links da fileira de navegação e do rodapé social. Caixa alta miúda tracked; o wordmark é o mesmo desenho em 0.78rem / 600 / 0.22em."
-      },
-      "brand": {
-        "displayName": "Wordmark",
-        "purpose": "IB Conecta à esquerda da fileira de navegação. Tipo letra-espaçada; não existe arquivo de logo no repositório."
-      },
-      "cta": {
-        "displayName": "CTA",
-        "purpose": "Botões e a célula-ação da folha, em caixa alta tracked."
-      },
-      "state": {
-        "displayName": "Selo de Estado",
-        "purpose": "Texto do selo de estado da área privada e da tag de ledger, com algarismos tabulares."
-      },
-      "caption": {
-        "displayName": "Legenda Manuscrita",
-        "purpose": "Legenda sob a fotografia, em Caveat. É a mão de quem anotou o acervo — nunca rótulo, botão, cabeçalho ou data."
-      },
-      "frame-date": {
-        "displayName": "Data do Quadro",
-        "purpose": "A data à direita na legenda de um quadro. Volta para a grotesca de propósito: data é dado, não anotação."
-      },
-      "mono": {
-        "displayName": "Mono",
-        "purpose": "Só a chave PIX, com user-select: all. Nunca título, nunca navegação."
+        "displayName": "Rótulo de campo",
+        "purpose": "Instrução funcional em caixa natural."
       }
     },
     "shadows": [],
     "motion": [
       {
-        "name": "develop",
-        "value": "@keyframes develop { from { opacity: 0 } to { opacity: 1 } } — 0.5s ease-out both",
-        "purpose": "O único momento do sistema: cada fotografia da home revela de papel para imagem, como uma prova subindo na bandeja. Nada desliza, escala ou levanta."
+        "name": "action-feedback",
+        "value": "background-color .18s ease-out",
+        "purpose": "Hover de botões; desligado com reduced motion."
       },
       {
-        "name": "develop-stagger",
-        "value": "animation-delay: calc(var(--frame-index, 0) * 55ms)",
-        "purpose": "Escalonamento da revelação na ordem de leitura dos quadros. prefers-reduced-motion: reduce entrega a folha já revelada, sem escalonamento."
-      },
-      {
-        "name": "hover-material",
-        "value": "sem transição declarada; troca de preenchimento e de filter",
-        "purpose": "Hover escurece o material (vermelho→vermelho escuro, grafite→grafite escuro) e devolve saturação à fotografia (0.4→0.9). Nunca translada, escala ou eleva."
+        "name": "welcome-reveal",
+        "value": ".65s cubic-bezier(.16,1,.3,1)",
+        "purpose": "Recorte da foto inicial; desligado com reduced motion."
       }
     ],
     "breakpoints": [
-      { "name": "sheet-narrow", "value": "560px", "note": "Grade de 2 colunas, goteira afina para 4px, legenda cai a 0.82rem." },
-      { "name": "sheet-mid", "value": "900px", "note": "Grade de 4 colunas; as regiões abandonam o grid-area fixo e seguem a ordem do DOM." },
-      { "name": "sheet-full", "value": "901px", "note": "Grade de 6 colunas por 4 fileiras iguais, altura calc(100svh - 3.5rem) com piso de 33rem." }
-    ],
-    "enforcement": {
-      "contract": "templates/base.html — o contrato de direção (THESIS, OWN-WORLD, STORY, FIRST VIEWPORT, FORM) mora como comentário no topo do template que toda superfície estende.",
-      "tests": "apps/public/tests/test_design_contract.py — 6 testes mecânicos: nenhum border-radius, nenhuma sombra, toda cor amostrada do comp, um único vermelho de sinal, a folha de estilo no lugar, e o contrato ainda registrado na casca. Mais 8 testes cobrem o selo de estado, dentro de 185 no total.",
-      "samplingRecord": ".impeccable/surfaces/templates-public-home-html.md — o registro de amostragem do comp aprovado .impeccable/mocks/comp-arquivo-b-folha.png (1536×1024)."
-    }
+      {
+        "name": "compact-desktop",
+        "value": "1100px"
+      },
+      {
+        "name": "stacked-welcome",
+        "value": "900px"
+      },
+      {
+        "name": "single-column",
+        "value": "600px"
+      },
+      {
+        "name": "stacked-register",
+        "value": "34rem"
+      }
+    ]
   },
   "components": [
     {
-      "name": "Célula-Ação Primária",
+      "name": "Ação primária",
       "kind": "button",
-      "refersTo": "sheet-action",
-      "description": "A ação primária da home é uma célula inteira da folha em vermelho de nanquim, não um botão dentro de uma célula.",
-      "html": "<a class='ds-sheet-action' href='#'>Planeje sua visita</a>",
-      "css": ".ds-sheet-action { display: flex; align-items: center; justify-content: center; min-height: 7rem; padding: 1rem 0.7rem; background: var(--ink-red, #8b211a); border: 1px solid var(--ink-red, #8b211a); border-radius: 0; color: var(--mount, #f9f9f9); font-family: Archivo, 'Segoe UI', system-ui, sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.13em; line-height: 1.35; text-align: center; text-transform: uppercase; text-decoration: none; } .ds-sheet-action:hover { background: var(--ink-red-hover, #6f1a14); border-color: var(--ink-red-hover, #6f1a14); color: var(--mount, #f9f9f9); } .ds-sheet-action:focus-visible { outline: 2px solid var(--ink-red, #8b211a); outline-offset: 2px; }"
+      "refersTo": "button-primary",
+      "description": "Ação principal em vinho com altura confortável.",
+      "html": "<button class='ds-primary'>Planeje sua visita</button>",
+      "css": ".ds-primary{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.8rem 1.35rem;border:1px solid var(--ink-red,#862d36);border-radius:10px;background:var(--ink-red,#862d36);color:var(--mount,#fff);font:500 .95rem/1.4 var(--font,Archivo,sans-serif);cursor:pointer;transition:background-color .18s ease-out}.ds-primary:hover{background:var(--ink-red-hover,#69222b);border-color:var(--ink-red-hover,#69222b)}.ds-primary:focus-visible{outline:2px solid var(--ink-red,#862d36);outline-offset:5px}.ds-primary:disabled{opacity:.55;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}"
     },
     {
-      "name": "Botão Primário",
+      "name": "Ação secundária",
       "kind": "button",
-      "refersTo": "cta-primary",
-      "description": "A ação primária das páginas internas: retângulo reto chapado em vermelho de nanquim.",
-      "html": "<a class='ds-cta' href='#'>Abrir coletânea</a>",
-      "css": ".ds-cta { display: inline-block; padding: 0.8rem 1.5rem; background: var(--ink-red, #8b211a); border: 1px solid var(--ink-red, #8b211a); border-radius: 0; color: var(--mount, #f9f9f9); font-family: Archivo, 'Segoe UI', system-ui, sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; } .ds-cta:hover { background: var(--ink-red-hover, #6f1a14); border-color: var(--ink-red-hover, #6f1a14); } .ds-cta:focus-visible { outline: 2px solid var(--ink-red, #8b211a); outline-offset: 2px; }"
+      "refersTo": "button-secondary",
+      "description": "Alternativa com contorno vinho e fundo transparente.",
+      "html": "<button class='ds-secondary'>Conversar com a igreja</button>",
+      "css": ".ds-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.8rem 1.35rem;border:1px solid var(--ink-red,#862d36);border-radius:10px;background:transparent;color:var(--ink-red,#862d36);font:500 .95rem/1.4 var(--font,Archivo,sans-serif);cursor:pointer;transition:background-color .18s ease-out}.ds-secondary:hover{background:var(--paper-warm,#f3f0eb);border-color:var(--ink-red-hover,#69222b)}.ds-secondary:focus-visible{outline:2px solid var(--ink-red,#862d36);outline-offset:5px}.ds-secondary:disabled{opacity:.55;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-secondary{transition:none}}"
     },
     {
-      "name": "Botão Secundário",
+      "name": "Ação clara",
       "kind": "button",
-      "refersTo": "cta-secondary",
-      "description": "Ação irmã: fio de grafite em repouso, e no hover inverte para grafite chapado com texto papel.",
-      "html": "<a class='ds-cta-secondary' href='#'>Cadastrar ministério</a>",
-      "css": ".ds-cta-secondary { display: inline-block; padding: 0.8rem 1.5rem; background: transparent; border: 1px solid var(--graphite, #222527); border-radius: 0; color: var(--graphite, #222527); font-family: Archivo, 'Segoe UI', system-ui, sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; } .ds-cta-secondary:hover { background: var(--graphite, #222527); border-color: var(--graphite, #222527); color: var(--paper, #ece8e2); } .ds-cta-secondary:focus-visible { outline: 2px solid var(--ink-red, #8b211a); outline-offset: 2px; }"
+      "refersTo": "button-light",
+      "description": "Ação de papel sobre uma região vinho.",
+      "html": "<div class='ds-band'><button class='ds-light'>Horários e como chegar</button></div>",
+      "css": ".ds-band{padding:1.5rem;background:var(--ink-red,#862d36)}.ds-light{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.8rem 1.35rem;border:1px solid var(--paper,#faf9f6);border-radius:10px;background:var(--paper,#faf9f6);color:var(--ink-red,#862d36);font:500 .95rem/1.4 var(--font,Archivo,sans-serif);cursor:pointer;transition:background-color .18s ease-out}.ds-light:hover{background:var(--mount,#fff);border-color:var(--ink-red-hover,#69222b)}.ds-light:focus-visible{outline:2px solid var(--mount,#fff);outline-offset:5px}.ds-light:disabled{opacity:.55;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-light{transition:none}}"
     },
     {
-      "name": "Campo de Texto",
+      "name": "Campo de texto",
       "kind": "input",
-      "refersTo": "input-text",
-      "description": "Campo de canto reto com interior em branco de montagem, com teto de 28rem: uma linha para digitar um usuário não tem 730px.",
-      "html": "<p class='ds-field'><label for='ds-user'>Usuário</label><input id='ds-user' type='text' /></p>",
-      "css": ".ds-field { margin: 0 0 0.85rem; } .ds-field label { display: inline-block; margin-bottom: 0.25rem; font-family: Archivo, 'Segoe UI', system-ui, sans-serif; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--archive-gray, #74706c); } .ds-field input { display: block; width: 100%; max-width: 28rem; padding: 0.6rem 0.7rem; font-family: Archivo, 'Segoe UI', system-ui, sans-serif; font-size: 0.95rem; background: var(--mount, #f9f9f9); border: 1px solid var(--archive-gray, #74706c); border-radius: 0; color: var(--graphite, #222527); caret-color: var(--ink-red, #8b211a); } .ds-field input:focus { border-color: var(--ink-red, #8b211a); } .ds-field input:focus-visible { outline: 2px solid var(--ink-red, #8b211a); outline-offset: 2px; }"
+      "refersTo": "field",
+      "description": "Rótulo superior, limite de leitura e foco visível.",
+      "html": "<label class='ds-label' for='ds-name'>Nome</label><input class='ds-field' id='ds-name' type='text' autocomplete='name'>",
+      "css": ".ds-label{display:block;margin-bottom:.25rem;color:var(--graphite,#262722);font:600 .95rem/1.6 var(--font,Archivo,sans-serif)}.ds-field{width:100%;max-width:28rem;min-height:46px;padding:.6rem .7rem;border:1px solid var(--archive-gray,#62635d);border-radius:8px;background:var(--mount,#fff);color:var(--graphite,#262722);font:400 1rem/1.6 var(--font,Archivo,sans-serif)}.ds-field:focus{border-color:var(--ink-red,#862d36)}.ds-field:focus-visible{outline:2px solid var(--ink-red,#862d36);outline-offset:5px}.ds-field:disabled{background:var(--paper-warm,#f3f0eb);color:var(--archive-gray,#62635d);cursor:not-allowed}.ds-field[aria-invalid=true]{border-color:var(--ink-red,#862d36)}"
     },
     {
-      "name": "Fileira de Navegação",
+      "name": "Painel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Superfície branca para leitura e operação, sem sombra.",
+      "html": "<section class='ds-panel'><h2>Planeje sua visita</h2><p>Encontre os horários e as informações para chegar.</p></section>",
+      "css": ".ds-panel{padding:clamp(1.25rem,3vw,2rem);background:var(--mount,#fff);border:1px solid var(--paper-shade,#ded9d2);border-radius:14px;color:var(--graphite,#262722);font:400 1rem/1.6 var(--font,Archivo,sans-serif);overflow-wrap:anywhere}.ds-panel h2{margin:0 0 1rem;font:400 1.8rem/1.12 var(--font-display,'DM Serif Display',Georgia,serif);letter-spacing:-.025em}.ds-panel p{margin:0}"
+    },
+    {
+      "name": "Navegação",
       "kind": "nav",
-      "refersTo": "nav-link",
-      "description": "Banda de arquivo: wordmark à esquerda, todos os destinos visíveis, régua de 1px embaixo. Nunca há hamburger em nenhuma largura.",
-      "html": "<header class='ds-nav'><a class='ds-brand' href='#'>IB Conecta</a><nav><a href='#' aria-current='page'>Planeje sua visita</a><a href='#'>Pedido de oração</a><a href='#'>Agenda</a><a href='#'>Sermões</a><a href='#'>Entrar</a></nav></header>",
-      "css": ".ds-nav { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 1.4rem; padding: 0.75rem 0.5rem 0.55rem; border-bottom: 1px solid var(--archive-gray, #74706c); font-family: Archivo, 'Segoe UI', system-ui, sans-serif; } .ds-brand { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; text-decoration: none; color: var(--graphite, #222527); white-space: nowrap; } .ds-nav nav { display: flex; flex-wrap: wrap; column-gap: 1.15rem; row-gap: 0.2rem; } .ds-nav nav a { padding: 0.15rem 0; text-decoration: none; color: var(--graphite, #222527); font-size: 0.63rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; border-bottom: 1px solid transparent; } .ds-nav nav a:hover, .ds-nav nav a[aria-current='page'] { color: var(--ink-red, #8b211a); border-bottom-color: var(--ink-red, #8b211a); }"
+      "description": "Links em caixa natural e agrupamento nativo; estado atual sublinhado.",
+      "html": "<nav class='ds-nav' aria-label='Exemplo'><details class='ds-group'><summary>Conheça a igreja</summary><div class='ds-dropdown'><a href='#conhecer'>Quero conhecer</a><a href='#oracao'>Pedido de oração</a></div></details><a href='#agenda' aria-current='page'>Agenda</a><a href='#sermoes'>Sermões</a></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;flex-wrap:wrap;gap:clamp(.9rem,2vw,2rem);font:400 .92rem/1.6 var(--font,Archivo,sans-serif)}.ds-nav a,.ds-nav summary{color:var(--graphite,#262722);text-decoration:none;cursor:pointer}.ds-nav a:hover,.ds-nav summary:hover,.ds-nav a[aria-current=page]{color:var(--ink-red,#862d36)}.ds-nav a[aria-current=page]{text-decoration:underline;text-underline-offset:.5rem}.ds-group{position:relative}.ds-group summary{padding:.75rem 0}.ds-dropdown{position:absolute;left:0;top:100%;width:15rem;z-index:20;padding:.6rem;background:var(--mount,#fff);border:1px solid var(--paper-shade,#ded9d2);border-radius:12px}.ds-dropdown a{display:block;padding:.7rem .8rem;border-radius:6px}.ds-dropdown a:hover{background:var(--paper-warm,#f3f0eb)}.ds-nav a:focus-visible,.ds-nav summary:focus-visible{outline:2px solid var(--ink-red,#862d36);outline-offset:5px}@media(max-width:600px){.ds-dropdown{position:static;width:100%}}"
     },
     {
-      "name": "Selo de Estado",
+      "name": "Estado por forma",
       "kind": "chip",
-      "refersTo": "state-open",
-      "description": "Componente assinatura da área privada. Três tons distinguidos pela forma da marca — vazada, cheia, cortada — para sobreviver à impressão em preto e branco e a quem não distingue matiz.",
-      "html": "<span class='ds-state ds-state--open'><span class='ds-state-mark' aria-hidden='true'></span><span>Pendente</span></span> <span class='ds-state ds-state--settled'><span class='ds-state-mark' aria-hidden='true'></span><span>Confirmado</span></span> <span class='ds-state ds-state--closed'><span class='ds-state-mark' aria-hidden='true'></span><span>Recusado</span></span>",
-      "css": ".ds-state { display: inline-flex; align-items: center; gap: 0.4em; padding: 0.16em 0.5em 0.16em 0.42em; border: 1px solid currentcolor; border-radius: 0; font-family: Archivo, 'Segoe UI', system-ui, sans-serif; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-variant-numeric: tabular-nums; white-space: nowrap; } .ds-state-mark { width: 0.62em; height: 0.62em; flex: none; border: 1px solid currentcolor; } .ds-state--open { color: var(--ink-red, #8b211a); } .ds-state--open .ds-state-mark { background: transparent; } .ds-state--settled { color: var(--archive-gray, #74706c); } .ds-state--settled .ds-state-mark { background: currentcolor; } .ds-state--closed { color: var(--archive-gray, #74706c); } .ds-state--closed .ds-state-mark { background: linear-gradient(to bottom right, transparent calc(50% - 0.6px), currentcolor calc(50% - 0.6px), currentcolor calc(50% + 0.6px), transparent calc(50% + 0.6px)); }"
+      "refersTo": "state",
+      "description": "Texto e quadrados distintos preservam o significado além da cor.",
+      "html": "<span class='ds-state ds-open'><span class='ds-mark' aria-hidden='true'></span>Pendente</span> <span class='ds-state ds-settled'><span class='ds-mark' aria-hidden='true'></span>Confirmado</span> <span class='ds-state ds-closed'><span class='ds-mark' aria-hidden='true'></span>Encerrado</span>",
+      "css": ".ds-state{display:inline-flex;align-items:center;gap:.4em;padding:.16em .5em .16em .42em;border:1px solid currentcolor;border-radius:5px;font:600 .85rem/1.6 var(--font,Archivo,sans-serif);letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--archive-gray,#62635d)}.ds-mark{width:.62em;height:.62em;flex:none;border:1px solid currentcolor}.ds-open{color:var(--ink-red,#862d36)}.ds-settled .ds-mark{background:currentcolor}.ds-closed .ds-mark{background:linear-gradient(to bottom right,transparent calc(50% - .6px),currentcolor calc(50% - .6px),currentcolor calc(50% + .6px),transparent calc(50% + .6px))}"
     },
     {
-      "name": "Chapa do Próximo Culto",
-      "kind": "card",
-      "refersTo": "plate-mount",
-      "description": "Componente assinatura da home: o elemento mais claro e dominante da tela, segurado pelas quatro cantoneiras de álbum. Horário e endereço vêm do CMS.",
-      "html": "<article class='ds-mount'><span class='ds-mount-corners' aria-hidden='true'><svg viewBox='0 0 20 20'><path d='M0 0 H20 L0 20 Z' fill='#F9F9F9' stroke='#74706C' stroke-width='0.75' stroke-linejoin='miter'/></svg><svg viewBox='0 0 20 20'><path d='M0 0 H20 L0 20 Z' fill='#F9F9F9' stroke='#74706C' stroke-width='0.75' stroke-linejoin='miter'/></svg><svg viewBox='0 0 20 20'><path d='M0 0 H20 L0 20 Z' fill='#F9F9F9' stroke='#74706C' stroke-width='0.75' stroke-linejoin='miter'/></svg><svg viewBox='0 0 20 20'><path d='M0 0 H20 L0 20 Z' fill='#F9F9F9' stroke='#74706C' stroke-width='0.75' stroke-linejoin='miter'/></svg></span><span class='ds-mount-label'>Culto de celebração</span><h1 class='ds-mount-when'>Domingo, 19h</h1><p class='ds-mount-where'>Rua do Comércio, Centro, Santa Leopoldina - ES</p><p class='ds-mount-host'>Igreja Batista em Santa Leopoldina</p></article>",
-      "css": ".ds-mount { position: relative; display: flex; flex-direction: column; justify-content: center; padding: 1.5rem 1rem; background: var(--mount, #f9f9f9); border: 1px solid var(--paper-shade, #d4d0ca); border-radius: 0; font-family: Archivo, 'Segoe UI', system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-mount-corners { position: absolute; inset: 0; pointer-events: none; } .ds-mount-corners svg { position: absolute; width: 16px; height: 16px; } .ds-mount-corners svg:nth-child(1) { top: -1px; left: -1px; } .ds-mount-corners svg:nth-child(2) { top: -1px; right: -1px; transform: rotate(90deg); } .ds-mount-corners svg:nth-child(3) { bottom: -1px; right: -1px; transform: rotate(180deg); } .ds-mount-corners svg:nth-child(4) { bottom: -1px; left: -1px; transform: rotate(270deg); } .ds-mount-label { display: block; margin: 0 0 0.35rem; font-size: 0.63rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--archive-gray, #74706c); } .ds-mount-when { margin: 0 0 0.35rem; font-size: clamp(1.7rem, 3.6vw, 3.4rem); font-weight: 600; line-height: 1.05; letter-spacing: -0.015em; color: var(--graphite, #222527); } .ds-mount-where { margin: 0; font-size: 1.05rem; font-weight: 500; color: var(--graphite, #222527); } .ds-mount-host { margin: 0.3rem 0 0; font-size: 0.8rem; color: var(--archive-gray, #74706c); }"
-    },
-    {
-      "name": "Quadro da Folha de Contato",
+      "name": "Lista editorial",
       "kind": "custom",
-      "refersTo": "sheet-frame",
-      "description": "Componente assinatura: fotografia em mount de papel morno, legenda manuscrita e data miúda embaixo, cruz de registro na interseção da grade. O bloco cinza aqui representa a fotografia.",
-      "html": "<figure class='ds-frame'><svg class='ds-frame-tick' viewBox='0 0 16 16' aria-hidden='true'><g stroke='#74706C' stroke-width='1' shape-rendering='crispEdges'><line x1='8' y1='0' x2='8' y2='5.5'/><line x1='8' y1='10.5' x2='8' y2='16'/><line x1='0' y1='8' x2='5.5' y2='8'/><line x1='10.5' y1='8' x2='16' y2='8'/></g></svg><span class='ds-frame-photo'></span><figcaption><span>Culto de domingo</span><span class='ds-frame-date'>ago 2026</span></figcaption></figure>",
-      "css": ".ds-frame { position: relative; display: flex; flex-direction: column; width: 12rem; margin: 0 0 0 0.5rem; padding: 5px 5px 0; background: var(--paper-warm, #f4f1ec); border: 1px solid var(--paper-shade, #d4d0ca); border-radius: 0; text-decoration: none; } .ds-frame-tick { position: absolute; top: -9px; left: -9px; width: 12px; height: 12px; opacity: 0.7; pointer-events: none; } .ds-frame-photo { display: block; width: 100%; aspect-ratio: 1; background: var(--paper-shade, #d4d0ca); filter: saturate(0.4) contrast(1.07) brightness(0.97); } .ds-frame figcaption { display: flex; justify-content: space-between; gap: 0.4rem; padding: 0.3rem 0.15rem 0.35rem; font-family: Caveat, 'Segoe UI', cursive; font-size: 0.9rem; line-height: 1.15; color: var(--archive-gray, #74706c); } .ds-frame-date { flex: none; align-self: flex-end; font-family: Archivo, 'Segoe UI', system-ui, sans-serif; font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; } .ds-frame:hover .ds-frame-photo { filter: saturate(0.9) contrast(1.06); } .ds-frame:hover figcaption { color: var(--graphite, #222527); }"
-    },
-    {
-      "name": "Célula de Lista Datada",
-      "kind": "card",
-      "refersTo": "sheet-list",
-      "description": "Uma célula da folha que inverte de fotografia para papel e carrega linhas datadas. A data é um bloco fixo em vermelho de nanquim à esquerda do título.",
-      "html": "<section class='ds-list'><h2 class='ds-list-heading'>Agenda</h2><ul><li><span class='ds-list-when'>23.08</span><a href='#'>Culto de celebração</a></li><li><span class='ds-list-when'>26.08</span><a href='#'>Estudo bíblico</a></li><li><span class='ds-list-when'>29.08</span><a href='#'>Evangelismo na praça</a></li></ul></section>",
-      "css": ".ds-list { display: flex; flex-direction: column; padding: 0.85rem 0.9rem; background: var(--paper-warm, #f4f1ec); border: 1px solid var(--paper-shade, #d4d0ca); border-radius: 0; font-family: Archivo, 'Segoe UI', system-ui, sans-serif; font-size: 0.85rem; font-variant-numeric: tabular-nums; } .ds-list-heading { margin: 0 0 0.6rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--paper-shade, #d4d0ca); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--graphite, #222527); } .ds-list ul { list-style: none; margin: 0; padding: 0; } .ds-list li { display: flex; gap: 0.6rem; padding: 0.3rem 0; border-bottom: 1px solid var(--paper-shade, #d4d0ca); } .ds-list li:last-child { border-bottom: 0; } .ds-list-when { flex: none; color: var(--ink-red, #8b211a); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.04em; } .ds-list a { text-decoration: none; color: var(--graphite, #222527); } .ds-list a:hover { color: var(--ink-red, #8b211a); text-decoration: underline; }"
-    },
-    {
-      "name": "Tag de Ledger",
-      "kind": "chip",
-      "refersTo": "state-settled",
-      "description": "Chip de linha de ledger onde o estado está no fio: invertido, tracejado ou duplo. Para estado de fluxo da área privada, use o selo.",
-      "html": "<span class='ds-tag ds-tag--confirmed'>Confirmado</span> <span class='ds-tag ds-tag--pending'>Pendente</span> <span class='ds-tag ds-tag--refused'>Recusado</span>",
-      "css": ".ds-tag { display: inline-block; padding: 0.15rem 0.5rem; border: 1px solid var(--archive-gray, #74706c); border-radius: 0; color: var(--archive-gray, #74706c); font-family: Archivo, 'Segoe UI', system-ui, sans-serif; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; } .ds-tag--confirmed { background: var(--graphite, #222527); border-color: var(--graphite, #222527); color: var(--paper, #ece8e2); } .ds-tag--pending { border-style: dashed; } .ds-tag--refused { border-style: double; border-width: 3px; color: var(--ink-red, #8b211a); border-color: var(--ink-red, #8b211a); }"
+      "description": "Datas em vinho e fios de separação, sem cartão envolvente.",
+      "html": "<ul class='ds-list'><li><time datetime='2026-09-20'>20.09</time><a href='#evento'>Encontro da comunidade<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' aria-hidden='true'><path d='M5 12h14M13 6l6 6-6 6'/></svg></a></li></ul>",
+      "css": ".ds-list{list-style:none;padding:0;margin:1.3rem 0;font:400 1rem/1.6 var(--font,Archivo,sans-serif)}.ds-list li{display:flex;align-items:baseline;gap:1.25rem;border-top:1px solid var(--paper-shade,#ded9d2);padding:1rem 0}.ds-list time{flex:none;color:var(--ink-red,#862d36);font-size:.88rem;font-variant-numeric:tabular-nums}.ds-list a{display:flex;align-items:center;justify-content:space-between;width:100%;gap:1rem;color:var(--graphite,#262722);text-decoration:none}.ds-list a:hover{color:var(--ink-red,#862d36)}.ds-list a:focus-visible{outline:2px solid var(--ink-red,#862d36);outline-offset:5px}.ds-list svg{width:21px;height:21px;flex:none}"
     }
   ],
   "narrative": {
-    "northStar": "Arquivo da Congregação",
-    "overview": "O site é o acervo fotográfico da própria congregação, montado como uma folha de contato. Os quadros não ilustram a página: eles são a página. O primeiro viewport é uma grade de células em papel de arquivo onde doze fotografias, uma chapa branca com o próximo culto, duas ações e três listas datadas ocupam células inteiras separadas apenas por goteira. Nada flutua entre as células. Esta é uma recusa deliberada do padrão de site de igreja — uma foto de palco em hero sobre três cartões arredondados com sombra.\n\nA personalidade é documental e institucional, não devocional decorativa: o material é papel, fio de 1px, cantoneira de álbum e cruz de registro. A hierarquia se resolve por inversão (uma chapa branca supera o papel, o papel supera a fotografia) e por densidade, nunca por elevação. Há um único vermelho de nanquim no sistema inteiro, e ele significa \"a próxima ação humana\" ou \"isto ainda espera você\". Onde outros sistemas usariam verde de sucesso, âmbar de atenção e vermelho de erro, este usa a forma da marca.\n\nO mundo cobre o site inteiro — as treze superfícies públicas, o login e a área privada de membros. Uma varredura mecânica confirmou que nenhuma superfície ficou com classe órfã do mundo anterior. Três invariantes são verificadas por máquina em apps/public/tests/test_design_contract.py (6 testes, dentro de 185 no total): nenhum border-radius, nenhuma sombra, e nenhuma cor fora da amostragem do comp aprovado. O contrato de direção mora como comentário no topo de templates/base.html, e o teste também verifica que ele continua lá.\n\nTrade-off aceito e registrado: o princípio 4 do PRODUCT.md (leveza para o visitante rural em conexão limitada) foi explicitamente sobrescrito pelo usuário para este redesenho. O visual rico vale a página mais pesada, e vale igualmente em todo dispositivo — não há versão magra para o celular. O visitante rural em celular segue sendo o público primário e a página tem de continuar legível e usável nele, mas o peso deixou de ser teto. Isto é uma decisão de produto, não um descuido de implementação.",
+    "northStar": "Encontro — editorial acolhedor",
+    "overview": "A identidade aprovada em 16/09/2026 recebe o visitante com fotografia ampla, títulos serifados e ritmo de leitura generoso. Vinho, branco morno e tinta escura aproximam a instituição de quem procura culto, caminho ou conversa. A logo original permanece como identidade, com corte de apresentação em CSS.\n\nEste registro substitui deliberadamente Arquivo da Congregação. As ferramentas privadas compartilham paleta e controles legíveis, com densidade adequada à operação. A composição específica da homepage permanece no surface brief.",
     "keyCharacteristics": [
-      "Papel de arquivo com grão em raster tileado (512px) como chão de toda tela",
-      "Grade de folha de contato de borda a borda, sem coluna centrada e sem margem externa",
-      "Goteira de 6px como único separador; canto reto e zero sombra em todo o sistema",
-      "Fotografia como material da página, com legenda manuscrita sob cada quadro",
-      "Cantoneira de álbum e cruz de registro como geometria assinatura",
-      "Um único vermelho de nanquim como sinal; estado marcado por forma, não por matiz",
-      "Archivo com algarismos tabulares para tudo que informa; Caveat só na legenda",
-      "Um único momento de movimento: a folha revela"
+      "DM Serif Display local normal e itálico com Archivo local.",
+      "Superfícies claras, divisórias finas e cantos suaves, sem sombras.",
+      "Fotografias grandes com procedência explícita.",
+      "Ações vinho, foco visível e navegação sem JavaScript."
     ],
     "rules": [
       {
-        "name": "A Regra do Único Sinal",
-        "body": "O vermelho de nanquim é a única cor de sinal do sistema. Não existe verde de sucesso, âmbar de atenção nem um segundo vermelho. Sucesso, pendência e recusa se distinguem pela forma da marca. O teste test_the_ink_red_is_the_only_signal_colour reprova um segundo vermelho.",
+        "name": "The Vinho com Função Rule",
+        "body": "O vinho identifica ação ou informação relevante e pode sustentar uma faixa com texto claro.",
         "section": "colors"
       },
       {
-        "name": "A Regra da Amostragem",
-        "body": "Toda cor do sistema veio da amostragem do comp aprovado ou é um escurecimento declarado dela. Nenhuma cor é estimada. Um hex novo na folha de estilo reprova em test_every_colour_was_sampled_and_none_estimated; introduzir um tom exige amostrar de novo e atualizar o conjunto do teste, conscientemente.",
-        "section": "colors"
-      },
-      {
-        "name": "A Regra do Papel como Chão",
-        "body": "A página é papel de arquivo claro. Grafite e vermelho são chapas sobre a folha — uma ação, um cabeçalho invertido, um chip. Nunca são fundo de tela, de seção nem de área privada.",
-        "section": "colors"
-      },
-      {
-        "name": "A Regra das Duas Vozes",
-        "body": "Archivo escreve tudo que informa. Caveat escreve apenas a legenda de uma fotografia — é a mão de quem anotou o acervo. Um rótulo, um botão, um cabeçalho ou uma data em Caveat quebra a regra; a data dentro da própria legenda é Archivo justamente por isso.",
+        "name": "The Duas Vozes Rule",
+        "body": "Serifada para convite e leitura editorial; Archivo para controles, metadados, tabelas e instruções.",
         "section": "typography"
       },
       {
-        "name": "A Regra dos Algarismos Tabulares",
-        "body": "Horário, data e valor alinham em coluna. tabular-nums está no body e no selo de estado; não desligue localmente.",
+        "name": "The Texto Preservado Rule",
+        "body": "Ênfase tipográfica não reescreve o texto do CMS; a ênfase final da home não é obrigação global.",
         "section": "typography"
       },
       {
-        "name": "A Regra do Rótulo, Não do Chapéu",
-        "body": "A caixa alta tracked rotula um dado ou uma gaveta — \"PRÓXIMO CULTO\" acima do horário, \"AGENDA\" acima da lista. Ela nunca é um chapéu decorativo acima de um título de página.",
-        "section": "typography"
-      },
-      {
-        "name": "A Regra da Célula Inteira",
-        "body": "A página é uma grade de células e toda região ocupa células inteiras. Nada flutua entre células, nada sangra pela metade de uma goteira.",
+        "name": "The Medida de Leitura Rule",
+        "body": "Preserve limites de prosa e campos mesmo em superfícies largas.",
         "section": "layout"
       },
       {
-        "name": "A Regra da Medida",
-        "body": "A casca é de borda a borda; a prosa não. Todo bloco de texto corrido mede no máximo 66ch. Campo de formulário tem o mesmo dever: uma linha de 730px de largura para digitar um usuário é defeito, não amplitude.",
-        "section": "layout"
-      },
-      {
-        "name": "A Regra da Ordem de Leitura",
-        "body": "O posicionamento fixo da folha é um luxo de viewport largo. Em qualquer largura menor a grade volta para a ordem do DOM, e a ordem do DOM é sempre fatos, ações, listas, acervo.",
-        "section": "layout"
-      },
-      {
-        "name": "A Regra da Chapa Plana",
-        "body": "Nenhuma superfície tem sombra, em nenhum estado. Se um bloco precisa se destacar, ele inverte ou ganha goteira — não altura.",
+        "name": "The Superfície Serena Rule",
+        "body": "Contraste tonal e espaço separam regiões; interação muda cor e borda sem elevar controles.",
         "section": "elevation"
-      },
-      {
-        "name": "A Regra da Inversão como Hierarquia",
-        "body": "A ordem de patente é branco de montagem > papel morno > papel > fotografia, com grafite e vermelho de nanquim fora dessa escala, reservados a ação. O elemento mais importante de uma tela é o mais claro, não o mais alto.",
-        "section": "elevation"
-      },
-      {
-        "name": "A Regra do Canto Reto",
-        "body": "Zero raio, em qualquer elemento, em qualquer estado. Um canto arredondado é outro mundo, não uma variação deste.",
-        "section": "shapes"
-      },
-      {
-        "name": "A Regra da Forma que Sobrevive ao Cinza",
-        "body": "Todo estado se distingue pela forma antes da cor: caixa vazada, cheia ou cortada; fio simples ou duplo. As telas da área privada são impressas em preto e branco e lidas por quem não distingue matiz. Uma diferença que só existe em cor não é uma diferença.",
-        "section": "shapes"
       }
     ],
     "dos": [
-      "Do manter a folha de borda a borda: .wrap em 100% com 6px de goteira, sem coluna centrada.",
-      "Do fazer toda região ocupar células inteiras da grade, separadas pela goteira de 6px.",
-      "Do classificar por inversão de valor — branco de montagem acima de papel morno, acima de papel, acima de fotografia.",
-      "Do usar o vermelho de nanquim só como sinal: a próxima ação, a data de uma linha, o foco, o que ainda espera resposta.",
-      "Do marcar todo estado pela forma antes da cor — caixa vazada, cheia ou cortada; fio simples ou duplo — para que sobreviva à impressão em preto e branco.",
-      "Do manter cantoneira de álbum, cruz de registro e legenda manuscrita: é a geometria assinatura, não enfeite.",
-      "Do amostrar do comp aprovado antes de introduzir qualquer cor, e atualizar o conjunto de test_design_contract.py no mesmo commit.",
-      "Do limitar prosa e campo de formulário à medida (66ch; 28rem/44rem em campo), mesmo com a casca larga.",
-      "Do tirar horário, endereço, WhatsApp, PIX e handle do CMS, e declarar em nota de rodapé o que for provisório.",
-      "Do honrar prefers-reduced-motion entregando a folha já revelada."
+      "Do preservar logo original e fontes locais.",
+      "Do manter fatos e textos institucionais no CMS.",
+      "Do distinguir estados por texto e forma.",
+      "Do preservar foco, reduced motion e navegação sem JavaScript.",
+      "Do identificar imagens ilustrativas enquanto presentes."
     ],
     "donts": [
-      "Don't tratar o mundo anterior — parede de cal, chapa de esmalte, latão, Overpass, cantos de 1.15rem, parafusos de canto, sombra deslocada — como o sistema atual. Aquele mundo está aposentado.",
-      "Don't introduzir border-radius em nada, em nenhum estado.",
-      "Don't introduzir sombra, elevação, vidro ou gradiente de profundidade; profundidade é goteira e inversão.",
-      "Don't adicionar uma segunda cor de sinal — nem verde de sucesso, nem âmbar, nem um segundo vermelho.",
-      "Don't usar grafite ou vermelho de nanquim como fundo de tela ou de seção; eles são chapa de ação sobre papel claro.",
-      "Don't escrever rótulo, botão, cabeçalho ou data em Caveat; ela é só a legenda da fotografia.",
-      "Don't pôr um chapéu decorativo acima de um título de página. A caixa alta tracked rotula um dado ou uma gaveta, e nada mais.",
-      "Don't usar ícone de glifo, fonte de ícone ou emoji como sinal de interface; o que não é tipo é SVG autorado.",
-      "Don't levantar, escalar ou transladar no hover; escureça o material.",
-      "Don't rebaixar as fotografias a uma faixa decorativa nem remontar a folha com uma fração dos quadros — a densidade de vinte e quatro células é o desenho.",
-      "Don't tilear a cruz de registro pelo container; ela mora na interseção da grade, uma por célula.",
-      "Don't trocar a marca do selo de estado por uma bolinha colorida, nem distinguir dois estados só por matiz.",
-      "Don't apresentar as fotografias sintéticas como acervo da igreja, nem remover a nota de rodapé que as declara enquanto elas estiverem no ar.",
-      "Don't promover o preto de fotografia do .media-embed a cor de superfície ou de texto, e nunca dê autoplay em vídeo.",
-      "Don't promover as regras de impressão (fundo branco, chrome oculto, fio em cinza de arquivo) para o layout de tela."
+      "Don't restaurar textura, grade de arquivo, cantoneiras ou letra manuscrita como sistema atual.",
+      "Don't adicionar sombras deslocadas, glifos como ícones ou rótulos decorativos acima de títulos.",
+      "Don't impor a composição da home às ferramentas operacionais.",
+      "Don't apresentar conteúdo demonstrativo como fatos da igreja.",
+      "Don't iniciar vídeos automaticamente."
     ]
   }
 }

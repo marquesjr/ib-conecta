@@ -1,97 +1,62 @@
 <!DOCTYPE html>
 {% load static public_tags %}
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% block title %}IB Conecta — Igreja Batista em Santa Leopoldina{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/ib-conecta.css' %}" />
-    {% block extra_head %}{% endblock %}
-  </head>
-  <body{% if body_class %} class="{{ body_class }}"{% endif %}{% block body_attrs %}{% endblock %}>
-    <!--
-      THESIS: The site is the congregation's own photographic archive, a contact sheet whose frames ARE the page; it refuses the church template of one photo hero over three rounded cards.
-      OWN-WORLD: Archival paper #ECE8E2, gutters and hairlines in #D4D0CA, square-cornered flat plates with no radius and no shadow; white mount plate #F9F9F9 on album corner mounts, graphite #222527, photo black #111313, archival gray #74706C, one ink red #8B211A as the only signal; register crosses at cell intersections; Archivo with tabular figures; hand-inked captions.
-      STORY: This church is alive this week — here is its own week in frames, when it gathers, where, and how to reach a person.
-      FIRST VIEWPORT: Hairline nav row on paper, rule beneath; a six-by-three contact-sheet grid fills the viewport; a white mount plate on a two-by-two block at upper left carries PRÓXIMO CULTO, the service time, the address; the ink red primary action fills the single cell beneath it, WhatsApp the next; two cells invert to dated Agenda and Sermões lists.
-      FORM: Arquivo da Congregação, candidate 4 of the grounded list, safer register, composition Folha de Contato — seed e2d3e9a9.
-      FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
-    -->
-    <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
-    <div class="wrap">
-      <header class="site-header">
-        <a class="brand" href="{% url 'home' %}">IB Conecta</a>
-        <nav aria-label="Principal">
-          <a href="{% url 'plan_visit' %}">Planeje sua visita</a>
-          <a href="{% url 'prayer_request' %}">Pedido de oração</a>
-          <a href="{% url 'know_church' %}">Quero conhecer</a>
-          <a href="{% url 'contribute' %}">Contribuir</a>
-          {% if agenda_index_url %}
-            <a href="{{ agenda_index_url }}">Agenda</a>
-          {% endif %}
-          {% if sermon_index_url %}
-            <a href="{{ sermon_index_url }}">Sermões</a>
-          {% endif %}
-          {% if live_stream_url %}
-            <a href="{{ live_stream_url }}">Ao vivo</a>
-          {% endif %}
-          {% if news_index_url %}
-            <a href="{{ news_index_url }}">Notícias</a>
-          {% endif %}
-          {% if whatsapp_url %}
-            <a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-          {% endif %}
-          {% if user.is_authenticated %}
-            <a href="{% url 'private_area:home' %}">Área privada</a>
-            <a href="{% url 'accounts:account_home' %}">Minha conta</a>
-          {% else %}
-            <a href="{% url 'accounts:login' %}">Entrar</a>
-          {% endif %}
-        </nav>
-      </header>
-
-      <main id="conteudo">
-        {% if messages %}
-          <ul class="messages">
-            {% for message in messages %}
-              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-        {% block content %}{% endblock %}
-        {% block share %}
-          {% whatsapp_share %}
-        {% endblock %}
-      </main>
-
-      {% block after_nav %}{% endblock %}
-
-      <footer class="site-footer">
-        <p><strong>Igreja Batista em Santa Leopoldina</strong></p>
-        {% if church_settings and church_settings.social_links %}
-          <p class="social-links">
-            {% for link in church_settings.social_links %}
-              <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
-            {% endfor %}
-          </p>
-        {% endif %}
-        {% if church_settings and church_settings.whatsapp_welcome_text %}
-          {% whatsapp_welcome church_settings.whatsapp_welcome_text %}
-        {% endif %}
-        {% if whatsapp_url %}
-          <p>
-            <a class="cta secondary" href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer">
-              Falar no WhatsApp da igreja
-            </a>
-          </p>
-        {% endif %}
-        {% if church_settings and church_settings.whatsapp_welcome_text %}
-          {% whatsapp_welcome church_settings.whatsapp_welcome_text part="note" %}
-        {% endif %}
-        <p>
-          <a href="{% url 'privacy' %}">Privacidade</a>
-        </p>
-      </footer>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}IB Conecta — Igreja Batista em Santa Leopoldina{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/ib-conecta.css' %}" />
+  <script src="{% static 'js/navigation.js' %}" defer></script>
+  {% block extra_head %}{% endblock %}
+</head>
+<body{% if body_class %} class="{{ body_class }}"{% endif %}{% block body_attrs %}{% endblock %}>
+  <!--
+  THESIS: Editorial acolhedor makes the congregation visible through generous photography and an inviting reading rhythm.
+  OWN-WORLD: Warm white, burgundy, dark ink; editorial serif headlines, Archivo utility text, soft photo corners, quiet rules.
+  STORY: Discover the church, find the next service, plan a visit or reach a person; members retain their working tools.
+  FIRST VIEWPORT: Logo and concise navigation above an editorial invitation on the left and one large photograph on the right; a burgundy service band follows.
+  FORM: Encontro — editorial acolhedor, candidate 1; seed ab3af8d9. User selected the displayed comp on 2026-09-16.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+  -->
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+  {% is_demo_preview as demo_preview %}
+  {% if demo_preview %}<p class="demo-notice">Prévia de demonstração — horários, endereço, contatos e eventos são fictícios. Não utilize o PIX ou o WhatsApp desta prévia.</p>{% endif %}
+  <header class="site-header">
+    <a class="brand" href="{% url 'home' %}" aria-label="Igreja Batista em Santa Leopoldina — início"><span class="brand-image"><img src="{% static 'img/church-logo.png' %}" alt="Igreja Batista em Santa Leopoldina" width="150" height="150" /></span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" hidden>Menu <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+    <nav id="primary-nav" aria-label="Principal">
+      <details class="nav-group"><summary>Conheça a igreja</summary><div class="nav-dropdown">
+        <a href="{% url 'know_church' %}">Quero conhecer</a>
+        <a href="{% url 'prayer_request' %}">Pedido de oração</a>
+        <a href="{% url 'contribute' %}">Contribuir</a>
+        {% if news_index_url %}<a href="{{ news_index_url }}">Notícias</a>{% endif %}
+        {% if whatsapp_url %}<a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer">WhatsApp da igreja</a>{% endif %}
+      </div></details>
+      {% if agenda_index_url %}<a href="{{ agenda_index_url }}">Agenda</a>{% endif %}
+      {% if sermon_index_url %}<a href="{{ sermon_index_url }}">Sermões</a>{% endif %}
+      {% if live_stream_url %}<a href="{{ live_stream_url }}">Ao vivo</a>{% endif %}
+      {% if user.is_authenticated %}<a href="{% url 'private_area:home' %}">Área privada</a><a href="{% url 'accounts:account_home' %}">Minha conta</a>
+      {% else %}<a href="{% url 'accounts:login' %}">Entrar</a>{% endif %}
+      <a class="cta nav-visit" href="{% url 'plan_visit' %}">Planeje sua visita</a>
+    </nav>
+  </header>
+  <main id="conteudo" tabindex="-1">
+    {% if messages %}<ul class="messages" aria-live="polite">{% for message in messages %}<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>{% endfor %}</ul>{% endif %}
+    {% block content %}{% endblock %}
+    {% block share %}<div class="share-area">{% whatsapp_share %}</div>{% endblock %}
+  </main>
+  {% block after_nav %}{% endblock %}
+  <footer class="site-footer">
+    <div class="footer-intro"><h2>Igreja Batista<br>em Santa Leopoldina</h2><p>“Deus é o nosso Refúgio e Fortaleza”</p>
+      {% if church_settings and church_settings.address_line %}<p>{{ church_settings.address_line }}</p>{% endif %}<p class="footer-product">IB Conecta</p>
     </div>
-  </body>
+    <div><h3>Vamos conversar?</h3>
+      {% if church_settings and church_settings.whatsapp_welcome_text %}{% whatsapp_welcome church_settings.whatsapp_welcome_text %}{% endif %}
+      {% if whatsapp_url %}<p><a class="text-link" href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp da igreja {% include "public/_arrow.html" %}</a></p>{% endif %}
+      {% if church_settings and church_settings.whatsapp_welcome_text %}{% whatsapp_welcome church_settings.whatsapp_welcome_text part="note" %}{% endif %}
+      {% if church_settings and church_settings.social_links %}<p class="social-links">{% for link in church_settings.social_links %}<a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>{% endfor %}</p>{% endif %}
+      <a href="{% url 'privacy' %}">Privacidade</a>
+    </div>
+  </footer>
+</body>
 </html>

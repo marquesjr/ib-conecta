@@ -48,11 +48,7 @@ def _submit_or_reject_spam(request, form, *, scope: str, success_url: str, succe
 
 
 def home(request):
-    """A home é a folha de contato: o acervo e os fatos datados dividem a primeira tela.
-
-    As três listas curtas existem porque a densidade da composição aprovada é um
-    compromisso — uma folha com células vazias seria um desenho diferente.
-    """
+    """Convite editorial, fotografia em destaque e conteúdo publicado da igreja."""
     site = Site.find_for_request(request) or Site.objects.filter(is_default_site=True).first()
     count = ChurchSettings.for_site(site).archive_frame_count if site else 12
     frames = archive_frames(count)

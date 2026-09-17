@@ -1,0 +1,206 @@
+{
+  "title": "Uma nova presença para a igreja",
+  "question": "Compare as propostas para a homepage. A identidade escolhida também orientará as páginas internas.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Janelas da comunidade",
+      "kicker": "PROPOSTA",
+      "thesis": "Fotografias amplas em uma composição arquitetônica clara, inspirada no encontro entre igreja e cidade.",
+      "palette": [
+        "#faf9f6",
+        "#252524",
+        "#892c31"
+      ],
+      "materials": [
+        "superfícies claras",
+        "fotografia sem filtros",
+        "tipografia sóbria"
+      ],
+      "viewport": "Logo e navegação limpa; convite e visita à esquerda, três grandes fotos em alturas diferentes à direita; horários em uma faixa organizada.",
+      "risk": "Depende de uma boa seleção de fotos para a composição não parecer um mosaico comum.",
+      "comp": ".impeccable/mocks/decision/janelas.png",
+      "raised": [
+        {
+          "from": "Nuvens",
+          "raise": "Margens amplas e cor concentrada apenas nas ações."
+        },
+        {
+          "from": "Película",
+          "raise": "Fotografias com escala suficiente para reconhecer pessoas."
+        },
+        {
+          "from": "Quarto virtual",
+          "raise": "Identidade reconhecível também nas páginas internas."
+        },
+        {
+          "from": "Relógio",
+          "raise": "Horários claros e estáveis, sempre fáceis de encontrar."
+        },
+        {
+          "from": "Editorial de moda",
+          "raise": "Hierarquia tipográfica forte e espaço entre seções."
+        },
+        {
+          "from": "Assistente de instalação",
+          "raise": "Formulários com sequência e próxima ação evidentes."
+        }
+      ]
+    },
+    {
+      "id": "model-pick",
+      "label": "Encontro — editorial acolhedor",
+      "kicker": "IMPECCABLE’S PICK",
+      "thesis": "Uma presença serena, com um convite expressivo e fotografia documental em grande escala.",
+      "palette": [
+        "#f8f6f1",
+        "#262722",
+        "#862d36"
+      ],
+      "materials": [
+        "branco quente",
+        "tipografia editorial",
+        "vermelho da marca"
+      ],
+      "viewport": "Convite grande em serifada à esquerda, uma fotografia ampla à direita e uma faixa de visita; comunidade em fotos ao longo da página.",
+      "risk": "Mais familiar entre sites institucionais; a personalidade virá das fotos reais e da marca.",
+      "comp": ".impeccable/mocks/decision/encontro.png"
+    },
+    {
+      "id": "clouds-storms-auroras-iridescent-cloud-edge",
+      "label": "Nuvens iridescentes",
+      "verdict": "declined",
+      "thesis": "Cores atmosféricas tiram protagonismo da marca e não ajudam a visita.",
+      "palette": [
+        "#ffffff",
+        "#637080",
+        "#afa1cf"
+      ],
+      "materials": [
+        "referência comparativa"
+      ],
+      "viewport": "Referência avaliada para navegação, leitura e uso no celular.",
+      "risk": "Cores atmosféricas tiram protagonismo da marca e não ajudam a visita.",
+      "case": "Cores atmosféricas tiram protagonismo da marca e não ajudam a visita.",
+      "kept": "Margens claras."
+    },
+    {
+      "id": "cinema-cinematography-editing-hand-processed-film-bloom",
+      "label": "Película de cinema",
+      "verdict": "declined",
+      "thesis": "Texturas e nostalgia repetiriam o problema do visual atual.",
+      "palette": [
+        "#222222",
+        "#b5b5b5",
+        "#c96e30"
+      ],
+      "materials": [
+        "referência comparativa"
+      ],
+      "viewport": "Referência avaliada para navegação, leitura e uso no celular.",
+      "risk": "Texturas e nostalgia repetiriam o problema do visual atual.",
+      "case": "Texturas e nostalgia repetiriam o problema do visual atual.",
+      "kept": "Escala fotográfica."
+    },
+    {
+      "id": "cyworld-minihompy-room",
+      "label": "Quarto virtual",
+      "verdict": "declined",
+      "thesis": "Miniaturas e adesivos remetem justamente à web dos anos 2000.",
+      "palette": [
+        "#eedde8",
+        "#d4e2e2",
+        "#78606a"
+      ],
+      "materials": [
+        "referência comparativa"
+      ],
+      "viewport": "Referência avaliada para navegação, leitura e uso no celular.",
+      "risk": "Miniaturas e adesivos remetem justamente à web dos anos 2000.",
+      "case": "Miniaturas e adesivos remetem justamente à web dos anos 2000.",
+      "kept": "Identidade consistente."
+    },
+    {
+      "id": "signals-instruments-seven-segment-alarm-clock",
+      "label": "Relógio digital",
+      "verdict": "declined",
+      "thesis": "A linguagem instrumental faz a igreja parecer um painel.",
+      "palette": [
+        "#111111",
+        "#c32b2b",
+        "#555555"
+      ],
+      "materials": [
+        "referência comparativa"
+      ],
+      "viewport": "Referência avaliada para navegação, leitura e uso no celular.",
+      "risk": "A linguagem instrumental faz a igreja parecer um painel.",
+      "case": "A linguagem instrumental faz a igreja parecer um painel.",
+      "kept": "Horários estáveis."
+    },
+    {
+      "id": "luxury-fashion-flagship",
+      "label": "Editorial de moda",
+      "verdict": "declined",
+      "thesis": "A distância e a linguagem de luxo enfraquecem o acolhimento comunitário.",
+      "palette": [
+        "#faf8f1",
+        "#222222",
+        "#862d36"
+      ],
+      "materials": [
+        "referência comparativa"
+      ],
+      "viewport": "Referência avaliada para navegação, leitura e uso no celular.",
+      "risk": "A distância e a linguagem de luxo enfraquecem o acolhimento comunitário.",
+      "case": "A distância e a linguagem de luxo enfraquecem o acolhimento comunitário.",
+      "kept": "Espaço e hierarquia."
+    },
+    {
+      "id": "digital-design-canon-shareware-installer-screens",
+      "label": "Instalador clássico",
+      "verdict": "declined",
+      "thesis": "A aparência retro contradiz o pedido de modernização e limita a navegação.",
+      "palette": [
+        "#cccccc",
+        "#111111",
+        "#3333aa"
+      ],
+      "materials": [
+        "referência comparativa"
+      ],
+      "viewport": "Referência avaliada para navegação, leitura e uso no celular.",
+      "risk": "A aparência retro contradiz o pedido de modernização e limita a navegação.",
+      "case": "A aparência retro contradiz o pedido de modernização e limita a navegação.",
+      "kept": "Próxima ação clara."
+    }
+  ],
+  "canon": true,
+  "canonCard": {
+    "label": "Institucional contemporâneo",
+    "thesis": "A estrutura familiar de um site de igreja, executada com clareza e bom acabamento.",
+    "palette": [
+      "#ffffff",
+      "#242424",
+      "#892c31"
+    ],
+    "materials": [
+      "fotografia de capa",
+      "seções amplas"
+    ],
+    "viewport": "Uma foto de capa com convite, horários logo abaixo e seções de agenda, sermões e Instagram.",
+    "risk": "Fácil de entender, mas menos singular.",
+    "comp": ".impeccable/mocks/decision/institucional.png"
+  },
+  "reroll": {
+    "registers": [
+      "safer",
+      "bolder"
+    ]
+  },
+  "steer": true,
+  "buildPath": {
+    "value": "comp",
+    "toggle": true
+  }
+}
