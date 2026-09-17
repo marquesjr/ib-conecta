@@ -1,4 +1,4 @@
-"""A folha de contato da home: os quadros do acervo, com reserva quando não há acervo real.
+"""Fotografias da home: acervo real com reserva ilustrativa quando necessário.
 
 Ordem de preferência, e ela é deliberada:
 
@@ -50,11 +50,10 @@ def _seeded(count):
 
 
 def archive_frames(count=12):
-    """Devolve até ``count`` quadros para a folha de contato.
+    """Devolve até ``count`` fotos, priorizando o acervo publicado.
 
-    O acervo real entra primeiro e, se ele não preenche a folha, os quadros semeados
-    completam. Uma grade meio vazia descaracterizaria a composição aprovada, cuja
-    densidade é um compromisso e não um humor.
+    A primeira abre a homepage; as restantes compõem a galeria editorial.
+    Imagens de reserva são marcadas como sintéticas para identificação na página.
     """
     from apps.public.models import ArchiveFrame
 

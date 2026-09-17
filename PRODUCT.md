@@ -49,7 +49,7 @@ Confirmado no produto:
 - Coletânea: não armazena material sem autorização de uso; referências externas saem impressas como QR para URL interna estável.
 - Idioma da interface: português (`pt-BR`).
 - Nenhum vídeo inicia automaticamente.
-- Peso das páginas públicas: o visual rico tem precedência sobre a leveza, por decisão explícita do responsável pelo produto, e vale igual em qualquer aparelho. A home carrega o acervo fotográfico da congregação (doze quadros) porque a fotografia *é* a página nesta direção — ver `DESIGN.md`. O custo aceito é celular mais pesado e primeira carga mais lenta em conexão limitada. Isto substitui a regra anterior de manter as páginas públicas leves; se a leveza voltar a ser prioridade, é o desenho que muda, não só a compressão das imagens.
+- Fotografias continuam importantes em qualquer aparelho. Na direção Editorial acolhedor, aprovada em 16/09/2026, uma foto abre a homepage e as demais compõem uma galeria com carregamento adiado. A quantidade continua configurável no CMS. A preferência anterior por riqueza visual permanece, sem exigir a antiga grade densa de doze quadros na primeira tela.
 
 Aberto:
 
@@ -62,11 +62,12 @@ Aberto:
 - Voz já no produto: acolhedora e pastoral, convite ao culto e à conversa, sem prometer atendimento 24h nem espetáculo.
 - Código: MIT. Conteúdos e mídias da igreja permanecem com seus respectivos direitos.
 - Administração edita WhatsApp, PIX, redes, horários, endereço e próximo culto no Wagtail; o código não é a fonte desses fatos.
+- Direção aprovada: Editorial acolhedor, com a logo original fornecida, serifada editorial, superfícies claras, vermelho da marca e fotografias grandes. Substitui Arquivo da Congregação.
 
 ## Evidence on Hand
 
 - Copy e dados de culto/endereço/PIX/WhatsApp são configuráveis; os defaults do código e os fixtures de teste não são prova da igreja real.
-- Não há no repositório logo oficial, fotos de culto, depoimentos, números de frequência, imprensa ou casos reais. Trabalho futuro não deve fabricar testemunhos, horários, endereço, chave PIX ou conteúdo pastoral.
+- A logo original fornecida pelo usuário está em `static/img/church-logo.png` (150×150, sem alteração de pixels). O Instagram indicado é `https://www.instagram.com/igrejabatista.santaleopoldina/`. Não foram obtidas fotografias reais nesta remodelação; as imagens de exemplo continuam identificadas. Não fabricar testemunhos, horários, endereço, chave PIX ou conteúdo pastoral.
 - Páginas institucionais (história, crenças, ministérios, liderança) nascem com texto-semente para a igreja substituir no CMS.
 
 ## Product Principles
@@ -74,5 +75,5 @@ Aberto:
 1. Primeiro o visitante no celular: culto, caminho e conversa humana, mesmo com rede ruim.
 2. Público e privado em par — a vitrine não expõe a operação; a operação não compete com o acolhimento.
 3. Gestão interna só o necessário para a igreja funcionar de verdade.
-4. Leveza é restrição de produto, não polish: sem autoplay, sem mídia pesada hospedada aqui.
+4. Fotografias têm espaço na experiência, com carregamento adiado abaixo da abertura e sem autoplay.
 5. A igreja fala com a própria voz pelo CMS; o portal não inventa prova.

@@ -1,761 +1,126 @@
-/* IB Conecta — Arquivo da Congregação.
-   Tokens sampled from the approved comp .impeccable/mocks/comp-arquivo-b-folha.png
-   (see .impeccable/surfaces/templates-public-home-html.md for the sampling record).
-   Archivo and Caveat are SIL OFL, self-hosted as variable woff2. */
-
-@font-face {
-  font-family: Archivo;
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url("../fonts/archivo-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: Archivo;
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url("../fonts/archivo-latin-ext.woff2") format("woff2");
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-  font-family: Caveat;
-  font-style: normal;
-  font-weight: 400 700;
-  font-display: swap;
-  src: url("../fonts/caveat-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: Caveat;
-  font-style: normal;
-  font-weight: 400 700;
-  font-display: swap;
-  src: url("../fonts/caveat-latin-ext.woff2") format("woff2");
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
+/* Encontro — editorial acolhedor. Local fonts; original church photography takes priority. */
+@font-face { font-family: Archivo; font-style: normal; font-weight: 100 900; font-display: swap; src: url("../fonts/archivo-latin.woff2") format("woff2"); }
+@font-face { font-family: "DM Serif Display"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/dm-serif-display-regular.ttf") format("truetype"); }
+@font-face { font-family: "DM Serif Display"; font-style: italic; font-weight: 400; font-display: swap; src: url("../fonts/dm-serif-display-italic.ttf") format("truetype"); }
 :root {
-  /* Sampled from the approved comp, never estimated. */
-  --paper: #ece8e2;
-  --paper-shade: #d4d0ca;
-  --mount: #f9f9f9;
-  --graphite: #222527;
-  --photo-black: #111313;
-  --archive-gray: #74706c;
-  --ink-red: #8b211a;
-
-  --ink-red-hover: #6f1a14;
-  --graphite-hover: #15181a;
-  --paper-warm: #f4f1ec;
-
-  --font: Archivo, "Segoe UI", system-ui, sans-serif;
-  --font-hand: Caveat, "Segoe UI", cursive;
-  --font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
-
-  /* The gutter is the only separator in this world: no radius, no shadow. */
-  --gutter: 6px;
-  --hair: 1px;
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2.75rem;
-  --measure: min(66ch, 100%);
-  /* Largura da folha das páginas internas. A prosa continua em --measure dentro dela. */
-  --sheet: 74rem;
-
-  --paper-fill: url("../img/paper.png");
-  --corner: url("../img/corner.svg");
-  --tick: url("../img/tick.svg");
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  scrollbar-color: var(--graphite) var(--paper-shade);
-}
-
-body {
-  margin: 0;
-  font-family: var(--font);
-  font-size: 100%;
-  color: var(--graphite);
-  background-color: var(--paper);
-  background-image: var(--paper-fill);
-  background-size: 512px;
-  background-repeat: repeat;
-  line-height: 1.55;
-  caret-color: var(--ink-red);
-  font-variant-numeric: tabular-nums;
-}
-
-::selection {
-  background: var(--ink-red);
-  color: var(--mount);
-}
-
-:focus-visible {
-  outline: 2px solid var(--ink-red);
-  outline-offset: 2px;
-}
-
-a {
-  color: var(--graphite);
-  text-underline-offset: 0.18em;
-}
-
-a:hover {
-  color: var(--ink-red);
-}
-
-.skip-link {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 20;
-  padding: 0.7rem 1.1rem;
-  background: var(--graphite);
-  color: var(--paper);
-  text-decoration: none;
-  transform: translateY(-160%);
-  font-weight: 600;
-  font-size: 0.68rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.skip-link:focus {
-  transform: none;
-  color: var(--paper);
-  outline-color: var(--paper);
-}
-
-/* ---------- Shell ---------- */
-
-.wrap {
-  width: 100%;
-  padding: 0 var(--gutter) var(--gutter);
-}
-
-/* The nav row is a single hairline band on paper, every destination visible. */
-.site-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0 1.4rem;
-  padding: 0.75rem var(--space-sm) 0.55rem;
-  border-bottom: var(--hair) solid var(--archive-gray);
-  margin-bottom: var(--gutter);
-}
-
-.brand {
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--graphite);
-  white-space: nowrap;
-}
-
-.site-header nav {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 1.15rem;
-  row-gap: 0.2rem;
-  margin: 0;
-}
-
-.site-header nav a {
-  padding: 0.15rem 0;
-  text-decoration: none;
-  color: var(--graphite);
-  font-weight: 500;
-  font-size: 0.63rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  border-bottom: var(--hair) solid transparent;
-}
-
-.site-header nav a:hover,
-.site-header nav a[aria-current="page"] {
-  color: var(--ink-red);
-  border-bottom-color: var(--ink-red);
-}
-
-main {
-  display: block;
-}
-
-.site-footer {
-  margin-top: var(--gutter);
-  padding: var(--space-md) var(--space-sm);
-  border-top: var(--hair) solid var(--archive-gray);
-  font-size: 0.85rem;
-  color: var(--archive-gray);
-}
-
-.site-footer strong {
-  color: var(--graphite);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-}
-
-.site-footer p {
-  margin: 0 0 var(--space-sm);
-}
-
-.social-links a {
-  margin-right: 1.1rem;
-  font-size: 0.63rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.social-links a:hover {
-  text-decoration: underline;
-}
-
-/* ---------- Plates: the ranking device is inversion, not elevation ---------- */
-
-.plate {
-  position: relative;
-  background: var(--paper-warm);
-  border: var(--hair) solid var(--paper-shade);
-  padding: var(--space-md);
-}
-
-.plate--mount {
-  background: var(--mount);
-  border-color: var(--paper-shade);
-}
-
-.plate--graphite {
-  background: var(--graphite);
-  border-color: var(--graphite);
-  color: var(--paper);
-}
-
-.plate--graphite a {
-  color: var(--paper);
-}
-
-.plate--ink {
-  background: var(--ink-red);
-  border-color: var(--ink-red);
-  color: var(--mount);
-}
-
-/* Album photo-corner mounts. Authored SVG, one span per corner so each can rotate. */
-.mounts {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.mounts i {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  background: var(--corner) center / contain no-repeat;
-}
-
-.mounts i:nth-child(1) { top: -1px; left: -1px; }
-.mounts i:nth-child(2) { top: -1px; right: -1px; transform: rotate(90deg); }
-.mounts i:nth-child(3) { bottom: -1px; right: -1px; transform: rotate(180deg); }
-.mounts i:nth-child(4) { bottom: -1px; left: -1px; transform: rotate(270deg); }
-
-/* ---------- Type ---------- */
-
-h1,
-h2,
-h3 {
-  font-weight: 600;
-  line-height: 1.15;
-  margin: 0 0 0.5rem;
-}
-
-h1 {
-  font-size: clamp(1.5rem, 3.4vw, 2.05rem);
-  letter-spacing: -0.01em;
-}
-
-h2 {
-  font-size: 1.15rem;
-  letter-spacing: 0;
-}
-
-h3 {
-  font-size: 1rem;
-}
-
-.label {
-  display: block;
-  margin: 0 0 0.35rem;
-  font-size: 0.63rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--archive-gray);
-}
-
-.plate--graphite .label,
-.plate--ink .label {
-  color: color-mix(in srgb, var(--paper) 70%, transparent);
-}
-
-.cell-heading {
-  margin: 0 0 0.6rem;
-  padding-bottom: 0.35rem;
-  border-bottom: var(--hair) solid var(--paper-shade);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--graphite);
-}
-
-.muted {
-  color: var(--archive-gray);
-}
-
-.caption {
-  font-family: var(--font-hand);
-  font-size: 0.95rem;
-  line-height: 1.2;
-  color: var(--archive-gray);
-}
-
-/* ---------- Actions ---------- */
-
-.cta {
-  display: inline-block;
-  padding: 0.8rem 1.5rem;
-  background: var(--ink-red);
-  color: var(--mount);
-  text-decoration: none;
-  text-transform: uppercase;
-  font-weight: 600;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  border: var(--hair) solid var(--ink-red);
-}
-
-.cta:hover {
-  background: var(--ink-red-hover);
-  border-color: var(--ink-red-hover);
-  color: var(--mount);
-}
-
-.cta.secondary {
-  background: transparent;
-  color: var(--graphite);
-  border-color: var(--graphite);
-}
-
-.cta.secondary:hover {
-  background: var(--graphite);
-  border-color: var(--graphite);
-  color: var(--paper);
-}
-
-button.cta {
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gutter);
-  margin: var(--space-md) 0 0;
-}
-
-/* ---------- The contact sheet ---------- */
-
-.contact-sheet {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  /* Dense packing lets the plates sit where the comp puts them while the DOM keeps a
-     sensible reading order: the service time, then its actions, then the dated lists. */
-  grid-auto-flow: row dense;
-  gap: var(--gutter);
-}
-
-/* Every cell fills its track. Without this the browser's default figure margin
-   (1em 40px) shrinks each photograph into an island of paper. */
-.contact-sheet > * {
-  margin: 0;
-}
-
-/* Every region occupies whole cells; nothing floats between them.
-   Twenty-four cells: twelve photographs plus the mount, two actions, three lists
-   and the handle. The count is the composition's density commitment. */
-.sheet-mount { grid-area: 1 / 1 / 2 / 3; }
-.sheet-action--primary { grid-area: 2 / 1 / 3 / 2; }
-.sheet-action--secondary { grid-area: 2 / 2 / 3 / 3; }
-.sheet-list--agenda { grid-area: 2 / 5 / 3 / 7; }
-.sheet-list--sermons { grid-area: 3 / 1 / 4 / 3; }
-.sheet-list--news { grid-area: 4 / 5 / 5 / 7; }
-.sheet-handle { grid-area: 4 / 1 / 5 / 3; }
-.sheet-frame { grid-column: span 1; }
-
-.sheet-mount {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: var(--space-lg) var(--space-md);
-}
-
-.sheet-mount .service-when {
-  margin: 0 0 0.35rem;
-  font-size: clamp(1.7rem, 3.6vw, 3.4rem);
-  font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -0.015em;
-  color: var(--graphite);
-}
-
-.sheet-mount .service-where {
-  margin: 0;
-  font-size: 1.05rem;
-  font-weight: 500;
-  color: var(--graphite);
-}
-
-.sheet-mount .service-host {
-  margin: 0.3rem 0 0;
-  font-size: 0.8rem;
-  color: var(--archive-gray);
-}
-
-/* The whole cell is the action, the way the comp works it. */
-.sheet-action {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-md) 0.7rem;
-  text-align: center;
-  text-transform: uppercase;
-  font-weight: 600;
-  font-size: 0.72rem;
-  letter-spacing: 0.13em;
-  line-height: 1.35;
-  text-decoration: none;
-}
-
-a.sheet-action.plate--ink:hover {
-  background: var(--ink-red-hover);
-  border-color: var(--ink-red-hover);
-  color: var(--mount);
-}
-
-a.sheet-action.plate--graphite:hover {
-  background: var(--graphite-hover);
-  border-color: var(--graphite-hover);
-  color: var(--paper);
-}
-
-.sheet-list {
-  display: flex;
-  flex-direction: column;
-  padding: 0.85rem 0.9rem;
-  font-size: 0.85rem;
-}
-
-.sheet-list ol,
-.sheet-list ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.sheet-list li {
-  display: flex;
-  gap: 0.6rem;
-  padding: 0.3rem 0;
-  border-bottom: var(--hair) solid var(--paper-shade);
-}
-
-.sheet-list li:last-child {
-  border-bottom: 0;
-}
-
-.sheet-list .when {
-  flex: none;
-  color: var(--ink-red);
-  font-weight: 600;
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
-}
-
-.sheet-list a {
-  text-decoration: none;
-  color: var(--graphite);
-}
-
-.sheet-list a:hover {
-  color: var(--ink-red);
-  text-decoration: underline;
-}
-
-.sheet-list .empty {
-  margin: 0;
-  color: var(--archive-gray);
-  font-size: 0.8rem;
-}
-
-/* The handle is a short strip on the sheet's bottom edge, not a full cell. */
-.sheet-handle {
-  align-self: end;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.8rem 0.9rem;
-  font-size: 0.63rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--graphite);
-}
-
-.sheet-handle:hover {
-  color: var(--ink-red);
-}
-
-/* A frame is a photograph with its inked caption beneath, on a paper mount. */
-.sheet-frame {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  background: var(--paper-warm);
-  border: var(--hair) solid var(--paper-shade);
-  padding: 5px 5px 0;
-  text-decoration: none;
-}
-
-/* A register cross sits on the cell's own corner, so it lands on the sheet's
-   intersections. Tiling it across the container instead turns the sheet into a
-   dotted texture, which is not what the comp draws. */
-.sheet-frame::before {
-  content: "";
-  position: absolute;
-  top: calc(-6px - var(--gutter) / 2);
-  left: calc(-6px - var(--gutter) / 2);
-  width: 12px;
-  height: 12px;
-  background: var(--tick) center / contain no-repeat;
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.sheet-frame img {
-  display: block;
-  width: 100%;
-  /* height:auto is load-bearing: the width/height attributes on the img are a
-     presentational hint that otherwise beats aspect-ratio and stretches the row. */
-  height: auto;
-  aspect-ratio: 1;
-  object-fit: cover;
-  background: var(--paper-shade);
-  /* The comp's frames read as archival prints: near-monochrome with a warm cast
-     and deep blacks, not colour photographs sitting on paper. */
-  filter: saturate(0.4) contrast(1.07) brightness(0.97);
-}
-
-.sheet-frame figcaption,
-.sheet-frame .frame-caption {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.4rem;
-  padding: 0.3rem 0.15rem 0.35rem;
-  font-family: var(--font-hand);
-  font-size: 0.9rem;
-  line-height: 1.15;
-  color: var(--archive-gray);
-}
-
-.sheet-frame .frame-date {
-  flex: none;
-  font-family: var(--font);
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  align-self: flex-end;
-}
-
-.sheet-frame a {
-  display: block;
-  line-height: 0;
-}
-
-.sheet-frame:hover img {
-  filter: saturate(0.9) contrast(1.06);
-}
-
-.sheet-frame:hover figcaption {
-  color: var(--graphite);
-}
-
-/* On a wide viewport the sheet owns the first screen edge to edge, four equal rows,
-   the way the comp composes it. The photographs take whatever height the row leaves
-   after the caption instead of forcing a square and pushing the sheet past the fold. */
-@media (min-width: 901px) {
-  .contact-sheet {
-    grid-template-rows: repeat(4, minmax(0, 1fr));
-    height: calc(100svh - 3.5rem);
-    min-height: 33rem;
-  }
-
-  .sheet-frame img {
-    flex: 1 1 auto;
-    min-height: 0;
-    aspect-ratio: auto;
-  }
-}
-
-/* The evangelistic copy is the church's own voice, set as a quiet caption to the sheet. */
-.home-lede {
-  max-width: var(--measure);
-  margin: var(--space-lg) 0 0;
-  padding: 0 var(--space-sm);
-  font-size: 0.95rem;
-  color: var(--archive-gray);
-}
-
-.home-lede strong {
-  display: block;
-  margin-bottom: 0.2rem;
-  color: var(--graphite);
-  font-size: 1.05rem;
-  font-weight: 600;
-}
-
-/* ---------- Content pages ---------- */
-
-/* As internas são folhas montadas no papel, não faixas. Sem esta medida a linha do
-   registro corria 1.893px numa tela de 1920 e nada era varrível; a home fica de fora
-   porque a folha de contato é sangria por desenho.
-
-   A folha encosta na esquerda em vez de centralizar: a nav é sangria em toda página,
-   então alinhar a folha à mancha da nav dá uma margem só, à direita, como folha de
-   registro sob o cabeçalho — centralizar deixaria o conteúdo alinhado a nada. */
-.cms-page {
-  max-width: var(--sheet);
-  padding: var(--space-lg) var(--space-sm) var(--space-xl);
-}
-
-.page-head {
-  padding-bottom: var(--space-md);
-  margin-bottom: var(--space-lg);
-  border-bottom: var(--hair) solid var(--archive-gray);
-}
-
-.page-head h1 {
-  margin: 0;
-}
-
-.cms-page .lede {
-  max-width: var(--measure);
-  font-size: 1.05rem;
-  color: var(--archive-gray);
-  margin: 0.5rem 0 0;
-}
-
-.cms-page .rich-text,
-.cms-page table {
-  max-width: var(--measure);
-}
-
-.cms-page .rich-text :first-child { margin-top: 0; }
-.cms-page .rich-text img { max-width: 100%; height: auto; }
-
-.panel {
-  position: relative;
-  background: var(--paper-warm);
-  border: var(--hair) solid var(--paper-shade);
-  padding: var(--space-md) var(--space-md) var(--space-md);
-  margin: 0 0 var(--gutter);
-}
-
+  --paper: #faf9f6; --paper-warm: #f3f0eb; --paper-shade: #ded9d2; --mount: #ffffff;
+  --graphite: #262722; --photo-black: #171916; --archive-gray: #62635d;
+  --ink-red: #862d36; --ink-red-hover: #69222b; --graphite-hover: #171916;
+  --font: Archivo, "Segoe UI", sans-serif; --font-display: "DM Serif Display", Georgia, serif;
+  --font-mono: ui-monospace, Consolas, monospace;
+  --hair: 1px; --gutter: 1.25rem; --space-xs: .25rem; --space-sm: .5rem;
+  --space-md: 1rem; --space-lg: 1.5rem; --space-xl: 3rem; --measure: min(68ch, 100%);
+  --sheet: 76rem; --page-gutter: clamp(1.25rem, 5vw, 6rem);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scrollbar-color: var(--archive-gray) var(--paper); scroll-behavior: smooth; }
+body { margin: 0; font-family: var(--font); font-size: 1rem; color: var(--graphite); background: var(--paper); line-height: 1.6; caret-color: var(--ink-red); }
+::selection { background: var(--ink-red); color: var(--mount); }
+:focus-visible { outline: 2px solid var(--ink-red); outline-offset: 5px; }
+a { color: var(--ink-red); text-underline-offset: .22em; }
+a:hover { color: var(--ink-red-hover); }
+button, input, select, textarea { font: inherit; }
+img { max-width: 100%; }
+h1, h2, h3 { margin: 0 0 .65rem; line-height: 1.12; text-wrap: balance; }
+h1, h2 { font-family: var(--font-display); font-weight: 400; letter-spacing: -.025em; }
+h1 { font-size: clamp(2.5rem, 4.5vw, 4.5rem); }
+h2 { font-size: clamp(1.8rem, 2.8vw, 2.8rem); }
+h3 { font-size: 1.1rem; font-weight: 600; }
+p { margin: 0 0 1rem; }
+.skip-link { position: absolute; top: 0; left: 1rem; z-index: 50; padding: 1rem; background: var(--ink-red); color: var(--mount); transform: translateY(-150%); }
+.skip-link:focus { transform: none; color: var(--mount); }
+.site-header { max-width: 96rem; margin: auto; padding: 1.1rem var(--page-gutter); display: flex; justify-content: space-between; align-items: center; gap: 2rem; min-height: 6rem; }
+.brand { flex: none; }
+.brand-image { display: block; width: 150px; height: 53px; overflow: hidden; }
+.brand-image img { display: block; width: 150px; max-width: none; height: 150px; margin-top: -49px; }
+.site-header nav { display: flex; align-items: center; gap: clamp(.9rem, 2vw, 2rem); font-size: .92rem; }
+.site-header nav a:not(.cta), summary { color: var(--graphite); text-decoration: none; cursor: pointer; }
+.site-header nav a:hover, .site-header nav a[aria-current="page"], summary:hover { color: var(--ink-red); }
+.site-header nav a[aria-current="page"] { text-decoration: underline; text-underline-offset: .5rem; }
+.site-header nav a.cta:hover, .site-header nav a.cta[aria-current="page"] { color: var(--mount); }
+.nav-group { position: relative; }
+.nav-group summary { padding: .75rem 0; }
+.nav-dropdown { position: absolute; right: 0; top: 100%; width: 15rem; z-index: 20; padding: .6rem; background: var(--mount); border: 1px solid var(--paper-shade); border-radius: 12px; }
+.nav-dropdown a { display: block; padding: .7rem .8rem; border-radius: 6px; }
+.nav-dropdown a:hover { background: var(--paper-warm); }
+.nav-toggle { display: none; align-items: center; gap: .7rem; padding: .65rem .8rem; border: 1px solid var(--paper-shade); border-radius: 8px; background: var(--mount); color: var(--graphite); }
+.cta { display: inline-flex; align-items: center; justify-content: center; gap: .8rem; min-height: 48px; padding: .8rem 1.35rem; border: 1px solid var(--ink-red); border-radius: 10px; background: var(--ink-red); color: var(--mount); font-size: .95rem; font-weight: 500; text-decoration: none; line-height: 1.4; cursor: pointer; transition: background-color .18s ease-out; }
+.cta:hover { background: var(--ink-red-hover); border-color: var(--ink-red-hover); color: var(--mount); }
+.cta.secondary { background: transparent; color: var(--ink-red); }
+.cta.secondary:hover { background: var(--paper-warm); }
+.cta.light { background: var(--paper); border-color: var(--paper); color: var(--ink-red); }
+.cta.light:hover { background: var(--mount); }
+.cta:disabled { opacity: .55; cursor: not-allowed; }
+.actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.8rem; }
+.icon-arrow { width: 21px; height: 21px; flex: none; vertical-align: middle; }
+.text-link { display: inline-flex; align-items: center; gap: .65rem; font-weight: 500; text-decoration: none; }
+.text-link:hover { text-decoration: underline; }
+.welcome { max-width: 96rem; margin: auto; padding: .5rem 2rem 2rem var(--page-gutter); display: grid; grid-template-columns: 43% minmax(0, 1fr); gap: 2rem; align-items: center; }
+.welcome-copy { padding: 1.5rem 0; }
+.welcome h1 { font-size: clamp(2.6rem, 4.8vw, 5.2rem); line-height: 1.02; margin-bottom: 1.2rem; }
+.welcome h1 em { color: var(--ink-red); font-weight: 400; }
+.welcome-verse { font-family: var(--font-display); font-size: clamp(1.15rem, 1.7vw, 1.65rem); }
+.lede { color: var(--archive-gray); max-width: 48ch; font-size: 1.05rem; }
+.welcome-photo { position: relative; margin: 0; align-self: stretch; min-height: 28rem; border-radius: 18px; overflow: hidden; }
+.welcome-photo > a { display: block; height: 100%; }
+.welcome-photo img { width: 100%; height: 100%; position: absolute; inset: 0; object-fit: cover; }
+.welcome-photo figcaption { position: absolute; bottom: 0; right: 0; max-width: 90%; margin: .75rem; padding: .4rem .7rem; border-radius: 6px; background: var(--paper); color: var(--graphite); font-size: .72rem; }
+.visit-band { background: var(--ink-red); color: var(--mount); padding: 2rem var(--page-gutter); display: grid; grid-template-columns: 1fr 1.4fr auto; gap: 2.5rem; align-items: center; }
+.visit-band > div + div { padding-left: 2.5rem; border-left: 1px solid #b06e75; }
+.visit-band h2 { font: 500 1rem var(--font); letter-spacing: 0; }
+.visit-band p { margin: .35rem 0 0; font-size: .95rem; }
+.visit-band a:focus-visible { outline-color: var(--mount); }
+.home-content { max-width: 90rem; margin: auto; padding: 3.6rem var(--page-gutter) 0; }
+.editorial-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+.editorial-pair > section + section { border-left: 1px solid var(--paper-shade); padding-left: 4rem; }
+.section-intro { color: var(--archive-gray); }
+.editorial-list { list-style: none; padding: 0; margin: 1.3rem 0; }
+.editorial-list li { display: flex; align-items: baseline; gap: 1.25rem; border-top: 1px solid var(--paper-shade); padding: 1rem 0; }
+.editorial-list time { flex: none; font-variant-numeric: tabular-nums; color: var(--ink-red); font-size: .88rem; }
+.editorial-list a { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 1rem; text-decoration: none; color: var(--graphite); }
+.editorial-list a:hover { color: var(--ink-red); }
+.empty { color: var(--archive-gray); font-size: .95rem; }
+.community, .home-news { margin-top: 5rem; }
+.section-heading { display: flex; justify-content: space-between; align-items: end; gap: 2rem; margin-bottom: 1.5rem; }
+.section-heading p { margin-bottom: 0; }
+.instagram-link { font-size: .85rem; overflow-wrap: anywhere; }
+.image-notice { font-size: .85rem; color: var(--archive-gray); max-width: 72ch; margin-bottom: 1.5rem; scroll-margin-top: 1rem; }
+.community-gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
+.community-photo { margin: 0; min-width: 0; }
+.community-photo:first-child { grid-column: span 2; }
+.community-photo img { display: block; width: 100%; height: 19rem; object-fit: cover; border-radius: 14px; }
+.community-photo a { display: block; }
+.community-photo figcaption { display: flex; justify-content: space-between; gap: .75rem; padding-top: .55rem; font-size: .8rem; color: var(--archive-gray); }
+.invitation { text-align: center; padding: 4.5rem 1.5rem; background: var(--paper-warm); border-radius: 16px; margin-top: 5rem; }
+.invitation p { color: var(--archive-gray); }
+.cms-page { max-width: var(--sheet); margin: auto; padding: 3.5rem var(--page-gutter); }
+.cms-page > h1 { margin-bottom: 1rem; }
+.cms-page > .lede { max-width: 62ch; margin-bottom: 2.5rem; }
+.page-head { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--paper-shade); }
+.page-head h1 { margin: 0; }
+.panel { background: var(--mount); border: 1px solid var(--paper-shade); border-radius: 14px; padding: clamp(1.25rem, 3vw, 2rem); margin-bottom: 1.25rem; overflow-wrap: anywhere; }
 .panel > :first-child { margin-top: 0; }
 .panel > :last-child { margin-bottom: 0; }
-
-.panel h2,
-.panel h3 {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding-bottom: 0.35rem;
-  margin-bottom: 0.65rem;
-  border-bottom: var(--hair) solid var(--paper-shade);
-}
-
-/* Panels tile into the sheet on wide viewports instead of stacking in a void. */
-.panel-set {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(19rem, 100%), 1fr));
-  gap: var(--gutter);
-  align-items: start;
-}
-
-.news-list {
-  list-style: none;
-  padding: 0;
-  margin: var(--space-md) 0 0;
-}
-
-.news-list li {
-  padding: 0.55rem 0;
-  border-bottom: var(--hair) solid var(--paper-shade);
-}
-
-.news-list li:last-child { border-bottom: 0; }
-
-.news-list a {
-  text-decoration: none;
-  color: var(--graphite);
-  font-weight: 500;
-}
-
-.news-list a:hover {
-  color: var(--ink-red);
-  text-decoration: underline;
-}
-
-.news-meta {
-  color: var(--archive-gray);
-  font-size: 0.78rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-/* ---------- Registro datado ---------- */
-
-/* Índice de arquivo, não lista de cartões. A data é o índice do acervo, então ela ganha
-   a coluna da esquerda em algarismos tabulares grandes em vez de ser sussurrada em
-   cinza sob o título. O fio vertical da coluna cruza com o fio de cada linha, e esses
-   cruzamentos são a mesma marca de registro da folha de contato. */
-
-.register {
-  list-style: none;
-  padding: 0;
-  margin: var(--space-lg) 0 0;
-  border-top: var(--hair) solid var(--paper-shade);
-}
+.panel h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+.panel h3 { margin-top: 1.5rem; }
+.panel .cta { margin: .25rem .3rem .25rem 0; }
+.panel-set { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr)); gap: 1.25rem; align-items: start; }
+.rich-text { max-width: var(--measure); }
+.rich-text img { max-width: 100%; height: auto; border-radius: 12px; }
+.rich-text h2 { margin-top: 2rem; }
+.share-area { max-width: var(--sheet); padding: 0 var(--page-gutter); margin: 0 auto 3rem; }
+.site-footer { max-width: 96rem; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; margin: 5rem auto 0; padding: 3.5rem var(--page-gutter); border-top: 1px solid var(--paper-shade); color: var(--archive-gray); font-size: .9rem; }
+.site-footer h2 { color: var(--graphite); font-size: 2rem; }
+.site-footer h3 { color: var(--graphite); }
+.footer-product { font-size: .8rem; margin-top: 2rem; }
+.social-links { display: flex; flex-wrap: wrap; gap: 1rem; }
+.whatsapp-welcome { max-width: var(--measure); }
+.muted, .news-meta, .caption { color: var(--archive-gray); font-size: .9rem; }
+.label { display: block; font-weight: 600; font-size: .9rem; margin-bottom: .4rem; }
+.news-list { list-style: none; padding: 0; }
+.news-list li { padding: 1rem 0; border-bottom: 1px solid var(--paper-shade); }
+.news-list a { font-weight: 500; text-decoration: none; }
+.news-meta { margin: .35rem 0 0; }
 
 .register-entry {
   display: grid;
@@ -768,7 +133,7 @@ a.sheet-action.plate--graphite:hover {
   color: var(--graphite);
 }
 
-/* Aquece o material; nunca levanta. */
+
 .register-entry:hover,
 .register-entry:focus-visible {
   background: var(--paper-warm);
@@ -800,10 +165,10 @@ a.sheet-action.plate--graphite:hover {
 
 .register-month,
 .register-time {
-  font-size: 0.63rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: var(--archive-gray);
   font-variant-numeric: tabular-nums;
 }
@@ -830,10 +195,10 @@ a.sheet-action.plate--graphite:hover {
 }
 
 .register-where {
-  font-size: 0.63rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: var(--archive-gray);
 }
 
@@ -847,14 +212,14 @@ a.sheet-action.plate--graphite:hover {
 .register-tag {
   padding: 0.16em 0.5em;
   border: var(--hair) solid currentcolor;
-  font-size: 0.63rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: var(--archive-gray);
 }
 
-/* O vermelho de sinal só aparece quando algo é pedido do visitante. */
+
 .register-tag--asks {
   color: var(--ink-red);
 }
@@ -865,7 +230,7 @@ a.sheet-action.plate--graphite:hover {
     gap: var(--space-sm);
   }
 
-  /* Sem coluna, a data volta a ser uma linha de cabeçalho da entrada. */
+
   .register-date {
     flex-direction: row;
     align-items: baseline;
@@ -879,11 +244,9 @@ a.sheet-action.plate--graphite:hover {
   }
 }
 
-/* ---------- Selo de estado ---------- */
 
-/* Modo Operar precisa de estado legível de relance. A marca distingue os tons pela
-   forma — vazada, cheia, cortada — porque escalas e coletâneas são impressas em preto
-   e branco, e porque cor sozinha não chega a quem não a distingue. */
+
+
 
 .visually-hidden {
   position: absolute;
@@ -903,10 +266,10 @@ a.sheet-action.plate--graphite:hover {
   gap: 0.4em;
   padding: 0.16em 0.5em 0.16em 0.42em;
   border: var(--hair) solid currentcolor;
-  font-size: 0.68rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   vertical-align: 0.05em;
@@ -923,7 +286,7 @@ a.sheet-action.plate--graphite:hover {
   color: var(--ink-red);
 }
 
-/* Caixa vazada: ninguém marcou ainda. */
+
 .state--open .state-mark {
   background: transparent;
 }
@@ -932,7 +295,7 @@ a.sheet-action.plate--graphite:hover {
   color: var(--archive-gray);
 }
 
-/* Caixa cheia: resolvido. */
+
 .state--settled .state-mark {
   background: currentcolor;
 }
@@ -941,7 +304,7 @@ a.sheet-action.plate--graphite:hover {
   color: var(--archive-gray);
 }
 
-/* Caixa cortada: resolvido pelo não. */
+
 .state--closed .state-mark {
   background: linear-gradient(
     to bottom right,
@@ -970,7 +333,7 @@ a.sheet-action.plate--graphite:hover {
   border: 0;
 }
 
-/* ---------- Messages and notes ---------- */
+
 
 .messages {
   list-style: none;
@@ -983,12 +346,12 @@ a.sheet-action.plate--graphite:hover {
   background: var(--mount);
   color: var(--graphite);
   border: var(--hair) solid var(--paper-shade);
-  border-left: 4px solid var(--graphite);
+  border: 1px solid var(--paper-shade);
 }
 
-/* State is marked by shape as well as hue: the left bar changes weight, not just colour. */
+
 .messages li.error {
-  border-left: 4px double var(--ink-red);
+  border: 1px solid var(--ink-red);
   color: var(--ink-red);
 }
 
@@ -1007,8 +370,7 @@ a.sheet-action.plate--graphite:hover {
   text-decoration: underline;
 }
 
-/* O convite do rodapé é a última frase da página: mede como texto corrido, não como
-   coluna larga do rodapé. Sem isto a linha atravessava a tela inteira em desktop. */
+
 .whatsapp-welcome {
   max-width: var(--measure);
   margin: var(--space-md) 0 0;
@@ -1043,7 +405,7 @@ a.sheet-action.plate--graphite:hover {
   user-select: all;
 }
 
-/* ---------- Forms ---------- */
+
 
 .hp {
   position: absolute;
@@ -1059,10 +421,10 @@ form p { margin: 0 0 0.85rem; }
 form label {
   display: inline-block;
   margin-bottom: var(--space-xs);
-  font-size: 0.68rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: var(--archive-gray);
 }
 
@@ -1079,7 +441,7 @@ form input[type="file"],
 form textarea,
 form select {
   width: 100%;
-  /* A field is as wide as its content needs, not as wide as the page. */
+
   max-width: 28rem;
   padding: 0.6rem 0.7rem;
   font: inherit;
@@ -1113,7 +475,7 @@ form input[type="radio"] {
   margin: 0 0 var(--space-sm);
   padding: 0.4rem 0.6rem;
   color: var(--ink-red);
-  border-left: 4px double var(--ink-red);
+  border: 1px solid var(--ink-red);
   background: var(--mount);
   font-size: 0.85rem;
 }
@@ -1124,7 +486,7 @@ form input[type="radio"] {
   color: var(--archive-gray);
 }
 
-/* ---------- Tables: the archive's ledger ---------- */
+
 
 table {
   width: 100%;
@@ -1141,29 +503,28 @@ td {
 }
 
 th {
-  font-size: 0.63rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: var(--archive-gray);
   border-bottom-color: var(--archive-gray);
 }
 
-/* ---------- Status marked by form, not hue alone ---------- */
+
 
 .tag {
   display: inline-block;
   padding: 0.15rem 0.5rem;
-  font-size: 0.62rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   border: var(--hair) solid var(--archive-gray);
   color: var(--archive-gray);
 }
 
-/* Confirmed inverts to solid; pending stays outlined; refused is double-ruled.
-   The shape carries the state so it survives greyscale and colour blindness. */
+
 .tag--confirmed {
   background: var(--graphite);
   border-color: var(--graphite);
@@ -1181,106 +542,96 @@ th {
   border-color: var(--ink-red);
 }
 
-/* ---------- Motion: one moment, the sheet develops ---------- */
 
-@keyframes develop {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Operational screens share the palette, with restrained density and readable controls. */
+.register { list-style: none; margin: 2rem 0; padding: 0; }
+.register > li { border-bottom: 1px solid var(--paper-shade); }
+.register-entry { border-radius: 10px; text-decoration: none; }
+.register-entry:hover { background: var(--paper-warm); }
+form label { display: block; color: var(--graphite); font-size: .95rem; letter-spacing: 0; }
+form input:not([type="checkbox"]):not([type="radio"]), form textarea, form select { border-radius: 8px; min-height: 46px; font-size: 1rem; }
+form textarea { resize: vertical; }
+form input[type="checkbox"], form input[type="radio"] { min-width: 18px; min-height: 18px; vertical-align: middle; }
+form input:disabled, form select:disabled { background: var(--paper-warm); color: var(--archive-gray); cursor: not-allowed; }
+form [aria-invalid="true"] { border-color: var(--ink-red); }
+.helptext { font-size: .85rem; }
+table { display: block; max-width: 100%; overflow-x: auto; }
+th { background: var(--paper-warm); }
+th, td { padding: .85rem; min-width: 5rem; }
+.messages { max-width: var(--sheet); margin: 1rem auto; padding: 0 var(--page-gutter); }
+.messages li, .errorlist, .form-errors { border-radius: 8px; }
+.demo-notice { margin: 0; padding: .65rem var(--page-gutter); background: var(--paper-warm); color: var(--graphite); font-size: .85rem; text-align: center; }
+.check-field { display: grid; grid-template-columns: 22px minmax(0, 1fr); align-items: start; gap: .65rem; margin-bottom: 1rem; }
+.check-field input { margin: .35rem 0 0; }
+.check-field label { margin: 0; min-height: 32px; cursor: pointer; }
+.check-field .errorlist { grid-column: 2; }
+.state, .tag, .register-tag { border-radius: 5px; }
+@keyframes welcome-reveal { from { clip-path: inset(0 3% 0 0 round 18px); } to { clip-path: inset(0 0 0 0 round 18px); } }
+.welcome-photo { animation: welcome-reveal .65s cubic-bezier(.16,1,.3,1); }
+@media (max-width: 1100px) {
+  .site-header { gap: 1rem; }
+  .site-header nav { gap: .85rem; font-size: .85rem; }
+  .nav-visit { padding-inline: .85rem; font-size: .85rem; }
+  .welcome { grid-template-columns: 44% minmax(0, 1fr); gap: 1.5rem; }
+  .welcome-photo { min-height: 25rem; }
+  .visit-band { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .visit-band > a { grid-column: 1 / -1; justify-self: start; }
 }
-
-body.home .sheet-frame img {
-  animation: develop 0.5s ease-out both;
-  animation-delay: calc(var(--frame-index, 0) * 55ms);
-}
-
-/* ---------- Adaptation: the archive survives the phone ---------- */
-
-/* Narrower viewports drop the fixed placement and fall back to DOM order, which is
-   already the reading order: facts, actions, dated lists, then the archive. */
 @media (max-width: 900px) {
-  .contact-sheet {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .sheet-mount,
-  .sheet-action--primary,
-  .sheet-action--secondary,
-  .sheet-list--agenda,
-  .sheet-list--sermons,
-  .sheet-list--news,
-  .sheet-handle {
-    grid-area: auto;
-  }
-
-  .sheet-mount,
-  .sheet-list {
-    grid-column: span 4;
-  }
-
-  .sheet-action,
-  .sheet-handle {
-    grid-column: span 2;
-  }
+  .site-header { flex-wrap: wrap; min-height: 5.5rem; padding-block: 1rem; }
+  .site-header nav { width: 100%; flex-wrap: wrap; font-size: 1rem; gap: .5rem 1.5rem; }
+  .has-js .nav-toggle:not([hidden]) { display: inline-flex; }
+  .has-js .site-header nav { display: none; }
+  .has-js .site-header nav.is-open { display: flex; }
+  .nav-dropdown { left: 0; right: auto; }
+  .nav-visit { font-size: .95rem; }
+  .welcome { grid-template-columns: 1fr; padding: 1rem var(--page-gutter) 2rem; gap: 1.5rem; }
+  .welcome-copy { padding: .5rem 0; }
+  .welcome h1 { font-size: clamp(2.8rem, 7.5vw, 4.5rem); max-width: 16ch; }
+  .welcome-photo { min-height: 0; aspect-ratio: 16 / 10; }
+  .welcome .lede { max-width: 58ch; }
+  .editorial-pair { gap: 2rem; }
+  .editorial-pair > section + section { padding-left: 2rem; }
+  .section-heading { flex-wrap: wrap; gap: 1rem; }
+  .community-photo img { height: 15rem; }
+  .site-footer { gap: 2rem; }
 }
-
-@media (max-width: 560px) {
-  :root {
-    --gutter: 4px;
-  }
-
-  .contact-sheet {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .sheet-mount,
-  .sheet-list,
-  .sheet-handle {
-    grid-column: span 2;
-  }
-
-  .sheet-action {
-    grid-column: span 1;
-  }
-
-  .site-header {
-    gap: 0.35rem 1rem;
-  }
-
-  .sheet-frame figcaption {
-    font-size: 0.82rem;
-  }
+@media (max-width: 600px) {
+  .site-header nav.is-open { flex-direction: column; align-items: stretch; gap: .25rem; padding-top: .5rem; }
+  .site-header nav > a:not(.cta) { padding: .65rem 0; }
+  .nav-dropdown { position: static; width: 100%; margin-bottom: .75rem; }
+  .welcome h1 { font-size: clamp(2.5rem, 10vw, 3.5rem); }
+  .welcome-verse { font-size: 1.18rem; }
+  .welcome .actions { flex-direction: column; align-items: stretch; margin-top: 1.35rem; }
+  .welcome-photo { aspect-ratio: 4 / 3; border-radius: 14px; }
+  .visit-band { grid-template-columns: 1fr; padding-block: 1.6rem; gap: 1.3rem; }
+  .visit-band > div + div { border-left: 0; border-top: 1px solid #b06e75; padding: 1.2rem 0 0; }
+  .visit-band > a { grid-column: auto; justify-self: stretch; }
+  .home-content { padding-top: 2.5rem; }
+  .editorial-pair { grid-template-columns: 1fr; gap: 2.5rem; }
+  .editorial-pair > section + section { padding: 0; border: 0; }
+  .community, .home-news { margin-top: 3.5rem; }
+  .community-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .community-photo img { height: 11rem; border-radius: 12px; }
+  .community-photo:first-child img { height: 16rem; }
+  .community-photo figcaption { flex-direction: column; gap: .2rem; }
+  .cms-page { padding-top: 2rem; padding-bottom: 2rem; }
+  .cms-page > h1 { font-size: 2.65rem; overflow-wrap: anywhere; }
+  .panel h2 { font-size: 1.65rem; }
+  .panel .cta { max-width: 100%; }
+  .site-footer { grid-template-columns: 1fr; padding-top: 2.5rem; margin-top: 3rem; }
+  .invitation { margin-top: 3rem; padding: 2.5rem 1.25rem; }
 }
-
 @media (prefers-reduced-motion: reduce) {
-  body.home .sheet-frame img {
-    animation: none;
-  }
+  html { scroll-behavior: auto; }
+  .welcome-photo { animation: none; }
+  .cta { transition: none; }
 }
-
 @media print {
-  body {
-    background: #fff;
-    /* Tokens amostrados também no papel: o mundo não troca de paleta ao imprimir. */
-    color: var(--photo-black);
-  }
-
-  .site-header nav,
-  .sheet-action {
-    display: none;
-  }
-
-  .plate,
-  .sheet-frame,
-  .panel {
-    /* O fio de arquivo #D4D0CA desaparece na impressora; o cinza de arquivo sobrevive. */
-    border-color: var(--archive-gray);
-  }
-
-  /* A escala e a coletânea saem em preto e branco: a marca do selo tem de sobreviver
-     ao descarte de cor, então a forma é forçada a imprimir. */
-  .state,
-  .state-mark {
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
-  }
+  body { background: #fff; color: #000; }
+  .site-header nav, .nav-toggle, .share-area, .site-footer, .skip-link { display: none !important; }
+  .cms-page { padding: 1rem 0; }
+  .panel { break-inside: avoid; border-color: var(--archive-gray); }
+  table { display: table; overflow: visible; }
+  .state, .state-mark { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }

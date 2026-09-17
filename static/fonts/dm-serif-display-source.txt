@@ -1,0 +1,14 @@
+DM Serif Display — self-hosted files
+
+Family: DM Serif Display
+Weight: 400
+Styles: normal (dm-serif-display-regular.ttf), italic (dm-serif-display-italic.ttf)
+Format: TrueType (CSS format('truetype'))
+License: SIL Open Font License 1.1; see dm-serif-display-OFL.txt.
+Source: Google Fonts official CSS API, retrieved 2026-09-16.
+CSS: https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap
+Regular: https://fonts.gstatic.com/s/dmserifdisplay/v17/-nFnOHM81r4j6k0gjAW3mujVU2B2K_c.ttf
+Italic: https://fonts.gstatic.com/s/dmserifdisplay/v17/-nFhOHM81r4j6k0gjAW3mujVU2B2G_Vx1w.ttf
+License source: https://raw.githubusercontent.com/google/fonts/main/ofl/dmserifdisplay/OFL.txt
+Verified cmap coverage for Portuguese accented letters, uppercase and lowercase.
+Use font-display: swap. These are display faces for headings; retain Archivo for body and controls.
