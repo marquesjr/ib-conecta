@@ -180,9 +180,9 @@ O token da API do Instagram **não** se cola neste painel. Quem opera a VM cadas
 
 ## Quadros do acervo (fotografias da home)
 
-A foto grande da abertura e a galeria **A vida em comunidade** vêm dos snippets **Quadros do acervo**, não da biblioteca **Imagens** (esta última serve ao editor das notícias).
+A foto grande da abertura e a galeria **A vida em comunidade** vêm dos **Fragmentos** → **Quadros do acervo**, não da biblioteca **Imagens** (esta última serve ao editor das notícias).
 
-1. No menu, abra **Quadros do acervo**.
+1. No menu, abra **Fragmentos** → **Quadros do acervo**.
 2. Cada quadro tem fotografia, **texto alternativo**, **legenda**, **crédito** (ex.: `Instagram @igrejabatista.santaleopoldina`), data e se aparece no site.
 3. Upload manual: **Adicionar quadro do acervo**, preencha a descrição da cena, publique o snippet (salvar basta; não é página).
 4. Fotos sincronizadas da API ou importadas da exportação oficial já nascem com crédito e data. Revise e, se houver menor ou cena que não deve ir à vitrine, desmarque **Exibir no site**.

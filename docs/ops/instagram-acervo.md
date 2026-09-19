@@ -24,7 +24,7 @@ No painel (`/admin/`), **Configurações** → **Configurações da igreja**:
 
 Não cole token nesta tela. O segredo fica fora do painel, no comando abaixo.
 
-Revisão editorial: **Quadros do acervo**. Legenda, crédito, data, texto alternativo e “Exibir no site”. Foto de menor: desmarque a exibição e fale com o pastor. Ver `docs/privacidade.md`.
+Revisão editorial: **Quadros do acervo** (a comunicação tem permissão neste snippet). Legenda, crédito, data, texto alternativo e “Exibir no site”. Foto de menor: desmarque a exibição e fale com o pastor. Ver `docs/privacidade.md`.
 
 ---
 
