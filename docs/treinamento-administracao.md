@@ -172,8 +172,22 @@ Em **Configurações** → **Configurações da igreja**:
 - WhatsApp institucional (só dígitos com DDI, ex. `5527...`).
 - PIX (chave da **igreja**; combine com a tesouraria).
 - Redes sociais.
+- Acervo da home: arroba do Instagram, origem do acervo (API oficial ou só galeria curada) e quantos quadros mostrar.
 
 Isso entra no ar ao **salvar** a configuração, sem o botão **Publicar** das páginas. Erro aqui aparece na home inteira. PIX e WhatsApp errados têm custo pastoral — revise em voz alta com outra pessoa.
+
+O token da API do Instagram **não** se cola neste painel. Quem opera a VM cadastra com `set_instagram_token` ou importa o ZIP da Meta. Passo a passo: [`docs/ops/instagram-acervo.md`](ops/instagram-acervo.md).
+
+## Quadros do acervo (fotografias da home)
+
+A foto grande da abertura e a galeria **A vida em comunidade** vêm dos **Fragmentos** → **Quadros do acervo**, não da biblioteca **Imagens** (esta última serve ao editor das notícias).
+
+1. No menu, abra **Fragmentos** → **Quadros do acervo**.
+2. Cada quadro tem fotografia, **texto alternativo**, **legenda**, **crédito** (ex.: `Instagram @igrejabatista.santaleopoldina`), data e se aparece no site.
+3. Upload manual: **Adicionar quadro do acervo**, preencha a descrição da cena, publique o snippet (salvar basta; não é página).
+4. Fotos sincronizadas da API ou importadas da exportação oficial já nascem com crédito e data. Revise e, se houver menor ou cena que não deve ir à vitrine, desmarque **Exibir no site**.
+
+Conta da igreja no Instagram: `@igrejabatista.santaleopoldina`. Sem a API ou o ZIP da Meta, a home continua com imagens ilustrativas identificadas — não apresente essas imagens como fotografia da congregação.
 
 ## Checklist de publicação
 

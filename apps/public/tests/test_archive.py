@@ -113,6 +113,15 @@ class HomeEditorialTests(TestCase):
         self.assertFalse(response.context["archive_is_seeded"])
         self.assertNotContains(response, "imagens de exemplo")
 
+    def test_real_frame_shows_credit_and_caption(self):
+        make_frame(
+            caption="Culto de domingo",
+            credit="Instagram @igrejabatista.santaleopoldina",
+        )
+        response = self.client.get(reverse("home"))
+        self.assertContains(response, "Culto de domingo")
+        self.assertContains(response, "Instagram @igrejabatista.santaleopoldina")
+
     def test_every_frame_carries_alternative_text(self):
         response = self.client.get(reverse("home"))
         body = response.content.decode()
@@ -185,6 +194,22 @@ class FetchMediaTests(TestCase):
     def test_unknown_mode_is_rejected(self):
         with self.assertRaises(InstagramError):
             fetch_media(mode="carrier-pigeon", token="tok")
+
+    def test_fetch_follows_official_pagination(self):
+        page1 = {
+            "data": [{"id": "1", "media_type": "IMAGE", "media_url": "https://cdn/1.jpg"}],
+            "paging": {"next": "https://graph.instagram.com/me/media?after=abc&access_token=tok"},
+        }
+        page2 = {
+            "data": [{"id": "2", "media_type": "IMAGE", "media_url": "https://cdn/2.jpg"}],
+        }
+        with patch(
+            "apps.public.instagram.urllib.request.urlopen",
+            side_effect=[fake_response(page1), fake_response(page2)],
+        ):
+            frames = fetch_media(mode="instagram_login", token="tok", limit=10)
+
+        self.assertEqual([frame.remote_id for frame in frames], ["1", "2"])
 
 
 @override_settings(MEDIA_ROOT=MEDIA_ROOT)
@@ -261,5 +286,6 @@ class SyncTests(TestCase):
         frame = ArchiveFrame.objects.get(remote_id="abc123")
         self.assertEqual(frame.source, ArchiveFrame.Source.INSTAGRAM)
         self.assertEqual(frame.caption, "Culto de domingo")
+        self.assertEqual(frame.credit, "Instagram @igrejabatista.santaleopoldina")
         self.assertTrue(frame.image.name.endswith(".jpg"))
         self.assertEqual(InstagramCredential.current().last_sync_error, "")
