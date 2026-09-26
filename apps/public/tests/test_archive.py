@@ -41,6 +41,10 @@ def make_frame(**kwargs):
 
 @override_settings(MEDIA_ROOT=MEDIA_ROOT)
 class ArchiveFramesTests(TestCase):
+    def setUp(self):
+        # Parte do vazio: a migração 0011 já cadastra fotos reais do Instagram.
+        ArchiveFrame.objects.all().delete()
+
     def test_seeded_frames_fill_the_sheet_when_there_is_no_archive(self):
         """A densidade da composição é um compromisso: a folha nunca fica vazia."""
         frames = archive_frames(12)
@@ -76,6 +80,23 @@ class ArchiveFramesTests(TestCase):
 
 
 @override_settings(MEDIA_ROOT=MEDIA_ROOT)
+class ImportedInstagramFramesTests(TestCase):
+    def test_migration_registers_the_most_liked_posts(self):
+        """As fotos do perfil entram curadas, visíveis, com imagem e descrição."""
+        frames = ArchiveFrame.objects.filter(permalink__startswith="https://www.instagram.com/p/")
+        self.assertEqual(frames.count(), 9)
+        for frame in frames:
+            self.assertEqual(frame.source, ArchiveFrame.Source.CURATED)
+            self.assertTrue(frame.is_visible)
+            self.assertTrue(frame.image.name.startswith("archive/ig-"))
+            self.assertTrue(frame.alt_text)
+            self.assertLessEqual(len(frame.caption), 120)
+
+        sheet = archive_frames(12)
+        self.assertEqual(sum(not frame["synthetic"] for frame in sheet), 9)
+        self.assertEqual(sheet[0]["caption"], "27 anos de Igreja Batista em Santa Leopoldina")
+
+
 class HomeEditorialTests(TestCase):
     def setUp(self):
         site = Site.objects.get(is_default_site=True)
