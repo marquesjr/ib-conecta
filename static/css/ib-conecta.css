@@ -96,7 +96,16 @@ p { margin: 0 0 1rem; }
 .section-heading p { margin-bottom: 0; }
 .instagram-link { font-size: .85rem; overflow-wrap: anywhere; }
 .image-notice { font-size: .85rem; color: var(--archive-gray); max-width: 72ch; margin-bottom: 1.5rem; scroll-margin-top: 1rem; }
-.mural-track { list-style: none; margin: 0; padding: 0 0 1rem; display: grid; grid-auto-flow: column; grid-auto-columns: clamp(14rem, 22vw, 19rem); gap: 1.25rem; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+/* Mural em slide: páginas inteiras de cartazes, setas no título. Sem JavaScript, continua deslizável. */
+.mural-aside { display: flex; align-items: center; gap: 1.5rem; }
+.mural-controls:not([hidden]) { display: flex; align-items: center; gap: .5rem; }
+.mural-status { margin: 0 .5rem 0 0; font-size: .85rem; color: var(--archive-gray); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mural-button { display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid var(--ink-red); border-radius: 10px; background: transparent; color: var(--ink-red); cursor: pointer; transition: background-color .18s ease-out; }
+.mural-button:hover { background: var(--paper-warm); }
+.mural-button:disabled { border-color: var(--paper-shade); color: var(--archive-gray); background: transparent; opacity: .6; cursor: default; }
+.mural-track { --mural-per-page: 4; --mural-gap: 1.25rem; position: relative; list-style: none; margin: 0; padding: 0 0 1rem; display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - (var(--mural-per-page) - 1) * var(--mural-gap)) / var(--mural-per-page)); gap: var(--mural-gap); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: thin; }
+.mural.is-slider .mural-track { padding-bottom: 0; scrollbar-width: none; }
+.mural.is-slider .mural-track::-webkit-scrollbar { display: none; }
 .mural-track > li { scroll-snap-align: start; }
 .poster { margin: 0; }
 .poster a { display: block; }
@@ -622,7 +631,7 @@ th, td { padding: .85rem; min-width: 5rem; }
   .editorial-pair { gap: 2rem; }
   .editorial-pair > section + section { padding-left: 2rem; }
   .section-heading { flex-wrap: wrap; gap: 1rem; }
-  .mural-track { grid-auto-columns: 16rem; }
+  .mural-track { --mural-per-page: 3; }
   .mosaic, .mosaic[data-size] { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: 16rem; grid-auto-rows: 11rem; gap: .8rem; }
   .mosaic > :first-child, .mosaic[data-size] > :first-child { grid-column: 1 / -1; grid-row: auto; }
   .mosaic > :last-child:nth-child(even) { grid-column: 1 / -1; }
@@ -639,7 +648,10 @@ th, td { padding: .85rem; min-width: 5rem; }
   .editorial-pair { grid-template-columns: 1fr; gap: 2.5rem; }
   .editorial-pair > section + section { padding: 0; border: 0; }
   .mural, .community, .home-news { margin-top: 3.5rem; }
-  .mural-track { grid-auto-columns: 72%; margin-right: calc(-1 * var(--page-gutter)); padding-right: var(--page-gutter); }
+  .mural-track { grid-auto-columns: 78%; margin-right: calc(-1 * var(--page-gutter)); padding-right: var(--page-gutter); scroll-padding-right: var(--page-gutter); }
+  .mural-aside { width: 100%; flex-wrap: wrap; gap: .75rem; }
+  .mural-aside .instagram-link { flex-basis: 100%; }
+  .mural-controls:not([hidden]) { margin-left: auto; }
   .community-photo figcaption { left: .5rem; right: .5rem; bottom: .5rem; font-size: .75rem; }
   .editorial-list a { grid-template-columns: 3.6rem minmax(0, 1fr) auto; gap: .75rem; }
   .cms-page { padding-top: 2rem; padding-bottom: 2rem; }
@@ -652,7 +664,8 @@ th, td { padding: .85rem; min-width: 5rem; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .welcome-photo img { animation: none; }
-  .cta, .icon-chevron { transition: none; }
+  .cta, .icon-chevron, .mural-button { transition: none; }
+  .mural-track { scroll-behavior: auto; }
 }
 @media print {
   body { background: #fff; color: #000; }

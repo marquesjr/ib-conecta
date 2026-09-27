@@ -1,8 +1,9 @@
 {% extends "base.html" %}
-{% load public_tags %}
+{% load static public_tags %}
 {% block title %}IB Conecta — Igreja Batista em Santa Leopoldina{% endblock %}
 {% block body_attrs %} class="home"{% endblock %}
 {% block share %}{% endblock %}
+{% block extra_head %}<script src="{% static 'js/mural.js' %}" defer></script>{% endblock %}
 {% block content %}
 <section class="welcome" aria-labelledby="welcome-title">
   <div class="welcome-copy">
@@ -65,11 +66,18 @@
       {% if sermon_index_url %}<a class="text-link" href="{{ sermon_index_url }}">Todos os sermões {% include "public/_arrow.html" %}</a>{% endif %}
     </section>
   </div>
-  {% if archive.posters %}<section class="mural" aria-labelledby="mural-title">
+  {% if archive.posters %}<section class="mural" aria-labelledby="mural-title" aria-roledescription="carrossel">
     <div class="section-heading"><div><h2 id="mural-title">Mural da igreja</h2><p class="section-intro">Convites e datas que a igreja publicou.</p></div>
-      {% if church_settings.instagram_url %}<a class="text-link instagram-link" href="{{ church_settings.instagram_url }}" target="_blank" rel="noopener noreferrer">@{{ church_settings.instagram_handle|default:"igrejabatista.santaleopoldina" }} {% include "public/_arrow.html" %}</a>{% endif %}
+      <div class="mural-aside">
+        {% if church_settings.instagram_url %}<a class="text-link instagram-link" href="{{ church_settings.instagram_url }}" target="_blank" rel="noopener noreferrer">@{{ church_settings.instagram_handle|default:"igrejabatista.santaleopoldina" }} {% include "public/_arrow.html" %}</a>{% endif %}
+        <div class="mural-controls" hidden>
+          <p class="mural-status" aria-live="polite"></p>
+          <button class="mural-button" type="button" data-direction="-1" aria-controls="mural-track" aria-label="Cartazes anteriores"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 12H5m6-6-6 6 6 6"/></svg></button>
+          <button class="mural-button" type="button" data-direction="1" aria-controls="mural-track" aria-label="Próximos cartazes"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></button>
+        </div>
+      </div>
     </div>
-    <ul class="mural-track" role="list">{% for frame in archive.posters %}
+    <ul class="mural-track" id="mural-track" role="list">{% for frame in archive.posters %}
       <li><figure class="poster">
         {% if frame.permalink %}<a href="{{ frame.permalink }}" target="_blank" rel="noopener noreferrer">{% endif %}
         <img src="{{ frame.url }}" alt="{{ frame.alt }}" width="640" height="640" loading="lazy" decoding="async" />

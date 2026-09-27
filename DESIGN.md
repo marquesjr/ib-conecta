@@ -187,7 +187,7 @@ Logo original e navegação horizontal discreta, com links em caixa natural. Pá
 O acervo separa **fotografia** de **arte ou cartaz** (campo Tipo do Quadro do acervo). Fotografia usa `object-fit: cover`, cantos suaves e legendas em Archivo; arte nunca é recortada.
 
 - **Abertura:** sempre uma fotografia (a marcada como destaque, senão a mais recente), em retrato 4:5 com no máximo 32rem de largura — perto da resolução dos arquivos do Instagram (640px) — e legenda fora da imagem. No celular a foto vem antes do título, em 4:3.
-- **Mural da igreja:** artes inteiras, quadradas, `object-fit: contain` sobre branco com borda, em faixa horizontal com scroll-snap. O link do perfil fica no título da seção.
+- **Mural da igreja:** artes inteiras, quadradas, `object-fit: contain` sobre branco com borda, em slide: páginas de quatro cartazes (três até 900px; no celular um por vez, com o próximo aparecendo na borda). Setas no título avançam uma página e ficam desativadas nas pontas; um contador ("1–4 de 5") é anunciado a leitores de tela. Sem troca automática. A barra de rolagem some só com o slide ativo (`static/js/mural.js`); sem JavaScript, as setas ficam ocultas e a faixa continua deslizável. O link do perfil fica no título da seção.
 - **A vida em comunidade:** mosaico de até quatro fotografias, a primeira maior; legenda curta sobreposta em etiqueta clara. Com menos de quatro, um convite para enviar fotos fecha a grade sem buracos.
 - **Crédito:** o crédito padrão do Instagram não se repete sob cada quadro; crédito de fotógrafo aparece.
 
