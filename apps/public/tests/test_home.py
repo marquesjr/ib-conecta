@@ -92,3 +92,12 @@ class WelcomeTextMigrationTests(TestCase):
         self.assertEqual(settings.evangelistic_headline, "Um lugar para viver a fé. Uma família para caminhar com você.")
         self.assertTrue(settings.evangelistic_message.startswith("Em Cristo encontramos esperança"))
         self.assertEqual(settings.evangelistic_reference, "Inspirado em Mateus 11:28 e Atos 2:42-47.")
+
+
+class PageTitleTests(TestCase):
+    def test_inner_pages_end_with_the_church_name(self):
+        for name in ("plan_visit", "prayer_request", "contribute", "privacy"):
+            body = self.client.get(reverse(name)).content.decode()
+            self.assertRegex(body, r"<title>[^<]+ — Igreja Batista em Santa Leopoldina</title>", name)
+            self.assertNotIn("— IB Conecta</title>", body)
+
