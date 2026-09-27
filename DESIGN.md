@@ -142,7 +142,7 @@ O vinho aquece uma base clara com texto escuro e cinza de leitura secundária.
 
 ## Layout
 
-Colunas centradas e margens fluidas substituem a antiga folha de contato. Conteúdo interno tem largura máxima de 76rem; cabeçalho e abertura chegam a 96rem, e conteúdo da home a 90rem. Prosa permanece mais estreita que sua superfície. Listas editoriais usam divisórias e datas alinhadas. Painéis operacionais usam colunas adaptáveis com mínimo de 22rem, limitado à largura disponível.
+Colunas centradas e margens fluidas substituem a antiga folha de contato. Conteúdo interno tem largura máxima de 76rem; cabeçalho e abertura chegam a 96rem, e conteúdo da home a 90rem. Prosa permanece mais estreita que sua superfície. Listas editoriais usam divisórias e data empilhada: dia em serifada vinho, dia da semana e mês em Archivo; título com linha secundária de horário e local (eventos) ou resumo (sermões). A faixa vinho da home responde quando, onde e primeira vez, cada uma com sua ação (horários, mapa, WhatsApp). Painéis operacionais usam colunas adaptáveis com mínimo de 22rem, limitado à largura disponível.
 
 O ritmo combina pequenos intervalos de controle com respiro entre seções. Margens laterais seguem `page-gutter`. Em 1100px, navegação e abertura se compactam; em 900px, a abertura empilha e o menu pode recolher. Em 600px, pares editoriais, faixa de visita e rodapé passam para uma coluna; ações da abertura ocupam a largura disponível. Registros datados empilham em 34rem. Tabelas podem rolar horizontalmente.
 
@@ -180,13 +180,20 @@ Campos brancos, borda cinza, raio `control` e altura mínima de 46px. Rótulos f
 
 ### Navigation
 
-Logo original e navegação horizontal discreta, com links em caixa natural. Página atual recebe vinho e sublinhado; grupos usam `details`/`summary`. No celular, Menu expõe `aria-expanded` e `aria-controls`; Escape fecha o grupo ou menu e devolve foco ao controle. Clique fora fecha; sem JavaScript os links continuam visíveis. O dropdown torna-se parte do fluxo em telas pequenas.
+Logo original e navegação horizontal discreta, com links em caixa natural. Página atual recebe vinho e sublinhado; grupos usam `details`/`summary` com chevron SVG no lugar do marcador nativo. A logo usa `mix-blend-mode: multiply` e um corte CSS dentro da área branca, para não aparecer como caixa sobre o fundo morno. No celular, Menu expõe `aria-expanded` e `aria-controls`; Escape fecha o grupo ou menu e devolve foco ao controle. Clique fora fecha; sem JavaScript os links continuam visíveis. O dropdown torna-se parte do fluxo em telas pequenas.
 
 ### Fotografia editorial
 
-Imagens usam `object-fit: cover`, cantos suaves e legendas em Archivo. A foto inicial tem prioridade de carregamento; a galeria usa lazy loading. A revelação inicial por recorte dura .65s com `cubic-bezier(.16,1,.3,1)`. Reduced motion desativa animação, rolagem suave e transição dos botões.
+O acervo separa **fotografia** de **arte ou cartaz** (campo Tipo do Quadro do acervo). Fotografia usa `object-fit: cover`, cantos suaves e legendas em Archivo; arte nunca é recortada.
 
-Fotos reais publicadas ou sincronizadas têm prioridade. Imagens ilustrativas mantêm legendas e aviso explícito; não constituem evidência documental da congregação.
+- **Abertura:** sempre uma fotografia (a marcada como destaque, senão a mais recente), em retrato 4:5 com no máximo 32rem de largura — perto da resolução dos arquivos do Instagram (640px) — e legenda fora da imagem. No celular a foto vem antes do título, em 4:3.
+- **Mural da igreja:** artes inteiras, quadradas, `object-fit: contain` sobre branco com borda, em faixa horizontal com scroll-snap. O link do perfil fica no título da seção.
+- **A vida em comunidade:** mosaico de até quatro fotografias, a primeira maior; legenda curta sobreposta em etiqueta clara. Com menos de quatro, um convite para enviar fotos fecha a grade sem buracos.
+- **Crédito:** o crédito padrão do Instagram não se repete sob cada quadro; crédito de fotógrafo aparece.
+
+A foto inicial tem prioridade de carregamento; mural e mosaico usam lazy loading. A revelação inicial por recorte dura .65s com `cubic-bezier(.16,1,.3,1)`. Reduced motion desativa animação, rolagem suave e transição dos botões.
+
+Fotos reais publicadas ou sincronizadas têm prioridade. Imagens ilustrativas só aparecem quando não há nenhuma fotografia real e nunca se misturam a ela; mantêm legendas e aviso explícito e não constituem evidência documental da congregação.
 
 ## Do's and Don'ts
 
@@ -205,6 +212,7 @@ Fotos reais publicadas ou sincronizadas têm prioridade. Imagens ilustrativas ma
 - **Don't** adicionar sombras deslocadas, glifos como ícones ou rótulos decorativos acima dos títulos.
 - **Don't** transformar o layout específico da home em obrigação das páginas operacionais.
 - **Don't** apresentar dados de demonstração ou fotos ilustrativas como fatos reais da igreja.
+- **Don't** recortar arte ou cartaz, nem abrir a home com um.
 - **Don't** iniciar vídeos automaticamente.
 
 Não canonizado: imagens ilustrativas são conteúdo provisório; o aviso de demonstração é uma salvaguarda de preview condicionada a DEBUG e EDITORIAL_DEMO_PREVIEW. Nenhum dos dois define a identidade permanente.

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Proposta — Encontro 2</title>
+<style>
+@font-face { font-family: Archivo; font-weight: 100 900; src: url("../../../static/fonts/archivo-latin.woff2") format("woff2"); }
+@font-face { font-family: "DM Serif Display"; font-style: normal; src: url("../../../static/fonts/dm-serif-display-regular.ttf"); }
+@font-face { font-family: "DM Serif Display"; font-style: italic; src: url("../../../static/fonts/dm-serif-display-italic.ttf"); }
+:root {
+  --paper: #faf9f6; --paper-warm: #f3f0eb; --paper-shade: #ded9d2; --mount: #fff;
+  --graphite: #262722; --archive-gray: #62635d; --ink-red: #862d36; --ink-red-hover: #69222b;
+  --font: Archivo, "Segoe UI", sans-serif; --font-display: "DM Serif Display", Georgia, serif;
+  --page-gutter: clamp(1.25rem, 5vw, 6rem);
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; font-family: var(--font); color: var(--graphite); background: var(--paper); line-height: 1.6; }
+a { color: var(--ink-red); text-underline-offset: .22em; }
+img { max-width: 100%; display: block; }
+h1, h2, h3 { margin: 0 0 .65rem; line-height: 1.12; text-wrap: balance; }
+h1, h2 { font-family: var(--font-display); font-weight: 400; letter-spacing: -.025em; }
+h2 { font-size: clamp(1.8rem, 2.8vw, 2.6rem); }
+h3 { font-size: 1.05rem; font-weight: 600; }
+p { margin: 0 0 1rem; }
+.arrow { width: 20px; height: 20px; flex: none; }
+.cta { display: inline-flex; align-items: center; justify-content: center; gap: .7rem; min-height: 48px; padding: .8rem 1.3rem; border: 1px solid var(--ink-red); border-radius: 10px; background: var(--ink-red); color: #fff; font-size: .95rem; font-weight: 500; text-decoration: none; }
+.cta.secondary { background: transparent; color: var(--ink-red); }
+.cta.light { background: var(--paper); border-color: var(--paper); color: var(--ink-red); }
+.text-link { display: inline-flex; align-items: center; gap: .55rem; font-weight: 500; text-decoration: none; }
+
+/* 1. Cabeçalho: logo sem a caixa branca, menu sem o triângulo do <summary> */
+.site-header { max-width: 96rem; margin: auto; padding: 1rem var(--page-gutter); display: flex; justify-content: space-between; align-items: center; gap: 2rem; }
+.brand-image { display: block; width: 150px; height: 53px; overflow: hidden; }
+.brand-image img { width: 150px; max-width: none; height: 150px; margin-top: -49px; mix-blend-mode: multiply; }
+nav { display: flex; align-items: center; gap: clamp(.9rem, 2vw, 2rem); font-size: .92rem; }
+nav a:not(.cta) { color: var(--graphite); text-decoration: none; }
+nav .group { display: inline-flex; align-items: center; gap: .35rem; }
+nav .group svg { width: 14px; height: 14px; }
+.menu-btn { display: none; }
+
+/* 2. Abertura: fotografia real, retrato, no tamanho que o arquivo aguenta */
+.welcome { max-width: 90rem; margin: auto; padding: 1.5rem var(--page-gutter) 3rem; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 32rem); gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+.welcome h1 { font-size: clamp(2.6rem, 4.8vw, 5rem); line-height: 1.02; margin-bottom: 1.2rem; }
+.welcome h1 em { color: var(--ink-red); }
+.lede { color: var(--archive-gray); max-width: 46ch; font-size: 1.05rem; }
+.actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.8rem; }
+.welcome-photo { margin: 0; }
+.welcome-photo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 45%; border-radius: 18px; }
+.welcome-photo figcaption { display: flex; justify-content: space-between; gap: 1rem; padding-top: .6rem; font-size: .82rem; color: var(--archive-gray); }
+
+/* 3. Faixa da visita: três respostas diretas, cada uma com uma ação */
+.visit-band { background: var(--ink-red); color: #fff; }
+.visit-inner { max-width: 90rem; margin: auto; padding: 2.2rem var(--page-gutter); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem; }
+.visit-inner > div + div { padding-left: 2.5rem; border-left: 1px solid #b06e75; }
+.visit-band .k { font-size: .82rem; opacity: .85; margin: 0 0 .2rem; }
+.visit-band .v { font-family: var(--font-display); font-size: 1.65rem; line-height: 1.15; margin: 0 0 .7rem; }
+.visit-band a { color: #fff; }
+
+.home-content { max-width: 90rem; margin: auto; padding: 4rem var(--page-gutter) 0; }
+.section-heading { display: flex; justify-content: space-between; align-items: end; gap: 2rem; margin-bottom: 1.5rem; }
+.section-heading p { color: var(--archive-gray); margin: 0; }
+
+/* 4. Agenda com dia da semana e hora */
+.editorial-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+.editorial-pair > section + section { border-left: 1px solid var(--paper-shade); padding-left: 4rem; }
+.list { list-style: none; padding: 0; margin: 1.2rem 0; }
+.list li { border-top: 1px solid var(--paper-shade); }
+.list a { display: grid; grid-template-columns: 4.2rem 1fr auto; gap: 1rem; align-items: center; padding: .9rem 0; color: var(--graphite); text-decoration: none; }
+.date { display: flex; flex-direction: column; line-height: 1.1; color: var(--ink-red); font-variant-numeric: tabular-nums; }
+.date b { font-family: var(--font-display); font-weight: 400; font-size: 1.6rem; }
+.date span { font-size: .75rem; text-transform: lowercase; }
+.list .t { font-weight: 500; }
+.list .m { display: block; font-size: .85rem; color: var(--archive-gray); font-weight: 400; }
+
+/* 5. Mural: artes do Instagram inteiras, sem recorte, em faixa rolável */
+.mural { margin-top: 5rem; }
+.mural-track { display: grid; grid-auto-flow: column; grid-auto-columns: clamp(14rem, 22vw, 19rem); gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 1rem; scrollbar-width: thin; }
+.poster { margin: 0; scroll-snap-align: start; }
+.poster img { width: 100%; aspect-ratio: 1; object-fit: contain; background: var(--mount); border: 1px solid var(--paper-shade); border-radius: 12px; }
+.poster figcaption { padding-top: .55rem; font-size: .85rem; line-height: 1.35; }
+.poster time { display: block; color: var(--archive-gray); font-size: .78rem; }
+
+/* 6. Vida em comunidade: só fotografias reais, mosaico que fecha sem sobras */
+.community { margin-top: 5rem; }
+.mosaic { display: grid; grid-template-columns: 1.4fr 1fr 1fr; grid-template-rows: 15rem 15rem; gap: 1.25rem; }
+.mosaic figure { margin: 0; position: relative; overflow: hidden; border-radius: 14px; }
+.mosaic figure:first-child { grid-row: span 2; }
+.mosaic img { width: 100%; height: 100%; object-fit: cover; }
+.mosaic figcaption { position: absolute; left: .7rem; bottom: .7rem; right: .7rem; width: fit-content; padding: .3rem .6rem; border-radius: 6px; background: var(--paper); font-size: .8rem; line-height: 1.35; }
+.mosaic figcaption time { color: var(--archive-gray); }
+.mosaic .invite { display: flex; flex-direction: column; justify-content: center; padding: 1.5rem; background: var(--paper-warm); }
+.mosaic .invite p { color: var(--archive-gray); font-size: .95rem; }
+
+.home-news { margin-top: 5rem; }
+.invitation { text-align: center; padding: 4rem 1.5rem; background: var(--paper-warm); border-radius: 16px; margin-top: 5rem; }
+.invitation p { color: var(--archive-gray); }
+.site-footer { max-width: 90rem; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; margin: 5rem auto 0; padding: 3rem var(--page-gutter); border-top: 1px solid var(--paper-shade); color: var(--archive-gray); font-size: .9rem; }
+.site-footer h2 { color: var(--graphite); font-size: 2rem; }
+
+@media (max-width: 900px) {
+  nav { display: none; }
+  .menu-btn { display: inline-flex; gap: .6rem; align-items: center; padding: .6rem .8rem; border: 1px solid var(--paper-shade); border-radius: 8px; background: #fff; font: inherit; }
+  .welcome { grid-template-columns: 1fr; padding-top: .5rem; gap: 1.5rem; }
+  .welcome-photo { order: -1; }
+  .welcome-photo img { aspect-ratio: 4 / 3; object-position: 50% 30%; border-radius: 14px; }
+  .welcome h1 { font-size: clamp(2.4rem, 10vw, 3.4rem); }
+  .actions { flex-direction: column; align-items: stretch; }
+  .visit-inner { grid-template-columns: 1fr; gap: 1.2rem; padding-block: 1.6rem; }
+  .visit-inner > div + div { border-left: 0; border-top: 1px solid #b06e75; padding: 1.2rem 0 0; }
+  .visit-band .v { font-size: 1.4rem; }
+  .home-content { padding-top: 2.5rem; }
+  .editorial-pair { grid-template-columns: 1fr; gap: 2.5rem; }
+  .editorial-pair > section + section { border: 0; padding: 0; }
+  .section-heading { flex-direction: column; align-items: start; gap: .5rem; }
+  .mural, .community, .home-news { margin-top: 3.5rem; }
+  .mural-track { grid-auto-columns: 72%; margin-right: calc(-1 * var(--page-gutter)); padding-right: var(--page-gutter); }
+  .mosaic { grid-template-columns: 1fr 1fr; grid-template-rows: 16rem 11rem 11rem; gap: .8rem; }
+  .mosaic figure:first-child { grid-column: span 2; grid-row: auto; }
+  .site-footer { grid-template-columns: 1fr; gap: 2rem; }
+  .invitation { margin-top: 3rem; padding: 2.5rem 1.25rem; }
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="#"><span class="brand-image"><img src="../../../static/img/church-logo.png" alt="Igreja Batista em Santa Leopoldina" /></span></a>
+  <nav>
+    <a class="group" href="#">Conheça a igreja <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></a>
+    <a href="#">Agenda</a><a href="#">Sermões</a><a href="#">Ao vivo</a><a href="#">Entrar</a>
+    <a class="cta" href="#">Planeje sua visita</a>
+  </nav>
+  <button class="menu-btn">Menu <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+</header>
+
+<section class="welcome">
+  <div>
+    <h1>Jesus te convida a conhecer a <em>graça de Deus</em></h1>
+    <p class="lede">A Igreja Batista em Santa Leopoldina celebra a Palavra e acolhe quem chega da cidade ou da zona rural.</p>
+    <div class="actions">
+      <a class="cta" href="#">Planeje sua visita <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a>
+      <a class="cta secondary" href="#">Conversar com a igreja</a>
+    </div>
+  </div>
+  <figure class="welcome-photo">
+    <img src="../../../apps/public/data/instagram_2026_09/20260809_Db1rSblxKLn_01.jpg" alt="Pastor segura um bebê vestido de branco diante da igreja reunida" />
+    <figcaption><span>Consagração da pequena Anne</span><time>ago. 2026</time></figcaption>
+  </figure>
+</section>
+
+<section class="visit-band">
+  <div class="visit-inner">
+    <div><p class="k">Culto de celebração</p><p class="v">Domingo, 19h</p><a class="text-link" href="#">Todos os horários →</a></div>
+    <div><p class="k">Onde estamos</p><p class="v">Rua do Comércio, Centro</p><a class="text-link" href="#">Abrir no mapa →</a></div>
+    <div><p class="k">Primeira vez?</p><p class="v">Fale com alguém antes de vir</p><a class="text-link" href="#">Conversar no WhatsApp →</a></div>
+  </div>
+</section>
+
+<div class="home-content">
+  <div class="editorial-pair">
+    <section>
+      <h2>Próximos encontros</h2>
+      <ul class="list">
+        <li><a href="#"><span class="date"><b>27</b><span>dom · set</span></span><span class="t">Culto de celebração<span class="m">19h · Templo</span></span>→</a></li>
+        <li><a href="#"><span class="date"><b>30</b><span>qua · set</span></span><span class="t">Estudo bíblico<span class="m">19h30 · Templo</span></span>→</a></li>
+        <li><a href="#"><span class="date"><b>03</b><span>sáb · out</span></span><span class="t">Evangelismo na praça<span class="m">16h · Praça central</span></span>→</a></li>
+      </ul>
+      <a class="text-link" href="#">Ver toda a agenda →</a>
+    </section>
+    <section>
+      <h2>Palavra para a vida</h2>
+      <ul class="list">
+        <li><a href="#"><span class="date"><b>20</b><span>set</span></span><span class="t">A graça que nos alcança<span class="m">Sermão de domingo</span></span>→</a></li>
+        <li><a href="#"><span class="date"><b>13</b><span>set</span></span><span class="t">O Senhor é o meu pastor<span class="m">Sermão de domingo</span></span>→</a></li>
+        <li><a href="#"><span class="date"><b>06</b><span>set</span></span><span class="t">Andar em novidade de vida<span class="m">Sermão de domingo</span></span>→</a></li>
+      </ul>
+      <a class="text-link" href="#">Todos os sermões →</a>
+    </section>
+  </div>
+
+  <section class="mural">
+    <div class="section-heading"><div><h2>Mural da igreja</h2><p>Os convites e datas que a igreja publicou no Instagram.</p></div><a class="text-link" href="#">@igrejabatista.santaleopoldina →</a></div>
+    <div class="mural-track">
+      <figure class="poster"><img src="../../../apps/public/data/instagram_2026_09/20260905_Dc7A0_YxMoH_01.jpg" alt="" /><figcaption>27 anos de Igreja Batista em Santa Leopoldina<time>set. 2026</time></figcaption></figure>
+      <figure class="poster"><img src="../../../apps/public/data/instagram_2026_09/20260417_DXPItN0gEiA_01.jpg" alt="" /><figcaption>Parabéns, Santa Leopoldina, pelos 139 anos<time>abr. 2026</time></figcaption></figure>
+      <figure class="poster"><img src="../../../apps/public/data/instagram_2026_09/20260403_DWqwTNTEVQD_01.jpg" alt="" /><figcaption>Sexta-feira Santa<time>abr. 2026</time></figcaption></figure>
+      <figure class="poster"><img src="../../../apps/public/data/instagram_2026_09/20260323_DWOqTXrgGYP_01.jpg" alt="" /><figcaption>Encontro de casais: “As quatro estações do amor”<time>mar. 2026</time></figcaption></figure>
+      <figure class="poster"><img src="../../../apps/public/data/instagram_2026_09/20260322_DWMWocQkddj_01.jpg" alt="" /><figcaption>Mutirão de limpeza do Rio Santa Maria da Vitória<time>mar. 2026</time></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="community">
+    <div class="section-heading"><div><h2>A vida em comunidade</h2><p>Encontros, fé e comunhão — fotos da própria igreja.</p></div></div>
+    <div class="mosaic">
+      <figure><img src="../../../apps/public/data/instagram_2026_09/20250915_DOopIIDEcLO_01.jpg" alt="" style="object-position:60% 40%" /><figcaption>Encerramento da Campanha de Missões · <time>set. 2025</time></figcaption></figure>
+      <figure><img src="../../../apps/public/data/instagram_2026_09/20250830_DN-mZu2gEom_01.jpg" alt="" /><figcaption>Subindo a Pedra Malha · <time>ago. 2025</time></figcaption></figure>
+      <figure><img src="../../../apps/public/data/instagram_2026_09/20250810_DNMF0BZSELs_01.jpg" alt="" style="object-position:30% 70%" /><figcaption>Dia dos Pais · <time>ago. 2025</time></figcaption></figure>
+      <figure style="grid-column: span 2"><div class="invite" style="height:100%"><h3>Tem fotos de um encontro?</h3><p>Envie para a comunicação. Com autorização de quem aparece, elas entram aqui.</p><a class="text-link" href="#">Falar com a comunicação →</a></div></figure>
+    </div>
+  </section>
+
+  <section class="home-news">
+    <div class="section-heading"><h2>Notícias da igreja</h2><a class="text-link" href="#">Todas as notícias →</a></div>
+    <ul class="list">
+      <li><a href="#"><span class="date"><b>24</b><span>set</span></span><span class="t">Mutirão de limpeza do templo</span>→</a></li>
+      <li><a href="#"><span class="date"><b>17</b><span>set</span></span><span class="t">Tarde infantil na escola bíblica</span>→</a></li>
+    </ul>
+  </section>
+
+  <section class="invitation"><h2>Podemos orar por você?</h2><p>Envie seu pedido de oração. O conteúdo não é publicado no site.</p><a class="cta secondary" href="#">Enviar pedido de oração →</a></section>
+</div>
+<footer class="site-footer">
+  <div><h2>Igreja Batista<br>em Santa Leopoldina</h2><p>“Deus é o nosso Refúgio e Fortaleza”</p><p>Rua do Comércio, Centro, Santa Leopoldina - ES</p></div>
+  <div><h3>Vamos conversar?</h3><p>Fale conosco pelo WhatsApp para dúvidas, conversa, desabafo ou pedido de oração.</p><a class="text-link" href="#">Falar no WhatsApp da igreja →</a></div>
+</footer>
+</body>
+</html>

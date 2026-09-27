@@ -180,12 +180,15 @@ O token da API do Instagram **não** se cola neste painel. Quem opera a VM cadas
 
 ## Quadros do acervo (fotografias da home)
 
-A foto grande da abertura e a galeria **A vida em comunidade** vêm dos **Fragmentos** → **Quadros do acervo**, não da biblioteca **Imagens** (esta última serve ao editor das notícias).
+A foto grande da abertura, o **Mural da igreja** e o mosaico **A vida em comunidade** vêm dos **Fragmentos** → **Quadros do acervo**, não da biblioteca **Imagens** (esta última serve ao editor das notícias).
 
 1. No menu, abra **Fragmentos** → **Quadros do acervo**.
 2. Cada quadro tem fotografia, **texto alternativo**, **legenda**, **crédito** (ex.: `Instagram @igrejabatista.santaleopoldina`), data e se aparece no site.
 3. Upload manual: **Adicionar quadro do acervo**, preencha a descrição da cena, publique o snippet (salvar basta; não é página).
 4. Fotos sincronizadas da API ou importadas da exportação oficial já nascem com crédito e data. Revise e, se houver menor ou cena que não deve ir à vitrine, desmarque **Exibir no site**.
+5. **Tipo**: marque **Arte ou cartaz** em toda imagem feita com texto (convite, data comemorativa, versículo). Arte vai inteira, sem recorte, para o **Mural da igreja**. **Fotografia** é para cenas reais: ela abre a home e compõe o mosaico. Quadros novos nascem como Fotografia — revise depois de cada sincronização, senão um cartaz pode abrir a página cortado.
+6. **Destaque na abertura**: marque em uma fotografia para ela abrir a home. Sem destaque, abre a fotografia mais recente. Em artes o destaque é ignorado.
+7. **Quadros no acervo da home** (Configurações da igreja) é o total mostrado: primeiro até cinco fotografias (abertura + mosaico), depois as artes no mural. Com poucas fotos, o mosaico termina com um convite para enviar fotos.
 
 Conta da igreja no Instagram: `@igrejabatista.santaleopoldina`. Sem a API ou o ZIP da Meta, a home continua com imagens ilustrativas identificadas — não apresente essas imagens como fotografia da congregação.
 

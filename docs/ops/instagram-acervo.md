@@ -1,6 +1,6 @@
 # Acervo fotográfico do Instagram
 
-A homepage do IB Conecta abre com uma fotografia e a seção **A vida em comunidade** mostra as demais. Isso não é a biblioteca **Imagens** das notícias: são os snippets **Quadros do acervo**. Ordem de preferência (já no código):
+A homepage do IB Conecta abre com uma fotografia, mostra as demais no mosaico **A vida em comunidade** e as artes com texto, inteiras, no **Mural da igreja**. Isso não é a biblioteca **Imagens** das notícias: são os snippets **Quadros do acervo**. Ordem de preferência (já no código):
 
 1. Fotos sincronizadas pela **API oficial** do Instagram.
 2. Fotos curadas no CMS (upload manual no snippet).
@@ -24,7 +24,7 @@ No painel (`/admin/`), **Configurações** → **Configurações da igreja**:
 
 Não cole token nesta tela. O segredo fica fora do painel, no comando abaixo.
 
-Revisão editorial: **Quadros do acervo** (a comunicação tem permissão neste snippet). Legenda, crédito, data, texto alternativo e “Exibir no site”. Foto de menor: desmarque a exibição e fale com o pastor. Ver `docs/privacidade.md`.
+Revisão editorial: **Quadros do acervo** (a comunicação tem permissão neste snippet). Legenda, crédito, data, texto alternativo, “Exibir no site”, **Tipo** (Fotografia ou Arte ou cartaz — quadros sincronizados nascem como Fotografia; marque os cartazes) e **Destaque na abertura**. Foto de menor: desmarque a exibição e fale com o pastor. Ver `docs/privacidade.md`.
 
 ---
 

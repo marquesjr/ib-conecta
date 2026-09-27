@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from wagtail.models import Site
 
-from apps.public.archive import archive_frames
+from apps.public.archive import home_archive
 from apps.public.forms import KnowChurchForm, PrayerRequestForm
 from apps.public.models import (
     ChurchSettings,
@@ -48,18 +48,18 @@ def _submit_or_reject_spam(request, form, *, scope: str, success_url: str, succe
 
 
 def home(request):
-    """Convite editorial, fotografia em destaque e conteúdo publicado da igreja."""
+    """Convite editorial, fotografia em destaque, mural de artes e conteúdo publicado."""
     site = Site.find_for_request(request) or Site.objects.filter(is_default_site=True).first()
     count = ChurchSettings.for_site(site).archive_frame_count if site else 12
-    frames = archive_frames(count)
+    archive = home_archive(count)
 
     return render(
         request,
         "public/home.html",
         {
-            "archive_frames": frames,
+            "archive": archive,
             # Imagem gerada não pode passar por prova: a home diz quando o acervo é de exemplo.
-            "archive_is_seeded": any(frame["synthetic"] for frame in frames),
+            "archive_is_seeded": archive["is_seeded"],
             "upcoming_events": EventPage.objects.live()
             .public()
             .filter(starts_at__gte=timezone.now())
