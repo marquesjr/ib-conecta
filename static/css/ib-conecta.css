@@ -31,8 +31,7 @@ p { margin: 0 0 1rem; }
 .skip-link:focus { transform: none; color: var(--mount); }
 .site-header { max-width: 96rem; margin: auto; padding: 1.1rem var(--page-gutter); display: flex; justify-content: space-between; align-items: center; gap: 2rem; min-height: 6rem; }
 .brand { flex: none; }
-.brand-image { display: block; width: 146px; height: 50px; overflow: hidden; }
-.brand-image img { display: block; width: 150px; max-width: none; height: 150px; margin-top: -52px; mix-blend-mode: multiply; }
+.brand-image { display: block; width: auto; height: 72px; mix-blend-mode: multiply; }
 .site-header nav { display: flex; align-items: center; gap: clamp(.9rem, 2vw, 2rem); font-size: .92rem; }
 .site-header nav a:not(.cta), summary { color: var(--graphite); text-decoration: none; cursor: pointer; }
 .site-header nav a:hover, .site-header nav a[aria-current="page"], summary:hover { color: var(--ink-red); }
@@ -639,6 +638,7 @@ th, td { padding: .85rem; min-width: 5rem; }
   .site-footer { gap: 2rem; }
 }
 @media (max-width: 600px) {
+  .brand-image { height: 58px; }
   .site-header nav.is-open { flex-direction: column; align-items: stretch; gap: .25rem; padding-top: .5rem; }
   .site-header nav > a:not(.cta) { padding: .65rem 0; }
   .nav-dropdown { position: static; width: 100%; margin-bottom: .75rem; }

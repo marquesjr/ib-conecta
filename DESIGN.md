@@ -91,7 +91,7 @@ components:
 
 **Creative North Star: "Encontro — editorial acolhedor"**
 
-A identidade aprovada em 16/09/2026 recebe o visitante com fotografia ampla, títulos serifados e ritmo de leitura generoso. Vinho, branco morno e tinta escura aproximam a instituição de quem procura culto, caminho ou conversa. A logo original da Igreja Batista em Santa Leopoldina permanece como identidade; o corte de apresentação é feito em CSS, sem redesenhar o arquivo.
+A identidade aprovada em 16/09/2026 recebe o visitante com fotografia ampla, títulos serifados e ritmo de leitura generoso. Vinho, branco morno e tinta escura aproximam a instituição de quem procura culto, caminho ou conversa. A logo da Igreja Batista em Santa Leopoldina permanece como identidade. Desde 27/09/2026 o site usa a versão em alta resolução fornecida pelo usuário, apenas aparada nas margens brancas e reduzida para a web, sem redesenho.
 
 Este registro descreve o sistema implementado em `static/css/ib-conecta.css`, `templates/base.html`, `templates/public/home.html` e `static/js/navigation.js`. Substitui deliberadamente Arquivo da Congregação, conforme a escolha do usuário; a composição da homepage está em `.impeccable/surfaces/templates-public-home-html.md`. As ferramentas privadas compartilham paleta e controles legíveis, com densidade adequada à operação.
 
@@ -180,7 +180,7 @@ Campos brancos, borda cinza, raio `control` e altura mínima de 46px. Rótulos f
 
 ### Navigation
 
-Logo original e navegação horizontal discreta, com links em caixa natural. Página atual recebe vinho e sublinhado; grupos usam `details`/`summary` com chevron SVG no lugar do marcador nativo. A logo usa `mix-blend-mode: multiply` e um corte CSS dentro da área branca, para não aparecer como caixa sobre o fundo morno. No celular, Menu expõe `aria-expanded` e `aria-controls`; Escape fecha o grupo ou menu e devolve foco ao controle. Clique fora fecha; sem JavaScript os links continuam visíveis. O dropdown torna-se parte do fluxo em telas pequenas.
+Logo original e navegação horizontal discreta, com links em caixa natural. Página atual recebe vinho e sublinhado; grupos usam `details`/`summary` com chevron SVG no lugar do marcador nativo. A logo aparece inteira (com o lema), com 72px de altura (58px no celular), e usa `mix-blend-mode: multiply` para o fundo branco não virar caixa sobre o fundo morno. No celular, Menu expõe `aria-expanded` e `aria-controls`; Escape fecha o grupo ou menu e devolve foco ao controle. Clique fora fecha; sem JavaScript os links continuam visíveis. O dropdown torna-se parte do fluxo em telas pequenas.
 
 ### Fotografia editorial
 
