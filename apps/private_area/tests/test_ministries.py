@@ -180,6 +180,148 @@ class MonthlyScheduleTests(TestCase):
         return ScheduleAssignment.objects.get()
 
 
+class ScheduleEditTests(TestCase):
+    def setUp(self):
+        self.leader = make_user("lider", Role.MINISTRY_LEADER)
+        self.joao = make_user("joao", Role.MEMBER)
+        self.maria = make_user("maria", Role.MEMBER)
+        self.client.login(username="lider", password="senha-segura-123")
+        self.client.post(
+            reverse("private_area:ministry_create"),
+            {"name": "Louvor", "description": ""},
+        )
+        self.ministry = Ministry.objects.get()
+        self.client.post(
+            reverse("private_area:schedule_create", args=[self.ministry.pk]),
+            {"year": 2026, "month": 10, "notes": "Ensaio geral"},
+        )
+        self.schedule = MonthlySchedule.objects.get()
+        self.client.post(
+            reverse("private_area:assignment_add", args=[self.schedule.pk]),
+            {
+                "starts_at": "2026-10-03T19:00",
+                "function": "Vocal",
+                "participant": self.joao.pk,
+            },
+        )
+        self.assignment = ScheduleAssignment.objects.get()
+
+    def test_leader_sees_edit_links_on_schedule(self):
+        page = self.client.get(
+            reverse("private_area:schedule_detail", args=[self.schedule.pk])
+        )
+        self.assertContains(page, reverse("private_area:schedule_edit", args=[self.schedule.pk]))
+        self.assertContains(
+            page, reverse("private_area:assignment_edit", args=[self.assignment.pk])
+        )
+
+    def test_member_cannot_edit_schedule_or_assignment(self):
+        self.client.logout()
+        self.client.login(username="joao", password="senha-segura-123")
+        page = self.client.get(
+            reverse("private_area:schedule_detail", args=[self.schedule.pk])
+        )
+        self.assertNotContains(page, "Editar escala")
+        for url in (
+            reverse("private_area:schedule_edit", args=[self.schedule.pk]),
+            reverse("private_area:assignment_edit", args=[self.assignment.pk]),
+            reverse("private_area:assignment_remove", args=[self.assignment.pk]),
+        ):
+            self.assertEqual(self.client.post(url, {}).status_code, 403)
+        self.assertTrue(ScheduleAssignment.objects.filter(pk=self.assignment.pk).exists())
+
+    def test_leader_edits_schedule_notes_and_month(self):
+        form = self.client.get(reverse("private_area:schedule_edit", args=[self.schedule.pk]))
+        self.assertEqual(form.status_code, 200)
+        self.assertContains(form, "Ensaio geral")
+        response = self.client.post(
+            reverse("private_area:schedule_edit", args=[self.schedule.pk]),
+            {"year": 2026, "month": 11, "notes": "Ensaio na quinta"},
+        )
+        self.assertRedirects(
+            response, reverse("private_area:schedule_detail", args=[self.schedule.pk])
+        )
+        self.schedule.refresh_from_db()
+        self.assertEqual(self.schedule.month, 11)
+        self.assertEqual(self.schedule.notes, "Ensaio na quinta")
+        self.assertEqual(self.schedule.ministry_id, self.ministry.pk)
+        self.assertTrue(AuditLog.objects.filter(action="schedule_updated").exists())
+
+    def test_edit_rejects_month_already_taken(self):
+        self.client.post(
+            reverse("private_area:schedule_create", args=[self.ministry.pk]),
+            {"year": 2026, "month": 11, "notes": ""},
+        )
+        response = self.client.post(
+            reverse("private_area:schedule_edit", args=[self.schedule.pk]),
+            {"year": 2026, "month": 11, "notes": ""},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Já existe uma escala para este mês.")
+        self.schedule.refresh_from_db()
+        self.assertEqual(self.schedule.month, 10)
+
+    def test_edit_form_shows_current_assignment_values(self):
+        page = self.client.get(
+            reverse("private_area:assignment_edit", args=[self.assignment.pk])
+        )
+        self.assertEqual(page.status_code, 200)
+        self.assertContains(page, 'value="2026-10-03T19:00"')
+        self.assertContains(page, 'value="Vocal"')
+
+    def test_changing_function_keeps_confirmation(self):
+        self.assignment.status = AssignmentStatus.CONFIRMED
+        self.assignment.save()
+        self.client.post(
+            reverse("private_area:assignment_edit", args=[self.assignment.pk]),
+            {
+                "starts_at": "2026-10-03T19:00",
+                "function": "Dirigente",
+                "participant": self.joao.pk,
+            },
+        )
+        self.assignment.refresh_from_db()
+        self.assertEqual(self.assignment.function, "Dirigente")
+        self.assertEqual(self.assignment.status, AssignmentStatus.CONFIRMED)
+
+    def test_changing_date_or_person_resets_confirmation(self):
+        self.assignment.status = AssignmentStatus.CONFIRMED
+        self.assignment.save()
+        response = self.client.post(
+            reverse("private_area:assignment_edit", args=[self.assignment.pk]),
+            {
+                "starts_at": "2026-10-10T18:30",
+                "function": "Vocal",
+                "participant": self.maria.pk,
+            },
+        )
+        self.assertRedirects(
+            response, reverse("private_area:schedule_detail", args=[self.schedule.pk])
+        )
+        self.assignment.refresh_from_db()
+        self.assertEqual(self.assignment.participant_id, self.maria.pk)
+        self.assertEqual(self.assignment.status, AssignmentStatus.PENDING)
+        entry = AuditLog.objects.filter(action="assignment_updated").latest("created_at")
+        self.assertIn("participant", entry.metadata["changed"])
+        self.assertIn("starts_at", entry.metadata["changed"])
+
+    def test_leader_removes_assignment(self):
+        self.assertEqual(
+            self.client.get(
+                reverse("private_area:assignment_remove", args=[self.assignment.pk])
+            ).status_code,
+            405,
+        )
+        response = self.client.post(
+            reverse("private_area:assignment_remove", args=[self.assignment.pk])
+        )
+        self.assertRedirects(
+            response, reverse("private_area:schedule_detail", args=[self.schedule.pk])
+        )
+        self.assertFalse(ScheduleAssignment.objects.exists())
+        self.assertTrue(AuditLog.objects.filter(action="assignment_removed").exists())
+
+
 class ScheduleExportTests(TestCase):
     def setUp(self):
         self.leader = make_user("lider", Role.MINISTRY_LEADER)

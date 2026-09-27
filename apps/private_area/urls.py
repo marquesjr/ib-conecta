@@ -79,6 +79,11 @@ urlpatterns = [
         name="schedule_detail",
     ),
     path(
+        "area-privada/escalas/<int:pk>/editar/",
+        ministry_views.schedule_edit,
+        name="schedule_edit",
+    ),
+    path(
         "area-privada/escalas/<int:pk>/convocar/",
         ministry_views.assignment_add,
         name="assignment_add",
@@ -97,6 +102,16 @@ urlpatterns = [
         "area-privada/convocacoes/<int:pk>/",
         ministry_views.assignment_respond,
         name="assignment_respond",
+    ),
+    path(
+        "area-privada/convocacoes/<int:pk>/editar/",
+        ministry_views.assignment_edit,
+        name="assignment_edit",
+    ),
+    path(
+        "area-privada/convocacoes/<int:pk>/remover/",
+        ministry_views.assignment_remove,
+        name="assignment_remove",
     ),
     path(
         "area-privada/convocacoes/<int:pk>/substituir/",

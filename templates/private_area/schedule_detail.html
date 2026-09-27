@@ -21,6 +21,9 @@
       </p>
     {% endif %}
     <p>
+      {% if can_manage_schedules %}
+        <a class="cta" href="{% url 'private_area:schedule_edit' schedule.pk %}">Editar escala</a>
+      {% endif %}
       <a class="cta secondary" href="{% url 'private_area:schedule_calendar' schedule.pk %}">
         Adicionar ao calendário
       </a>
@@ -52,6 +55,8 @@
             {% endif %}
             {% if can_manage_schedules %}
               <p>
+                <a href="{% url 'private_area:assignment_edit' assignment.pk %}">Editar</a>
+                ·
                 <a href="{% url 'private_area:assignment_substitute' assignment.pk %}">Registrar substituição</a>
               </p>
             {% endif %}

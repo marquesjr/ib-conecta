@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -113,6 +113,41 @@ def schedule_create(request: HttpRequest, pk: int) -> HttpResponse:
     )
 
 
+@permission_required(Permission.MANAGE_MINISTRY_SCHEDULES)
+@require_http_methods(["GET", "POST"])
+def schedule_edit(request: HttpRequest, pk: int) -> HttpResponse:
+    schedule = get_object_or_404(
+        MonthlySchedule.objects.select_related("ministry"),
+        pk=pk,
+    )
+    form = MonthlyScheduleForm(request.POST or None, instance=schedule)
+    if request.method == "POST" and form.is_valid():
+        try:
+            with transaction.atomic():
+                form.save()
+        except IntegrityError:
+            form.add_error(None, "Já existe uma escala para este mês.")
+        else:
+            log_audit(
+                actor=request.user,
+                action=AuditAction.SCHEDULE_UPDATED,
+                metadata={
+                    "schedule_id": schedule.pk,
+                    "ministry_id": schedule.ministry_id,
+                    "year": schedule.year,
+                    "month": schedule.month,
+                    "changed": form.changed_data,
+                },
+            )
+            messages.success(request, "Escala atualizada.")
+            return redirect("private_area:schedule_detail", pk=schedule.pk)
+    return render(
+        request,
+        "private_area/schedule_form.html",
+        {"form": form, "ministry": schedule.ministry, "schedule": schedule},
+    )
+
+
 @permission_required(Permission.ACCESS_PRIVATE_AREA)
 def schedule_detail(request: HttpRequest, pk: int) -> HttpResponse:
     schedule = get_object_or_404(
@@ -157,6 +192,58 @@ def assignment_add(request: HttpRequest, pk: int) -> HttpResponse:
             "Não foi possível convocar. Confira data, função e participante.",
         )
     return redirect("private_area:schedule_detail", pk=schedule.pk)
+
+
+@permission_required(Permission.MANAGE_MINISTRY_SCHEDULES)
+@require_http_methods(["GET", "POST"])
+def assignment_edit(request: HttpRequest, pk: int) -> HttpResponse:
+    assignment = get_object_or_404(
+        ScheduleAssignment.objects.select_related("schedule__ministry", "participant"),
+        pk=pk,
+    )
+    form = AssignmentForm(request.POST or None, instance=assignment)
+    if request.method == "POST" and form.is_valid():
+        assignment = form.save(commit=False)
+        # A new person or a new date needs a fresh confirmation.
+        if {"participant", "starts_at"} & set(form.changed_data):
+            assignment.status = AssignmentStatus.PENDING
+        assignment.save()
+        log_audit(
+            actor=request.user,
+            action=AuditAction.ASSIGNMENT_UPDATED,
+            metadata={"assignment_id": assignment.pk, "changed": form.changed_data},
+        )
+        messages.success(request, "Convocação atualizada.")
+        return redirect("private_area:schedule_detail", pk=assignment.schedule_id)
+    return render(
+        request,
+        "private_area/assignment_form.html",
+        {
+            "form": form,
+            "assignment": assignment,
+            "worship_functions": WORSHIP_FUNCTIONS,
+        },
+    )
+
+
+@permission_required(Permission.MANAGE_MINISTRY_SCHEDULES)
+@require_http_methods(["POST"])
+def assignment_remove(request: HttpRequest, pk: int) -> HttpResponse:
+    assignment = get_object_or_404(ScheduleAssignment, pk=pk)
+    schedule_id = assignment.schedule_id
+    log_audit(
+        actor=request.user,
+        action=AuditAction.ASSIGNMENT_REMOVED,
+        metadata={
+            "assignment_id": assignment.pk,
+            "schedule_id": schedule_id,
+            "participant_id": assignment.participant_id,
+            "function": assignment.function,
+        },
+    )
+    assignment.delete()
+    messages.success(request, "Convocação removida da escala.")
+    return redirect("private_area:schedule_detail", pk=schedule_id)
 
 
 @permission_required(Permission.ACCESS_PRIVATE_AREA)
