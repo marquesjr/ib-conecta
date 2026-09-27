@@ -1,0 +1,12 @@
+Ícones do navegador derivados do peixe (ichthys) da logo — 2026-09-27.
+
+Origem: static/img/church-logo-original.webp (logo recriada pelo usuário).
+1. Máscara dos pixels vermelhos na região do peixe (acima do lema), recorte (606,276)-(1494,664).
+2. Vetorização com potracer (porte em Python do potrace), um único contorno; sem redesenho.
+3. Peixe branco sobre o vermelho da logo (#d21019), centralizado.
+   Contorno branco extra por tamanho, só para o traço fino continuar legível:
+   - favicon.ico: 16 px (+30), 32 px (+22), 48 px (+18), em unidades do traçado.
+   - icon.svg: +20, bloco com cantos arredondados (rx 14/64).
+   - apple-touch-icon.png (180) e icon-192/512.png: +10/+8, fundo sem cantos
+     (o sistema arredonda) e margem dentro da zona segura de ícones mascaráveis.
+4. PNGs renderizados a partir do SVG no Chromium; ICO montado com Pillow (uma imagem por tamanho).

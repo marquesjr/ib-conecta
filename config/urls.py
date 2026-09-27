@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.conf.urls.static import static
+from django.templatetags.static import static as static_url
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
@@ -10,6 +12,8 @@ from config.health import healthz
 
 urlpatterns = [
     path("healthz/", healthz, name="healthz"),
+    # Leitores de feed, buscadores e navegadores antigos pedem /favicon.ico direto na raiz.
+    path("favicon.ico", RedirectView.as_view(url=static_url("img/icons/favicon.ico"), permanent=True)),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("", include("apps.accounts.urls")),

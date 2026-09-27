@@ -182,6 +182,10 @@ Campos brancos, borda cinza, raio `control` e altura mínima de 46px. Rótulos f
 
 Logo original e navegação horizontal discreta, com links em caixa natural. Página atual recebe vinho e sublinhado; grupos usam `details`/`summary` com chevron SVG no lugar do marcador nativo. A logo aparece inteira (com o lema), com 72px de altura (58px no celular), e usa `mix-blend-mode: multiply` para o fundo branco não virar caixa sobre o fundo morno. No celular, Menu expõe `aria-expanded` e `aria-controls`; Escape fecha o grupo ou menu e devolve foco ao controle. Clique fora fecha; sem JavaScript os links continuam visíveis. O dropdown torna-se parte do fluxo em telas pequenas.
 
+### Ícone do navegador
+
+Derivado do peixe da logo, vetorizado sem redesenho: peixe branco sobre o vermelho da logo (`#d21019`, exceção à paleta por ser cor da marca). O traço fino da logo recebe reforço proporcional ao tamanho, maior no `favicon.ico` de 16 px. Arquivos em `static/img/icons/` (procedência em `source.txt`); manifesto em `static/site.webmanifest`; `/favicon.ico` redireciona para o arquivo estático.
+
 ### Fotografia editorial
 
 O acervo separa **fotografia** de **arte ou cartaz** (campo Tipo do Quadro do acervo). Fotografia usa `object-fit: cover`, cantos suaves e legendas em Archivo; arte nunca é recortada.
