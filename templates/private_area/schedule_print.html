@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load state_tags %}
+{% load state_tags person_tags %}
 
 {% block title %}Imprimir escala de {{ schedule.label }} — Igreja Batista em Santa Leopoldina{% endblock %}
 
@@ -21,21 +21,22 @@
     <p class="no-print">
       <button class="cta" type="button" onclick="window.print()">Salvar como PDF</button>
     </p>
-    {% if assignments %}
-      <ul class="news-list">
-        {% for assignment in assignments %}
-          <li>
-            <strong>{{ assignment.function }}</strong> — {{ assignment.participant.username }}
-            <p class="news-meta">
-              {{ assignment.starts_at|date:"d/m/Y H:i" }}
-              {% state assignment.status assignment.get_status_display %}
-            </p>
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
+    {% for service in services %}
+      <section class="print-service">
+        <h2 class="service-heading">{{ service.starts_at|date:"l, d/m" }} · {{ service.starts_at|date:"H:i" }}</h2>
+        <ul class="service-roster">
+          {% for assignment in service.assignments %}
+            <li>
+              <span class="roster-function">{{ assignment.function }}</span>
+              <span class="roster-person">{{ assignment.participant|person_name }}</span>
+              <span class="roster-state">{% state assignment.status assignment.get_status_display %}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% empty %}
       <p class="muted">Nenhum participante nesta escala.</p>
-    {% endif %}
+    {% endfor %}
     <p class="no-print">
       <a href="{% url 'private_area:schedule_detail' schedule.pk %}">Voltar à escala</a>
     </p>

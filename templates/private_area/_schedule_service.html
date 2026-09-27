@@ -1,0 +1,37 @@
+{% load state_tags person_tags %}
+<section class="service{% if service.is_past %} service--past{% endif %}" aria-labelledby="service-{{ service.starts_at|date:'U' }}">
+  <p class="service-date" aria-hidden="true">
+    <span class="service-day">{{ service.starts_at|date:"d" }}</span>
+    <span class="service-weekday">{{ service.starts_at|date:"D" }} · {{ service.starts_at|date:"M" }}</span>
+  </p>
+  <div class="service-body">
+    <h2 class="service-heading" id="service-{{ service.starts_at|date:'U' }}">
+      <span>{{ service.starts_at|date:"l, d/m" }} · {{ service.starts_at|date:"H:i" }}</span>
+      <span class="service-count">{{ service.confirmed_count }} de {{ service.assignments|length }} confirmados</span>
+    </h2>
+    <ul class="service-roster">
+      {% for assignment in service.assignments %}
+        <li{% if request.user == assignment.participant %} class="is-me"{% endif %}>
+          <span class="roster-function">{{ assignment.function }}</span>
+          <span class="roster-person">
+            {{ assignment.participant|person_name }}{% if request.user == assignment.participant %} <small>(você)</small>{% endif %}
+            {% for substitution in assignment.substitutions.all %}
+              <small class="roster-note">Substituição: {{ substitution.replaced|person_name }} → {{ substitution.substitute|person_name }}</small>
+            {% endfor %}
+          </span>
+          <span class="roster-state">{% state assignment.status assignment.get_status_display %}</span>
+          {% if not service.is_past %}
+            <span class="roster-actions">
+              {% if request.user == assignment.participant and assignment.status == "pending" %}
+                <a href="{% url 'private_area:assignment_respond' assignment.pk %}">Responder</a>
+              {% endif %}
+              {% if can_manage_schedules %}
+                <a href="{% url 'private_area:assignment_substitute' assignment.pk %}">Substituir</a>
+              {% endif %}
+            </span>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

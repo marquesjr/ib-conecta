@@ -1,6 +1,9 @@
+from datetime import timedelta
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 from apps.accounts.models import AuditLog, Role
 from apps.private_area.models import AssignmentStatus, Ministry, MonthlySchedule, ScheduleAssignment
@@ -251,3 +254,68 @@ class ScheduleExportTests(TestCase):
         self.assertEqual(page.status_code, 200)
         self.assertContains(page, "wa.me")
         self.assertContains(page, "Compartilhar no WhatsApp")
+
+
+class ScheduleLayoutTests(TestCase):
+    """A escala agrupa convocações por culto e mostra ações só onde cabem."""
+
+    def setUp(self):
+        self.leader = make_user("lider", Role.MINISTRY_LEADER)
+        self.joao = make_user("joao", Role.MEMBER)
+        self.joao.first_name, self.joao.last_name = "João", "Pereira"
+        self.joao.save()
+        self.ministry = Ministry.objects.create(name="Louvor")
+        self.schedule = MonthlySchedule.objects.create(ministry=self.ministry, year=2026, month=9)
+        now = timezone.now()
+        self.future = now + timedelta(days=3)
+        self.past = now - timedelta(days=3)
+
+    def _assign(self, starts_at, function, participant, status=AssignmentStatus.PENDING):
+        return ScheduleAssignment.objects.create(
+            schedule=self.schedule,
+            starts_at=starts_at,
+            function=function,
+            participant=participant,
+            status=status,
+        )
+
+    def _page(self, username):
+        self.client.login(username=username, password="senha-segura-123")
+        return self.client.get(reverse("private_area:schedule_detail", args=[self.schedule.pk]))
+
+    def test_shows_full_name_instead_of_login(self):
+        self._assign(self.future, "Vocal", self.joao)
+        page = self._page("lider")
+        self.assertContains(page, "João Pereira")
+
+    def test_groups_assignments_by_service(self):
+        self._assign(self.future, "Vocal", self.joao)
+        self._assign(self.future, "Projeção", self.leader)
+        self._assign(self.past, "Vocal", self.joao, AssignmentStatus.CONFIRMED)
+        page = self._page("lider")
+        self.assertEqual(len(page.context["upcoming_services"]), 1)
+        self.assertEqual(len(page.context["upcoming_services"][0].assignments), 2)
+        self.assertEqual(len(page.context["past_services"]), 1)
+        self.assertContains(page, "1 culto já realizado")
+
+    def test_respond_link_only_for_own_pending_future_assignment(self):
+        pending = self._assign(self.future, "Vocal", self.joao)
+        confirmed = self._assign(self.future, "Dirigente", self.joao, AssignmentStatus.CONFIRMED)
+        past = self._assign(self.past, "Vocal", self.joao)
+        page = self._page("joao")
+        self.assertContains(page, reverse("private_area:assignment_respond", args=[pending.pk]))
+        self.assertNotContains(page, reverse("private_area:assignment_respond", args=[confirmed.pk]))
+        self.assertNotContains(page, reverse("private_area:assignment_respond", args=[past.pk]))
+        self.assertContains(page, "Sua convocação:")
+
+    def test_substitution_link_hidden_for_past_services(self):
+        future = self._assign(self.future, "Vocal", self.joao)
+        past = self._assign(self.past, "Vocal", self.joao)
+        page = self._page("lider")
+        self.assertContains(page, reverse("private_area:assignment_substitute", args=[future.pk]))
+        self.assertNotContains(page, reverse("private_area:assignment_substitute", args=[past.pk]))
+
+    def test_assignment_form_labels_participant_in_portuguese(self):
+        page = self._page("lider")
+        self.assertContains(page, "Participante")
+        self.assertNotContains(page, "Participant:")
