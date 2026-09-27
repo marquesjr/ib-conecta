@@ -120,6 +120,10 @@ class ParseExportTests(TestCase):
 
 @override_settings(MEDIA_ROOT=MEDIA_ROOT)
 class ImportExportTests(TestCase):
+    def setUp(self):
+        # Parte do vazio: a migração 0012 já cadastra fotos reais do Instagram.
+        ArchiveFrame.objects.all().delete()
+
     def _export_dir(self) -> Path:
         root = Path(tempfile.mkdtemp())
         photo = root / "media" / "posts" / "foto.png"

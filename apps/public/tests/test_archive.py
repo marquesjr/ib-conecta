@@ -42,7 +42,7 @@ def make_frame(**kwargs):
 @override_settings(MEDIA_ROOT=MEDIA_ROOT)
 class ArchiveFramesTests(TestCase):
     def setUp(self):
-        # Parte do vazio: a migração 0011 já cadastra fotos reais do Instagram.
+        # Parte do vazio: a migração 0012 já cadastra fotos reais do Instagram.
         ArchiveFrame.objects.all().delete()
 
     def test_seeded_frames_fill_the_sheet_when_there_is_no_archive(self):
