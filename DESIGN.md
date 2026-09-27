@@ -138,7 +138,7 @@ O vinho aquece uma base clara com texto escuro e cinza de leitura secundária.
 
 **The Duas Vozes Rule.** A serifada conduz convite e leitura editorial; Archivo sustenta controles, metadados, tabelas e instruções.
 
-**The Texto Preservado Rule.** Ênfase tipográfica não reescreve conteúdo do CMS. A abertura destaca as três palavras finais da headline personalizada em itálico vinho; esse tratamento é local à homepage, não uma obrigação para todo título.
+**The Texto Preservado Rule.** Ênfase tipográfica não reescreve conteúdo do CMS. A abertura destaca em itálico vinho a última frase da headline personalizada, em linha própria (ou as três palavras finais, se houver uma frase só); a referência bíblica da mensagem aparece discreta abaixo dos botões; esse tratamento é local à homepage, não uma obrigação para todo título.
 
 ## Layout
 

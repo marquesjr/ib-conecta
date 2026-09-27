@@ -86,11 +86,12 @@ DEMO_USERS = (
 )
 
 DEMO_SETTINGS = {
-    "evangelistic_headline": "Jesus te convida a conhecer a graça de Deus",
+    "evangelistic_headline": "Um lugar para viver a fé. Uma família para caminhar com você.",
     "evangelistic_message": (
-        "A Igreja Batista em Santa Leopoldina celebra a Palavra e acolhe "
-        "quem chega da cidade ou da zona rural."
+        "Em Cristo encontramos esperança, amor e uma comunidade onde podemos crescer juntos. "
+        "Venha conhecer a Palavra de Deus, compartilhar a vida e fazer parte da nossa família."
     ),
+    "evangelistic_reference": "Inspirado em Mateus 11:28 e Atos 2:42-47.",
     "next_service_label": "Culto de celebração",
     "next_service_when": "Domingo, 19h",
     "next_service_description": "Venha participar conosco do próximo culto.",

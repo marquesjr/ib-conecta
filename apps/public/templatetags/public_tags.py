@@ -12,8 +12,16 @@ register = template.Library()
 
 @register.filter
 def editorial_headline(value):
-    """Preserve CMS wording and escape it, emphasizing its final phrase."""
+    """Preserve CMS wording and escape it, emphasizing its final phrase.
+
+    With two or more sentences, the last one goes to its own line and is emphasized
+    ("Um lugar para viver a fé. <em>Uma família para caminhar com você.</em>").
+    Otherwise the final three words are emphasized.
+    """
     value = str(value or "")
+    sentences = re.search(r"^(.*[.!?])\s+(\S.*)$", value.strip(), flags=re.S)
+    if sentences:
+        return format_html("{} <br><em>{}</em>", sentences.group(1), sentences.group(2))
     ending = re.search(r"(\S+(?:\s+\S+){0,2})\s*$", value)
     if not ending:
         return value

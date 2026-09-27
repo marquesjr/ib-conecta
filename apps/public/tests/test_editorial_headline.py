@@ -11,6 +11,13 @@ class EditorialHeadlineTests(SimpleTestCase):
         self.assertEqual(strip_tags(rendered), text)
         self.assertIn("<em>graça de Deus</em>", rendered)
 
+    def test_second_sentence_gets_its_own_emphasized_line(self):
+        text = "Um lugar para viver a fé. Uma família para caminhar com você."
+        rendered = editorial_headline(text)
+        self.assertEqual(strip_tags(rendered), text)
+        self.assertIn("<br><em>Uma família para caminhar com você.</em>", rendered)
+        self.assertTrue(rendered.startswith("Um lugar para viver a fé."))
+
     def test_cms_html_is_escaped(self):
         rendered = editorial_headline('<script>alert("x")</script> Deus acolhe')
         self.assertNotIn("<script>", rendered)

@@ -1,19 +1,20 @@
 {% extends "base.html" %}
 {% load static public_tags %}
-{% block title %}IB Conecta — Igreja Batista em Santa Leopoldina{% endblock %}
+{% block title %}Igreja Batista em Santa Leopoldina{% endblock %}
 {% block body_attrs %} class="home"{% endblock %}
 {% block share %}{% endblock %}
 {% block extra_head %}<script src="{% static 'js/mural.js' %}" defer></script>{% endblock %}
 {% block content %}
 <section class="welcome" aria-labelledby="welcome-title">
   <div class="welcome-copy">
-    <h1 id="welcome-title">{% if church_settings.evangelistic_headline and church_settings.evangelistic_headline != "Boas-novas para Santa Leopoldina" %}{{ church_settings.evangelistic_headline|editorial_headline }}{% else %}Fé que acolhe.<br><em>Vida em comunidade.</em>{% endif %}</h1>
+    <h1 id="welcome-title">{% if church_settings.evangelistic_headline and church_settings.evangelistic_headline != "Boas-novas para Santa Leopoldina" %}{{ church_settings.evangelistic_headline|editorial_headline }}{% else %}Um lugar para viver a fé. <br><em>Uma família para caminhar com você.</em>{% endif %}</h1>
     <p class="lede">{{ church_settings.evangelistic_message }}</p>
     <div class="actions">
       <a class="cta" href="{% url 'plan_visit' %}">Planeje sua visita {% include "public/_arrow.html" %}</a>
       {% if whatsapp_url %}<a class="cta secondary" href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer">Conversar com a igreja</a>
       {% else %}<a class="cta secondary" href="{% url 'know_church' %}">Quero conhecer</a>{% endif %}
     </div>
+    {% if church_settings.evangelistic_reference %}<p class="welcome-reference">{{ church_settings.evangelistic_reference }}</p>{% endif %}
   </div>
   {% with frame=archive.hero %}
     {% if frame %}<figure class="welcome-photo">

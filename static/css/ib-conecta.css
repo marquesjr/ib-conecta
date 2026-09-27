@@ -62,6 +62,7 @@ p { margin: 0 0 1rem; }
 .welcome h1 { font-size: clamp(2.6rem, 4.8vw, 5rem); line-height: 1.02; margin-bottom: 1.2rem; }
 .welcome h1 em { color: var(--ink-red); font-weight: 400; }
 .lede { color: var(--archive-gray); max-width: 46ch; font-size: 1.05rem; }
+.welcome-reference { margin: 1.1rem 0 0; font-size: .85rem; color: var(--archive-gray); }
 .welcome-photo { margin: 0; }
 .welcome-photo > a { display: block; }
 .welcome-photo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 40%; border-radius: 18px; }

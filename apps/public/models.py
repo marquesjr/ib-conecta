@@ -567,15 +567,23 @@ class LiveStreamPage(Page):
 class ChurchSettings(BaseSiteSetting):
     evangelistic_headline = models.CharField(
         max_length=200,
-        default="Boas-novas para Santa Leopoldina",
+        default="Um lugar para viver a fé. Uma família para caminhar com você.",
         verbose_name="Título evangelístico",
+        help_text="Com duas frases, a segunda aparece em outra linha, em itálico vinho.",
     )
     evangelistic_message = models.TextField(
         default=(
-            "A Igreja Batista em Santa Leopoldina anuncia a Palavra de Deus "
-            "e convida você a participar dos cultos."
+            "Em Cristo encontramos esperança, amor e uma comunidade onde podemos crescer juntos. "
+            "Venha conhecer a Palavra de Deus, compartilhar a vida e fazer parte da nossa família."
         ),
         verbose_name="Mensagem da home",
+    )
+    evangelistic_reference = models.CharField(
+        max_length=200,
+        blank=True,
+        default="Inspirado em Mateus 11:28 e Atos 2:42-47.",
+        verbose_name="Referência bíblica da mensagem",
+        help_text="Aparece discreta abaixo dos botões da abertura. Deixe vazio para ocultar.",
     )
     next_service_label = models.CharField(
         max_length=120,
@@ -740,6 +748,7 @@ class ChurchSettings(BaseSiteSetting):
             [
                 FieldPanel("evangelistic_headline"),
                 FieldPanel("evangelistic_message"),
+                FieldPanel("evangelistic_reference"),
                 FieldPanel("next_service_label"),
                 FieldPanel("next_service_when"),
                 FieldPanel("next_service_description"),
