@@ -14,6 +14,8 @@ nunca afirmam fato nenhum — não carregam data nem nome de pessoa.
 from __future__ import annotations
 
 from django.templatetags.static import static
+from django.utils import timezone
+from django.utils.dateformat import format as date_format
 
 # Cena de cada quadro semeado. A descrição é o texto alternativo real da imagem
 # gerada; a legenda é a anotação curta que aparece sob o quadro.
@@ -50,6 +52,15 @@ def _seeded(count):
     return frames
 
 
+def _month_year(value):
+    """Mês e ano no idioma do site (``ago 2026``); ``strftime`` sairia em inglês."""
+    if not value:
+        return ""
+    if timezone.is_aware(value):
+        value = timezone.localtime(value)
+    return date_format(value, "b Y")
+
+
 def archive_frames(count=12):
     """Devolve até ``count`` fotos, priorizando o acervo publicado.
 
@@ -73,7 +84,7 @@ def archive_frames(count=12):
                 "alt": record.alt_text or record.caption,
                 "caption": record.caption,
                 "credit": record.credit,
-                "date": record.taken_at.strftime("%b %Y").lower() if record.taken_at else "",
+                "date": _month_year(record.taken_at),
                 "permalink": record.permalink,
                 "synthetic": False,
             }

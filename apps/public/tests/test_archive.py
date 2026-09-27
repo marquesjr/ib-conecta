@@ -70,6 +70,10 @@ class ArchiveFramesTests(TestCase):
         make_frame(caption="Café e comunhão", alt_text="")
         self.assertEqual(archive_frames(1)[0]["alt"], "Café e comunhão")
 
+    def test_frame_date_uses_portuguese_month(self):
+        make_frame(taken_at=timezone.make_aware(timezone.datetime(2025, 8, 15, 12)))
+        self.assertEqual(archive_frames(1)[0]["date"], "ago 2025")
+
     def test_count_is_respected(self):
         self.assertEqual(len(archive_frames(4)), 4)
 
