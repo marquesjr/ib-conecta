@@ -20,7 +20,7 @@
       {% if frame.permalink %}<a href="{{ frame.permalink }}" target="_blank" rel="noopener noreferrer">{% endif %}
       <img src="{{ frame.url }}" alt="{{ frame.alt }}" width="800" height="800" fetchpriority="high" decoding="async" />
       {% if frame.permalink %}</a>{% endif %}
-      {% if frame.synthetic %}<figcaption>Imagem ilustrativa · <a href="#acervo-exemplo">sobre as fotografias</a></figcaption>{% else %}<figcaption>{{ frame.caption }}</figcaption>{% endif %}
+      {% if frame.synthetic %}<figcaption>Imagem ilustrativa · <a href="#acervo-exemplo">sobre as fotografias</a></figcaption>{% else %}<figcaption>{{ frame.caption }}{% if frame.caption and frame.credit %} · {% endif %}{{ frame.credit }}</figcaption>{% endif %}
     </figure>{% endif %}
   {% endwith %}
 </section>
@@ -61,7 +61,7 @@
         {% if frame.permalink %}<a href="{{ frame.permalink }}" target="_blank" rel="noopener noreferrer">{% endif %}
         <img src="{{ frame.url }}" alt="{{ frame.alt }}" width="800" height="800" loading="lazy" decoding="async" />
         {% if frame.permalink %}</a>{% endif %}
-        <figcaption>{% if frame.synthetic %}<span>Imagem ilustrativa</span>{% else %}<span>{{ frame.caption }}</span>{% if frame.date %}<time>{{ frame.date }}</time>{% endif %}{% endif %}</figcaption>
+        <figcaption>{% if frame.synthetic %}<span>Imagem ilustrativa</span>{% else %}<span>{{ frame.caption }}{% if frame.caption and frame.credit %} · {% endif %}{{ frame.credit }}</span>{% if frame.date %}<time>{{ frame.date }}</time>{% endif %}{% endif %}</figcaption>
       </figure>
     {% endfor %}
     </div>

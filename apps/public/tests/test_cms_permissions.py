@@ -43,3 +43,10 @@ class CmsPermissionTests(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Página institucional")
+
+    def test_communication_can_review_archive_frames(self):
+        make_user("comms", Role.COMMUNICATION)
+        self.client.login(username="comms", password="senha-segura-123")
+        response = self.client.get("/admin/snippets/public/archiveframe/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Quadros do acervo")

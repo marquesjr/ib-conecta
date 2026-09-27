@@ -50,6 +50,11 @@ class InstagramError(RuntimeError):
     """Falha ao falar com a API. Sempre tratada, nunca propagada para a requisição."""
 
 
+DEFAULT_INSTAGRAM_HANDLE = "igrejabatista.santaleopoldina"
+DEFAULT_INSTAGRAM_URL = "https://www.instagram.com/igrejabatista.santaleopoldina/"
+API_FETCH_CAP = 100
+
+
 @dataclass(frozen=True)
 class RemoteFrame:
     remote_id: str
@@ -88,12 +93,36 @@ def _media_url(item: dict) -> str:
     return item.get("media_url") or item.get("thumbnail_url") or ""
 
 
+def normalize_handle(handle: str) -> str:
+    """Arroba sem @ nem URL. Vazio se não der para reconhecer."""
+    text = (handle or "").strip()
+    if not text:
+        return ""
+    text = text.split("?")[0].strip().strip("/")
+    if "instagram.com/" in text:
+        text = text.rsplit("instagram.com/", 1)[-1]
+    return text.lstrip("@").strip()
+
+
+def archive_credit(handle: str = "") -> str:
+    """Crédito público de um quadro vindo do Instagram da igreja."""
+    slug = normalize_handle(handle)
+    return f"Instagram @{slug}" if slug else "Instagram"
+
+
 def fetch_media(*, mode: str, token: str, user_id: str = "", limit: int = 24) -> list[RemoteFrame]:
-    """Busca as mídias mais recentes. Levanta ``InstagramError`` em qualquer falha."""
+    """Busca as mídias mais recentes. Levanta ``InstagramError`` em qualquer falha.
+
+    Percorre ``paging.next`` da API oficial até completar ``limit`` (teto
+    ``API_FETCH_CAP``). Sem isso o acervo parava na primeira página.
+    """
     if not token:
         raise InstagramError("Nenhum token de acesso cadastrado.")
+    if limit < 1:
+        return []
 
-    params = {"fields": MEDIA_FIELDS, "limit": str(limit), "access_token": token}
+    page_size = min(max(limit, 1), 100)
+    params = {"fields": MEDIA_FIELDS, "limit": str(page_size), "access_token": token}
     if mode == "instagram_login":
         url = f"{INSTAGRAM_HOST}/me/media?{urllib.parse.urlencode(params)}"
     elif mode == "facebook_login":
@@ -103,24 +132,36 @@ def fetch_media(*, mode: str, token: str, user_id: str = "", limit: int = 24) ->
     else:
         raise InstagramError(f"Origem do acervo desconhecida: {mode!r}")
 
-    payload = _get_json(url)
-    frames = []
-    for item in payload.get("data", []):
-        image_url = _media_url(item)
-        if not image_url:
-            # Mídia com direito autoral marcado vem sem URL. Ignorar é o comportamento correto.
-            continue
-        taken_at = parse_datetime(item.get("timestamp") or "") or timezone.now()
-        frames.append(
-            RemoteFrame(
-                remote_id=str(item.get("id") or ""),
-                image_url=image_url,
-                permalink=item.get("permalink") or "",
-                caption=_short_caption(item.get("caption") or ""),
-                taken_at=taken_at,
+    frames: list[RemoteFrame] = []
+    seen_urls: set[str] = set()
+    target = min(limit, API_FETCH_CAP)
+    while url and len(frames) < target:
+        if url in seen_urls:
+            break
+        seen_urls.add(url)
+        payload = _get_json(url)
+        for item in payload.get("data", []):
+            image_url = _media_url(item)
+            if not image_url:
+                # Mídia com direito autoral marcado vem sem URL. Ignorar é o comportamento correto.
+                continue
+            remote_id = str(item.get("id") or "")
+            if not remote_id:
+                continue
+            taken_at = parse_datetime(item.get("timestamp") or "") or timezone.now()
+            frames.append(
+                RemoteFrame(
+                    remote_id=remote_id,
+                    image_url=image_url,
+                    permalink=item.get("permalink") or "",
+                    caption=_short_caption(item.get("caption") or ""),
+                    taken_at=taken_at,
+                )
             )
-        )
-    return [frame for frame in frames if frame.remote_id]
+            if len(frames) >= target:
+                break
+        url = (payload.get("paging") or {}).get("next") or ""
+    return frames
 
 
 def refresh_token(*, mode: str, token: str) -> tuple[str, datetime | None]:
@@ -171,13 +212,81 @@ def _download(url: str) -> tuple[bytes, str]:
     return data, extension
 
 
-def sync() -> dict:
+def _apply_metadata(record, *, caption: str, permalink: str, taken_at, credit: str) -> list[str]:
+    changed = []
+    if caption and record.caption != caption:
+        record.caption = caption
+        changed.append("caption")
+    if (record.alt_text or "") == "" and caption:
+        record.alt_text = caption
+        changed.append("alt_text")
+    if permalink and record.permalink != permalink:
+        record.permalink = permalink
+        changed.append("permalink")
+    if taken_at and record.taken_at != taken_at:
+        record.taken_at = taken_at
+        changed.append("taken_at")
+    if credit and record.credit != credit:
+        record.credit = credit
+        changed.append("credit")
+    return changed
+
+
+def upsert_archive_frame(
+    *,
+    remote_id: str,
+    caption: str,
+    permalink: str,
+    taken_at,
+    credit: str,
+    image_bytes: bytes | None = None,
+    extension: str = ".jpg",
+    alt_text: str = "",
+) -> str:
+    """Cria ou atualiza um quadro do Instagram. Devolve created/updated/skipped."""
+    from apps.public.models import ArchiveFrame
+
+    existing = ArchiveFrame.objects.filter(
+        source=ArchiveFrame.Source.INSTAGRAM, remote_id=remote_id
+    ).first()
+    if existing is not None:
+        changed = _apply_metadata(
+            existing,
+            caption=caption,
+            permalink=permalink,
+            taken_at=taken_at,
+            credit=credit,
+        )
+        if changed:
+            existing.save(update_fields=changed)
+            return "updated"
+        return "skipped"
+
+    if not image_bytes:
+        return "skipped"
+
+    record = ArchiveFrame(
+        source=ArchiveFrame.Source.INSTAGRAM,
+        remote_id=remote_id,
+        caption=caption,
+        alt_text=alt_text or caption,
+        permalink=permalink,
+        taken_at=taken_at or timezone.now(),
+        credit=credit,
+    )
+    name = f"{slugify(remote_id) or 'quadro'}{extension}"
+    record.image.save(name, ContentFile(image_bytes), save=False)
+    record.save()
+    return "created"
+
+
+def sync(*, limit: int | None = None) -> dict:
     """Sincroniza o acervo com o Instagram da igreja.
 
     Nunca levanta: devolve um resumo e registra o erro na credencial, para que a
     página continue servindo a galeria curada quando a Meta estiver indisponível.
     """
-    from apps.public.models import ArchiveFrame, ChurchSettings, InstagramCredential
+    from apps.public.models import ChurchSettings, InstagramCredential
 
     summary = {"created": 0, "updated": 0, "skipped": 0, "error": ""}
 
@@ -196,12 +305,17 @@ def sync() -> dict:
         summary["error"] = "Nenhuma credencial do Instagram cadastrada."
         return summary
 
+    fetch_limit = limit if limit is not None else min(
+        max(church.archive_frame_count * 4, 48), API_FETCH_CAP
+    )
+    credit = archive_credit(church.instagram_handle or DEFAULT_INSTAGRAM_HANDLE)
+
     try:
         frames = fetch_media(
             mode=mode,
             token=credential.access_token,
             user_id=church.instagram_user_id,
-            limit=max(church.archive_frame_count * 2, 12),
+            limit=fetch_limit,
         )
     except InstagramError as exc:
         logger.warning("Sincronização do Instagram falhou: %s", exc)
@@ -210,44 +324,32 @@ def sync() -> dict:
         credential.save(update_fields=["last_sync_error"])
         return summary
 
+    from apps.public.models import ArchiveFrame
+
     for frame in frames:
-        existing = ArchiveFrame.objects.filter(
+        already = ArchiveFrame.objects.filter(
             source=ArchiveFrame.Source.INSTAGRAM, remote_id=frame.remote_id
-        ).first()
-        if existing is not None:
-            changed = []
-            if existing.caption != frame.caption:
-                existing.caption = frame.caption
-                changed.append("caption")
-            if existing.permalink != frame.permalink:
-                existing.permalink = frame.permalink
-                changed.append("permalink")
-            if changed:
-                existing.save(update_fields=changed)
-                summary["updated"] += 1
-            else:
+        ).exists()
+        data = None
+        extension = ".jpg"
+        if not already:
+            try:
+                data, extension = _download(frame.image_url)
+            except InstagramError as exc:
+                logger.warning("Imagem %s não baixou: %s", frame.remote_id, exc)
                 summary["skipped"] += 1
-            continue
+                continue
 
-        try:
-            data, extension = _download(frame.image_url)
-        except InstagramError as exc:
-            logger.warning("Imagem %s não baixou: %s", frame.remote_id, exc)
-            summary["skipped"] += 1
-            continue
-
-        record = ArchiveFrame(
-            source=ArchiveFrame.Source.INSTAGRAM,
+        outcome = upsert_archive_frame(
             remote_id=frame.remote_id,
             caption=frame.caption,
-            alt_text=frame.caption,
             permalink=frame.permalink,
             taken_at=frame.taken_at,
+            credit=credit,
+            image_bytes=data,
+            extension=extension,
         )
-        name = f"{slugify(frame.remote_id) or 'quadro'}{extension}"
-        record.image.save(name, ContentFile(data), save=False)
-        record.save()
-        summary["created"] += 1
+        summary[outcome] += 1
 
     credential.last_sync_at = timezone.now()
     credential.last_sync_error = ""

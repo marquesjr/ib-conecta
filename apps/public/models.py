@@ -858,6 +858,13 @@ class ArchiveFrame(models.Model):
         default="",
         verbose_name="Link do post",
     )
+    credit = models.CharField(
+        max_length=120,
+        blank=True,
+        default="",
+        verbose_name="Crédito",
+        help_text="Ex.: Instagram @igrejabatista.santaleopoldina. Quadros da API e da exportação preenchem sozinhos.",
+    )
     taken_at = models.DateTimeField(
         default=timezone.now,
         verbose_name="Data",
@@ -871,6 +878,7 @@ class ArchiveFrame(models.Model):
         FieldPanel("image"),
         FieldPanel("alt_text"),
         FieldPanel("caption"),
+        FieldPanel("credit"),
         FieldPanel("permalink"),
         FieldPanel("taken_at"),
         FieldPanel("is_visible"),

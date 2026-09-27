@@ -28,6 +28,15 @@ def ensure_cms_editors_group() -> Group:
     )
     group.permissions.add(access_admin)
 
+    archive_ct = ContentType.objects.get(app_label="public", model="archiveframe")
+    for codename in (
+        "add_archiveframe",
+        "change_archiveframe",
+        "view_archiveframe",
+        "delete_archiveframe",
+    ):
+        group.permissions.add(Permission.objects.get(content_type=archive_ct, codename=codename))
+
     page_ct = ContentType.objects.get(app_label="wagtailcore", model="page")
     root = Page.get_first_root_node()
     for codename in PAGE_PERMISSION_CODENAMES:
