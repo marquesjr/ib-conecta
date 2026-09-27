@@ -1,12 +1,12 @@
-Ícones do navegador derivados do peixe (ichthys) da logo — 2026-09-27.
+Ícones do navegador — peixe (ichthys) completo, escolhido pelo usuário em 2026-09-27.
 
-Origem: static/img/church-logo-original.webp (logo recriada pelo usuário).
-1. Máscara dos pixels vermelhos na região do peixe (acima do lema), recorte (606,276)-(1494,664).
-2. Vetorização com potracer (porte em Python do potrace), um único contorno; sem redesenho.
-3. Peixe branco sobre o vermelho da logo (#d21019), centralizado.
-   Contorno branco extra por tamanho, só para o traço fino continuar legível:
-   - favicon.ico: 16 px (+30), 32 px (+22), 48 px (+18), em unidades do traçado.
-   - icon.svg: +20, bloco com cantos arredondados (rx 14/64).
-   - apple-touch-icon.png (180) e icon-192/512.png: +10/+8, fundo sem cantos
-     (o sistema arredonda) e margem dentro da zona segura de ícones mascaráveis.
-4. PNGs renderizados a partir do SVG no Chromium; ICO montado com Pillow (uma imagem por tamanho).
+Desenho simples feito para o ícone (não é recorte da logo): duas curvas que se
+fecham no nariz e se cruzam na cauda, traço branco com pontas arredondadas sobre
+o vinho do site (#862d36). A versão anterior, vetorizada do peixe aberto da logo,
+foi descartada porque, fora da logo, lia como um X.
+
+- icon.svg: traço 5.5 em viewBox 64, bloco com cantos arredondados (rx 14).
+- favicon.ico: desenhos próprios para 16 px (traço 6.5, peixe 5% maior), 32 px (5.8) e 48 px (5.5).
+- apple-touch-icon.png (180): fundo sem cantos (o sistema arredonda), peixe a 90%.
+- icon-192.png e icon-512.png: peixe a 80%, dentro da zona segura de ícones mascaráveis.
+PNGs renderizados a partir do SVG no Chromium; ICO montado com Pillow (uma imagem por tamanho).

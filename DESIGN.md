@@ -184,7 +184,7 @@ Logo original e navegação horizontal discreta, com links em caixa natural. Pá
 
 ### Ícone do navegador
 
-Derivado do peixe da logo, vetorizado sem redesenho: peixe branco sobre o vermelho da logo (`#d21019`, exceção à paleta por ser cor da marca). O traço fino da logo recebe reforço proporcional ao tamanho, maior no `favicon.ico` de 16 px. Arquivos em `static/img/icons/` (procedência em `source.txt`); manifesto em `static/site.webmanifest`; `/favicon.ico` redireciona para o arquivo estático.
+Peixe (ichthys) completo e simples, em traço branco com pontas arredondadas sobre o vinho do site. É um desenho próprio para o ícone: o peixe aberto da logo, sozinho, lia como um X. O `favicon.ico` tem um desenho por tamanho (traço mais grosso a 16 px). Arquivos em `static/img/icons/` (procedência em `source.txt`); manifesto em `static/site.webmanifest`; `/favicon.ico` redireciona para o arquivo estático.
 
 ### Fotografia editorial
 
