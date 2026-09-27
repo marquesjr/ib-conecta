@@ -72,3 +72,32 @@ class HomePageTests(TestCase):
         self.assertContains(response, "wa.me/5527888888888")
         self.assertContains(response, "Mensagem%20configurada")
         self.assertNotContains(response, "5527999999999")
+
+    def test_home_title_is_the_church_name(self):
+        response = self.client.get(reverse("home"))
+        self.assertContains(response, "<title>Igreja Batista em Santa Leopoldina</title>", html=False)
+
+    def test_welcome_reference_is_shown_and_can_be_hidden(self):
+        self.settings.evangelistic_reference = "Inspirado em Mateus 11:28 e Atos 2:42-47."
+        self.settings.save()
+        self.assertContains(self.client.get(reverse("home")), "Inspirado em Mateus 11:28 e Atos 2:42-47.")
+        self.settings.evangelistic_reference = ""
+        self.settings.save()
+        self.assertNotContains(self.client.get(reverse("home")), 'class="welcome-reference"')
+
+
+class WelcomeTextMigrationTests(TestCase):
+    def test_existing_settings_receive_the_new_welcome_text(self):
+        settings = ChurchSettings.for_site(Site.objects.get(is_default_site=True))
+        self.assertEqual(settings.evangelistic_headline, "Um lugar para viver a fé. Uma família para caminhar com você.")
+        self.assertTrue(settings.evangelistic_message.startswith("Em Cristo encontramos esperança"))
+        self.assertEqual(settings.evangelistic_reference, "Inspirado em Mateus 11:28 e Atos 2:42-47.")
+
+
+class PageTitleTests(TestCase):
+    def test_inner_pages_end_with_the_church_name(self):
+        for name in ("plan_visit", "prayer_request", "contribute", "privacy"):
+            body = self.client.get(reverse(name)).content.decode()
+            self.assertRegex(body, r"<title>[^<]+ — Igreja Batista em Santa Leopoldina</title>", name)
+            self.assertNotIn("— IB Conecta</title>", body)
+

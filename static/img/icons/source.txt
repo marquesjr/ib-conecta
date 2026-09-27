@@ -1,0 +1,12 @@
+Ícones do navegador — peixe (ichthys) completo, escolhido pelo usuário em 2026-09-27.
+
+Desenho simples feito para o ícone (não é recorte da logo): duas curvas que se
+fecham no nariz e se cruzam na cauda, traço branco com pontas arredondadas sobre
+o vinho do site (#862d36). A versão anterior, vetorizada do peixe aberto da logo,
+foi descartada porque, fora da logo, lia como um X.
+
+- icon.svg: traço 5.5 em viewBox 64, bloco com cantos arredondados (rx 14).
+- favicon.ico: desenhos próprios para 16 px (traço 6.5, peixe 5% maior), 32 px (5.8) e 48 px (5.5).
+- apple-touch-icon.png (180): fundo sem cantos (o sistema arredonda), peixe a 90%.
+- icon-192.png e icon-512.png: peixe a 80%, dentro da zona segura de ícones mascaráveis.
+PNGs renderizados a partir do SVG no Chromium; ICO montado com Pillow (uma imagem por tamanho).

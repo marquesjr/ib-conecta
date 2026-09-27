@@ -225,6 +225,14 @@ class HomeEditorialTests(TestCase):
         shown = sum(body.count(f'class="{name}"') for name in ("welcome-photo", "community-photo", "poster"))
         self.assertEqual(shown, 6)
 
+    def test_mural_slider_degrades_to_a_plain_strip(self):
+        """As setas só aparecem com JavaScript; o HTML entrega a faixa completa."""
+        response = self.client.get(reverse("home"))
+        self.assertContains(response, "js/mural.js")
+        self.assertContains(response, '<div class="mural-controls" hidden>', html=False)
+        self.assertContains(response, 'aria-controls="mural-track"', count=2)
+        self.assertContains(response, 'class="poster"', count=5)
+
     def test_visit_band_links_to_the_map_when_configured(self):
         self.settings.map_url = "https://maps.example.com/igreja"
         self.settings.save()

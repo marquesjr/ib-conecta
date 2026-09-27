@@ -91,7 +91,7 @@ components:
 
 **Creative North Star: "Encontro — editorial acolhedor"**
 
-A identidade aprovada em 16/09/2026 recebe o visitante com fotografia ampla, títulos serifados e ritmo de leitura generoso. Vinho, branco morno e tinta escura aproximam a instituição de quem procura culto, caminho ou conversa. A logo original da Igreja Batista em Santa Leopoldina permanece como identidade; o corte de apresentação é feito em CSS, sem redesenhar o arquivo.
+A identidade aprovada em 16/09/2026 recebe o visitante com fotografia ampla, títulos serifados e ritmo de leitura generoso. Vinho, branco morno e tinta escura aproximam a instituição de quem procura culto, caminho ou conversa. A logo da Igreja Batista em Santa Leopoldina permanece como identidade. Desde 27/09/2026 o site usa a versão em alta resolução fornecida pelo usuário, apenas aparada nas margens brancas e reduzida para a web, sem redesenho.
 
 Este registro descreve o sistema implementado em `static/css/ib-conecta.css`, `templates/base.html`, `templates/public/home.html` e `static/js/navigation.js`. Substitui deliberadamente Arquivo da Congregação, conforme a escolha do usuário; a composição da homepage está em `.impeccable/surfaces/templates-public-home-html.md`. As ferramentas privadas compartilham paleta e controles legíveis, com densidade adequada à operação.
 
@@ -138,7 +138,7 @@ O vinho aquece uma base clara com texto escuro e cinza de leitura secundária.
 
 **The Duas Vozes Rule.** A serifada conduz convite e leitura editorial; Archivo sustenta controles, metadados, tabelas e instruções.
 
-**The Texto Preservado Rule.** Ênfase tipográfica não reescreve conteúdo do CMS. A abertura destaca as três palavras finais da headline personalizada em itálico vinho; esse tratamento é local à homepage, não uma obrigação para todo título.
+**The Texto Preservado Rule.** Ênfase tipográfica não reescreve conteúdo do CMS. A abertura destaca em itálico vinho a última frase da headline personalizada, em linha própria (ou as três palavras finais, se houver uma frase só); a referência bíblica da mensagem aparece discreta abaixo dos botões; esse tratamento é local à homepage, não uma obrigação para todo título.
 
 ## Layout
 
@@ -180,14 +180,18 @@ Campos brancos, borda cinza, raio `control` e altura mínima de 46px. Rótulos f
 
 ### Navigation
 
-Logo original e navegação horizontal discreta, com links em caixa natural. Página atual recebe vinho e sublinhado; grupos usam `details`/`summary` com chevron SVG no lugar do marcador nativo. A logo usa `mix-blend-mode: multiply` e um corte CSS dentro da área branca, para não aparecer como caixa sobre o fundo morno. No celular, Menu expõe `aria-expanded` e `aria-controls`; Escape fecha o grupo ou menu e devolve foco ao controle. Clique fora fecha; sem JavaScript os links continuam visíveis. O dropdown torna-se parte do fluxo em telas pequenas.
+Logo original e navegação horizontal discreta, com links em caixa natural. Página atual recebe vinho e sublinhado; grupos usam `details`/`summary` com chevron SVG no lugar do marcador nativo. A logo aparece inteira (com o lema), com 72px de altura (58px no celular), e usa `mix-blend-mode: multiply` para o fundo branco não virar caixa sobre o fundo morno. No celular, Menu expõe `aria-expanded` e `aria-controls`; Escape fecha o grupo ou menu e devolve foco ao controle. Clique fora fecha; sem JavaScript os links continuam visíveis. O dropdown torna-se parte do fluxo em telas pequenas.
+
+### Ícone do navegador
+
+Peixe (ichthys) completo e simples, em traço branco com pontas arredondadas sobre o vinho do site. É um desenho próprio para o ícone: o peixe aberto da logo, sozinho, lia como um X. O `favicon.ico` tem um desenho por tamanho (traço mais grosso a 16 px). Arquivos em `static/img/icons/` (procedência em `source.txt`); manifesto em `static/site.webmanifest`; `/favicon.ico` redireciona para o arquivo estático.
 
 ### Fotografia editorial
 
 O acervo separa **fotografia** de **arte ou cartaz** (campo Tipo do Quadro do acervo). Fotografia usa `object-fit: cover`, cantos suaves e legendas em Archivo; arte nunca é recortada.
 
 - **Abertura:** sempre uma fotografia (a marcada como destaque, senão a mais recente), em retrato 4:5 com no máximo 32rem de largura — perto da resolução dos arquivos do Instagram (640px) — e legenda fora da imagem. No celular a foto vem antes do título, em 4:3.
-- **Mural da igreja:** artes inteiras, quadradas, `object-fit: contain` sobre branco com borda, em faixa horizontal com scroll-snap. O link do perfil fica no título da seção.
+- **Mural da igreja:** artes inteiras, quadradas, `object-fit: contain` sobre branco com borda, em slide: páginas de quatro cartazes (três até 900px; no celular um por vez, com o próximo aparecendo na borda). Setas no título avançam uma página e ficam desativadas nas pontas; um contador ("1–4 de 5") é anunciado a leitores de tela. Sem troca automática. A barra de rolagem some só com o slide ativo (`static/js/mural.js`); sem JavaScript, as setas ficam ocultas e a faixa continua deslizável. O link do perfil fica no título da seção.
 - **A vida em comunidade:** mosaico de até quatro fotografias, a primeira maior; legenda curta sobreposta em etiqueta clara. Com menos de quatro, um convite para enviar fotos fecha a grade sem buracos.
 - **Crédito:** o crédito padrão do Instagram não se repete sob cada quadro; crédito de fotógrafo aparece.
 

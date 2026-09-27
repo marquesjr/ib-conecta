@@ -67,7 +67,7 @@ Aberto:
 ## Evidence on Hand
 
 - Copy e dados de culto/endereço/PIX/WhatsApp são configuráveis; os defaults do código e os fixtures de teste não são prova da igreja real.
-- A logo original fornecida pelo usuário está em `static/img/church-logo.png` (150×150, sem alteração de pixels). O Instagram indicado é `https://www.instagram.com/igrejabatista.santaleopoldina/`. A home usa os Quadros do acervo (API oficial ou exportação JSON da Meta; ver `docs/ops/instagram-acervo.md`). Sem token ou ZIP da igreja, as imagens de exemplo continuam identificadas. Não fabricar testemunhos, horários, endereço, chave PIX ou conteúdo pastoral.
+- A logo fornecida pelo usuário em alta resolução (27/09/2026) está em `static/img/church-logo-original.webp` (1536×1024, sem alteração; versão recriada pelo usuário com o lema “Deus é o nosso refúgio e fortaleza”). O site usa `static/img/church-logo.png` (540×221), derivada dela apenas com margens aparadas, redução e paleta reduzida; procedência em `static/img/church-logo.source.txt`. O Instagram indicado é `https://www.instagram.com/igrejabatista.santaleopoldina/`. A home usa os Quadros do acervo (API oficial ou exportação JSON da Meta; ver `docs/ops/instagram-acervo.md`). Sem token ou ZIP da igreja, as imagens de exemplo continuam identificadas. Não fabricar testemunhos, horários, endereço, chave PIX ou conteúdo pastoral.
 - Páginas institucionais (história, crenças, ministérios, liderança) nascem com texto-semente para a igreja substituir no CMS.
 
 ## Product Principles
