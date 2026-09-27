@@ -1,12 +1,14 @@
-Logo da Igreja Batista em Santa Leopoldina fornecida pelo usuário em 2026-09-27 (alta resolução).
+Logo da Igreja Batista em Santa Leopoldina recriada e fornecida pelo usuário em 2026-09-27,
+com o lema “Deus é o nosso refúgio e fortaleza”.
 
 Original: static/img/church-logo-original.webp
-  1254x1254, WebP, sem alteração.
-  SHA256: d652af083ffac8948ac341953f5867370f941b6b0855df39a9985fe5eb933515
+  1536x1024, WebP, sem alteração.
+  SHA256: 2d2db4956ef615f243ce648c3c5fe5d36d104e59ed29b7035f62d272d8ef3b17
 
 Derivada usada no site: static/img/church-logo.png
-  Recorte da faixa com conteúdo (57,406)-(1225,880) + 12px de margem branca,
-  redução para 540x226 (Lanczos) e paleta de 48 cores sem pontilhado (~30 KB).
-  Nenhum redesenho nem conteúdo gerado.
+  Recorte da faixa com conteúdo (58,263)-(1494,834) + 14px de margem branca,
+  redução para 540x221 (Lanczos) e paleta de 48 cores sem pontilhado (~27 KB).
+  Nenhum redesenho nem conteúdo gerado nesta etapa.
 
-Substitui a logo 150x150 fornecida em 2026-09-16 (codex-clipboard-f1bdeb80-c462-4826-8bcd-4a681cdcfab4.png).
+Substitui a versão em alta fornecida mais cedo no mesmo dia (lema sem o artigo “o”)
+e a logo 150x150 de 2026-09-16 (codex-clipboard-f1bdeb80-c462-4826-8bcd-4a681cdcfab4.png).
