@@ -1,5 +1,6 @@
 from .base import *  # noqa: F401,F403
 
+MEDIA_ROOT = BASE_DIR / ".scratch" / "media_test"
 PRIVATE_MEDIA_ROOT = BASE_DIR / ".scratch" / "private_media_test"
 
 DEBUG = False
