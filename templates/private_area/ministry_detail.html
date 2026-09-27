@@ -6,16 +6,22 @@
 
 {% block content %}
   <section class="cms-page">
-    <h1>{{ ministry.name }}</h1>
-    {% if ministry.description %}
-      <p class="lede">{{ ministry.description }}</p>
-    {% endif %}
-    {% if can_manage_schedules %}
-      <p>
-        <a class="cta" href="{% url 'private_area:schedule_create' ministry.pk %}">Montar escala mensal</a>
-        <a class="cta secondary" href="{% url 'private_area:playlist_create' ministry.pk %}">Montar playlist semanal</a>
-      </p>
-    {% endif %}
+    <p class="breadcrumb"><a href="{% url 'private_area:ministry_list' %}">Ministérios</a></p>
+    <div class="page-heading">
+      <div>
+        <h1>{{ ministry.name }}</h1>
+        {% if ministry.description %}
+          <p class="lede">{{ ministry.description }}</p>
+        {% endif %}
+      </div>
+      {% if can_manage_schedules %}
+        <div class="actions">
+          <a class="cta compact" href="{% url 'private_area:schedule_create' ministry.pk %}">Montar escala mensal</a>
+          <a class="cta secondary compact" href="{% url 'private_area:playlist_create' ministry.pk %}">Montar playlist semanal</a>
+        </div>
+      {% endif %}
+    </div>
+    <h2 class="section-label">Escalas</h2>
     {% if schedules %}
       <ul class="news-list">
         {% for schedule in schedules %}
@@ -28,7 +34,7 @@
       <p class="muted">Ainda não há escala mensal neste ministério.</p>
     {% endif %}
     {% if playlists %}
-      <h2>Playlists semanais</h2>
+      <h2 class="section-label">Playlists semanais</h2>
       <ul class="news-list">
         {% for playlist in playlists %}
           <li>
@@ -39,6 +45,5 @@
         {% endfor %}
       </ul>
     {% endif %}
-    <p><a href="{% url 'private_area:ministry_list' %}">Voltar aos ministérios</a></p>
   </section>
 {% endblock %}

@@ -8,9 +8,11 @@ Os três tons se distinguem pela forma da marca, não só pela cor, porque estas
 impressas em preto e branco (escala de ministério, coletânea) e porque cor sozinha não
 chega a quem não a distingue:
 
-- ``open``    caixa vazada — ainda espera alguém
-- ``settled`` caixa cheia — resolvido
-- ``closed``  caixa cortada — resolvido pelo não
+- ``open``    círculo vazado — ainda espera alguém
+- ``settled`` círculo cheio — resolvido
+- ``closed``  círculo cortado — resolvido pelo não
+
+A marca é redonda de propósito: um quadrado vazado era lido como caixa de marcar.
 """
 
 from django import template

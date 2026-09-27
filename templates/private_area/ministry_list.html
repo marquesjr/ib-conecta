@@ -6,13 +6,18 @@
 
 {% block content %}
   <section class="cms-page">
-    <h1>Ministérios</h1>
-    <p class="lede">Escalas e equipes da igreja, visíveis só para membros autenticados.</p>
-    {% if can_manage_schedules %}
-      <p>
-        <a class="cta" href="{% url 'private_area:ministry_create' %}">Cadastrar ministério</a>
-      </p>
-    {% endif %}
+    <p class="breadcrumb"><a href="{% url 'private_area:home' %}">Área privada</a></p>
+    <div class="page-heading">
+      <div>
+        <h1>Ministérios</h1>
+        <p class="lede">Escalas e equipes da igreja, visíveis só para membros autenticados.</p>
+      </div>
+      {% if can_manage_schedules %}
+        <div class="actions">
+          <a class="cta secondary compact" href="{% url 'private_area:ministry_create' %}">Cadastrar ministério</a>
+        </div>
+      {% endif %}
+    </div>
     {% if ministries %}
       <ul class="news-list">
         {% for ministry in ministries %}
@@ -27,6 +32,5 @@
     {% else %}
       <p class="muted">Nenhum ministério cadastrado ainda.</p>
     {% endif %}
-    <p><a href="{% url 'private_area:home' %}">Voltar à área privada</a></p>
   </section>
 {% endblock %}

@@ -78,10 +78,23 @@ class MonthlyScheduleForm(forms.ModelForm):
         fields = ("year", "month", "notes")
 
 
+class PersonChoiceField(forms.ModelChoiceField):
+    """Lista pessoas pelo nome completo, com o login só quando não há nome."""
+
+    def label_from_instance(self, obj):
+        return obj.get_full_name() or obj.username
+
+
+def _people_queryset():
+    return User.objects.filter(is_active=True).order_by("first_name", "last_name", "username")
+
+
 class AssignmentForm(forms.ModelForm):
     class Meta:
         model = ScheduleAssignment
         fields = ("starts_at", "function", "participant")
+        field_classes = {"participant": PersonChoiceField}
+        labels = {"participant": "Participante"}
         widgets = {
             "starts_at": forms.DateTimeInput(
                 attrs={"type": "datetime-local"},
@@ -92,9 +105,7 @@ class AssignmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["starts_at"].input_formats = ["%Y-%m-%dT%H:%M", "%Y-%m-%d %H:%M"]
-        self.fields["participant"].queryset = User.objects.filter(is_active=True).order_by(
-            "username"
-        )
+        self.fields["participant"].queryset = _people_queryset()
         self.fields["function"].widget = forms.TextInput(attrs={"list": "worship-functions"})
         self.fields["function"].help_text = (
             "Ex.: " + ", ".join(WORSHIP_FUNCTIONS)
@@ -102,11 +113,11 @@ class AssignmentForm(forms.ModelForm):
 
 
 class SubstitutionForm(forms.Form):
-    substitute = forms.ModelChoiceField(queryset=User.objects.none(), label="Substituto")
+    substitute = PersonChoiceField(queryset=User.objects.none(), label="Substituto")
 
     def __init__(self, *args, assignment=None, **kwargs):
         super().__init__(*args, **kwargs)
-        queryset = User.objects.filter(is_active=True).order_by("username")
+        queryset = _people_queryset()
         if assignment is not None:
             queryset = queryset.exclude(pk=assignment.participant_id)
         self.fields["substitute"].queryset = queryset

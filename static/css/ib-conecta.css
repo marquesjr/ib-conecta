@@ -158,6 +158,52 @@ p { margin: 0 0 1rem; }
 .news-list a { font-weight: 500; text-decoration: none; }
 .news-meta { margin: .35rem 0 0; }
 
+/* Ministérios e escala */
+.breadcrumb { margin: 0 0 .5rem; color: var(--archive-gray); font-size: .9rem; }
+.breadcrumb a { text-decoration: none; }
+.page-heading { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem 2rem; padding-bottom: 1.25rem; margin-bottom: 1.5rem; border-bottom: var(--hair) solid var(--paper-shade); }
+.page-heading h1 { margin: 0; }
+.page-heading .lede { margin: .5rem 0 0; }
+.page-heading .actions { margin-top: 0; gap: .5rem; }
+.cta.compact { min-height: 40px; padding: .5rem 1rem; font-size: .9rem; }
+.section-label { margin: 2rem 0 .25rem; font-family: var(--font); font-size: 1.1rem; font-weight: 600; letter-spacing: 0; }
+.my-assignment { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; margin-bottom: 1.25rem; padding: .9rem 1.2rem; background: var(--paper-warm); border: var(--hair) solid var(--paper-shade); border-radius: 14px; }
+.my-assignment p { margin: 0; }
+.schedule-summary { display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; margin: 0 0 .5rem; color: var(--archive-gray); font-size: .95rem; }
+.schedule-summary strong { color: var(--graphite); font-variant-numeric: tabular-nums; }
+.service { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: 1.25rem; padding: 1.25rem 0; border-top: var(--hair) solid var(--paper-shade); }
+.schedule-summary + .service { border-top: 0; }
+.service-date { display: flex; flex-direction: column; margin: 0; }
+.service-day { font-family: var(--font-display); font-size: 2.4rem; line-height: 1; color: var(--ink-red); font-variant-numeric: tabular-nums; }
+.service-weekday { color: var(--archive-gray); font-size: .8rem; text-transform: lowercase; }
+.service-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .25rem 1rem; margin: 0 0 .6rem; font-family: var(--font); font-size: 1rem; font-weight: 600; letter-spacing: 0; }
+.service-count { color: var(--archive-gray); font-weight: 400; font-size: .9rem; }
+.service-roster { list-style: none; margin: 0; padding: 0; background: var(--mount); border: var(--hair) solid var(--paper-shade); border-radius: 12px; }
+.service-roster li { display: grid; grid-template-columns: 9rem minmax(0, 1fr) auto auto; align-items: center; gap: .25rem 1rem; padding: .7rem 1rem; border-top: var(--hair) solid var(--paper-shade); }
+.service-roster li:first-child { border-top: 0; }
+.service-roster li.is-me { background: var(--paper); }
+.roster-function { color: var(--archive-gray); font-size: .9rem; }
+.roster-person { font-weight: 500; }
+.roster-person small { font-weight: 400; color: var(--archive-gray); }
+.roster-note { display: block; font-size: .8rem; }
+.roster-actions { display: flex; gap: .9rem; font-size: .9rem; }
+.service--past .service-day { color: var(--archive-gray); }
+.service--past .service-roster { background: transparent; }
+.past-services { margin: 1rem 0 2rem; border-top: var(--hair) solid var(--paper-shade); padding-top: 1rem; }
+.past-services > summary { color: var(--archive-gray); font-size: .95rem; }
+.past-services .service:first-of-type { border-top: 0; }
+.print-service { break-inside: avoid; margin-bottom: 1.5rem; }
+@media (max-width: 40rem) {
+  .service { grid-template-columns: 1fr; gap: 0; }
+  .service-date { display: none; }
+  .service-roster li { grid-template-columns: minmax(0, 1fr) auto; }
+  .roster-function { grid-column: 1; grid-row: 2; font-size: .82rem; }
+  .roster-person { grid-column: 1; grid-row: 1; }
+  .roster-state { grid-column: 2; grid-row: 1 / span 2; }
+  .roster-actions { grid-column: 1 / -1; }
+  .page-heading .actions { width: 100%; }
+}
+
 .register-entry {
   display: grid;
   grid-template-columns: 5.5rem 1fr;
@@ -316,6 +362,7 @@ p { margin: 0 0 1rem; }
   height: 0.62em;
   flex: none;
   border: var(--hair) solid currentcolor;
+  border-radius: 50%;
 }
 
 .state--open {
@@ -601,7 +648,8 @@ th, td { padding: .85rem; min-width: 5rem; }
 .check-field input { margin: .35rem 0 0; }
 .check-field label { margin: 0; min-height: 32px; cursor: pointer; }
 .check-field .errorlist { grid-column: 2; }
-.state, .tag, .register-tag { border-radius: 5px; }
+.tag, .register-tag { border-radius: 5px; }
+.state { border-radius: 999px; }
 @keyframes welcome-reveal { from { clip-path: inset(0 3% 0 0 round 18px); } to { clip-path: inset(0 0 0 0 round 18px); } }
 .welcome-photo img { animation: welcome-reveal .65s cubic-bezier(.16,1,.3,1); }
 @media (max-width: 1100px) {

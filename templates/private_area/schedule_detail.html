@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load state_tags %}
+{% load state_tags person_tags %}
 
 {% block title %}Escala de {{ schedule.label }} — Igreja Batista em Santa Leopoldina{% endblock %}
 
@@ -7,57 +7,62 @@
 
 {% block content %}
   <section class="cms-page">
-    <h1>Escala de {{ schedule.label }}</h1>
-    <p class="lede">{{ schedule.ministry.name }}</p>
-    {% if schedule.notes %}
-      <p>{{ schedule.notes }}</p>
-    {% endif %}
-
-    {% if share_url %}
-      <p>
-        <a class="cta secondary" href="{{ share_url }}" target="_blank" rel="noopener noreferrer">
-          Compartilhar no WhatsApp
-        </a>
-      </p>
-    {% endif %}
-    <p>
-      <a class="cta secondary" href="{% url 'private_area:schedule_calendar' schedule.pk %}">
-        Adicionar ao calendário
-      </a>
-      <a class="cta secondary" href="{% url 'private_area:schedule_print' schedule.pk %}">
-        Imprimir / salvar PDF
-      </a>
+    <p class="breadcrumb">
+      <a href="{% url 'private_area:ministry_list' %}">Ministérios</a> /
+      <a href="{% url 'private_area:ministry_detail' schedule.ministry_id %}">{{ schedule.ministry.name }}</a>
     </p>
+    <div class="page-heading">
+      <div>
+        <h1>Escala de {{ schedule.label }}</h1>
+        <p class="lede">{{ schedule.ministry.name }}{% if schedule.notes %} · {{ schedule.notes }}{% endif %}</p>
+      </div>
+      <div class="actions">
+        {% if share_url %}
+          <a class="cta secondary compact" href="{{ share_url }}" target="_blank" rel="noopener noreferrer">
+            Compartilhar no WhatsApp
+          </a>
+        {% endif %}
+        <a class="cta secondary compact" href="{% url 'private_area:schedule_calendar' schedule.pk %}">
+          Adicionar ao calendário
+        </a>
+        <a class="cta secondary compact" href="{% url 'private_area:schedule_print' schedule.pk %}">
+          Imprimir / salvar PDF
+        </a>
+      </div>
+    </div>
+
+    {% for assignment in my_pending %}
+      <div class="my-assignment">
+        <p>
+          <strong>Sua convocação:</strong>
+          {{ assignment.function }}, {{ assignment.starts_at|date:"l"|lower }}, {{ assignment.starts_at|date:"d/m" }} às {{ assignment.starts_at|date:"H:i" }}.
+        </p>
+        <a class="cta compact" href="{% url 'private_area:assignment_respond' assignment.pk %}">
+          Confirmar ou recusar
+        </a>
+      </div>
+    {% endfor %}
 
     {% if assignments %}
-      <ul class="news-list">
-        {% for assignment in assignments %}
-          <li>
-            <strong>{{ assignment.function }}</strong> — {{ assignment.participant.username }}
-            <p class="news-meta">
-              {{ assignment.starts_at|date:"d/m/Y H:i" }}
-              {% state assignment.status assignment.get_status_display %}
-            </p>
-            {% for substitution in assignment.substitutions.all %}
-              <p class="news-meta">
-                Substituição: {{ substitution.replaced.username }} → {{ substitution.substitute.username }}
-              </p>
-            {% endfor %}
-            {% if request.user == assignment.participant %}
-              <p>
-                <a class="cta secondary" href="{% url 'private_area:assignment_respond' assignment.pk %}">
-                  Confirmar ou recusar
-                </a>
-              </p>
-            {% endif %}
-            {% if can_manage_schedules %}
-              <p>
-                <a href="{% url 'private_area:assignment_substitute' assignment.pk %}">Registrar substituição</a>
-              </p>
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ul>
+      <p class="schedule-summary">
+        <span><strong>{{ assignments|length }}</strong> convocações</span>
+        <span><strong>{{ confirmed_count }}</strong> confirmadas</span>
+        <span><strong>{{ pending_count }}</strong> pendentes</span>
+        {% if declined_count %}<span><strong>{{ declined_count }}</strong> recusadas</span>{% endif %}
+      </p>
+
+      {% for service in upcoming_services %}
+        {% include "private_area/_schedule_service.html" %}
+      {% endfor %}
+
+      {% if past_services %}
+        <details class="past-services"{% if not upcoming_services %} open{% endif %}>
+          <summary>{{ past_services|length }} culto{{ past_services|length|pluralize }} já realizado{{ past_services|length|pluralize }}</summary>
+          {% for service in past_services %}
+            {% include "private_area/_schedule_service.html" %}
+          {% endfor %}
+        </details>
+      {% endif %}
     {% else %}
       <p class="muted">Nenhum participante convocado nesta escala.</p>
     {% endif %}
@@ -77,7 +82,5 @@
         </form>
       </div>
     {% endif %}
-
-    <p><a href="{% url 'private_area:ministry_detail' schedule.ministry_id %}">Voltar ao ministério</a></p>
   </section>
 {% endblock %}

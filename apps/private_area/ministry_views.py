@@ -1,3 +1,7 @@
+from dataclasses import dataclass, field
+from datetime import datetime
+from itertools import groupby
+
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError
@@ -29,6 +33,26 @@ from apps.public.whatsapp import build_whatsapp_share_url
 
 def _can_manage_schedules(user) -> bool:
     return user_has_permission(user, Permission.MANAGE_MINISTRY_SCHEDULES)
+
+
+@dataclass
+class ServiceGroup:
+    """Convocações de um mesmo culto (mesma data e horário) dentro da escala."""
+
+    starts_at: datetime
+    assignments: list = field(default_factory=list)
+    is_past: bool = False
+
+    @property
+    def confirmed_count(self) -> int:
+        return sum(1 for a in self.assignments if a.status == AssignmentStatus.CONFIRMED)
+
+
+def _group_by_service(assignments, now) -> list[ServiceGroup]:
+    return [
+        ServiceGroup(starts_at=starts_at, assignments=list(items), is_past=starts_at < now)
+        for starts_at, items in groupby(assignments, key=lambda a: a.starts_at)
+    ]
 
 
 @permission_required(Permission.ACCESS_PRIVATE_AREA)
@@ -121,15 +145,35 @@ def schedule_detail(request: HttpRequest, pk: int) -> HttpResponse:
     )
     can_manage = _can_manage_schedules(request.user)
     share_title = f"Escala de {schedule.label()} — {schedule.ministry.name}"
+    assignments = list(
+        schedule.assignments.select_related("participant").prefetch_related(
+            "substitutions__replaced",
+            "substitutions__substitute",
+        )
+    )
+    now = timezone.now()
+    services = _group_by_service(assignments, now)
+    status_counts = {status: 0 for status in AssignmentStatus.values}
+    for assignment in assignments:
+        status_counts[assignment.status] += 1
     return render(
         request,
         "private_area/schedule_detail.html",
         {
             "schedule": schedule,
-            "assignments": schedule.assignments.select_related("participant").prefetch_related(
-                "substitutions__replaced",
-                "substitutions__substitute",
-            ),
+            "assignments": assignments,
+            "upcoming_services": [s for s in services if not s.is_past],
+            "past_services": [s for s in services if s.is_past],
+            "my_pending": [
+                a
+                for a in assignments
+                if a.participant_id == request.user.pk
+                and a.status == AssignmentStatus.PENDING
+                and a.starts_at >= now
+            ],
+            "confirmed_count": status_counts[AssignmentStatus.CONFIRMED],
+            "pending_count": status_counts[AssignmentStatus.PENDING],
+            "declined_count": status_counts[AssignmentStatus.DECLINED],
             "assignment_form": AssignmentForm() if can_manage else None,
             "can_manage_schedules": can_manage,
             "worship_functions": WORSHIP_FUNCTIONS,
@@ -258,6 +302,9 @@ def schedule_print(request: HttpRequest, pk: int) -> HttpResponse:
         "private_area/schedule_print.html",
         {
             "schedule": schedule,
-            "assignments": schedule.assignments.select_related("participant"),
+            "services": _group_by_service(
+                schedule.assignments.select_related("participant"),
+                timezone.now(),
+            ),
         },
     )
