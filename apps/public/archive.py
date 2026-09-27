@@ -7,8 +7,11 @@ Ordem de preferência, e ela é deliberada:
 3. Quadros semeados sintéticos que acompanham o repositório.
 
 Os quadros semeados são gerados, não fotografia da igreja, e vão marcados como tal:
-eles sustentam o desenho até a conta profissional do Instagram ser conectada. Eles
+eles sustentam o desenho só enquanto não houver nenhuma fotografia real. Eles
 nunca afirmam fato nenhum — não carregam data nem nome de pessoa.
+
+A home separa fotografia de arte: a abertura e o mosaico usam só fotografias
+(cortar um cartaz apaga o texto dele); artes e cartazes vão inteiros para o Mural.
 """
 
 from __future__ import annotations
@@ -44,8 +47,11 @@ def _seeded(count):
                 "alt": alt,
                 "caption": caption,
                 "credit": "",
+                "byline": "",
                 "date": "",
                 "permalink": "",
+                "kind": "photo",
+                "featured": False,
                 "synthetic": True,
             }
         )
@@ -61,37 +67,95 @@ def _month_year(value):
     return date_format(value, "b Y")
 
 
-def archive_frames(count=12):
-    """Devolve até ``count`` fotos, priorizando o acervo publicado.
+def _byline(credit):
+    """Crédito que vale mostrar sob o quadro.
 
-    A primeira abre a homepage; as restantes compõem a galeria editorial.
-    Imagens de reserva são marcadas como sintéticas para identificação na página.
+    O crédito padrão do Instagram se repetiria em todos os quadros; a seção já
+    leva o link do perfil. Crédito de fotógrafo ou outra fonte continua visível.
+    """
+    if credit.strip().lower().startswith("instagram"):
+        return ""
+    return credit
+
+
+def _as_frame(record):
+    return {
+        "url": record.image.url,
+        "alt": record.alt_text or record.caption,
+        "caption": record.caption,
+        "credit": record.credit,
+        "byline": _byline(record.credit),
+        "date": _month_year(record.taken_at),
+        "permalink": record.permalink,
+        "kind": record.kind,
+        "featured": record.featured,
+        "synthetic": False,
+    }
+
+
+def _published(count, kind=None):
+    """Até ``count`` quadros publicados, do mais recente ao mais antigo.
+
+    A fotografia marcada como destaque entra mesmo que seja mais antiga que o corte.
     """
     from apps.public.models import ArchiveFrame
 
-    frames = []
+    if count <= 0:
+        return []
     try:
-        records = list(ArchiveFrame.objects.filter(is_visible=True)[:count])
+        visible = ArchiveFrame.objects.filter(is_visible=True).exclude(image="")
+        if kind:
+            visible = visible.filter(kind=kind)
+        records = list(visible[:count])
+        featured = visible.filter(kind=ArchiveFrame.Kind.PHOTO, featured=True).first()
     except Exception:  # noqa: BLE001 - banco indisponível não deve derrubar a home
-        records = []
+        return []
 
-    for record in records:
-        if not record.image:
-            continue
-        frames.append(
-            {
-                "url": record.image.url,
-                "alt": record.alt_text or record.caption,
-                "caption": record.caption,
-                "credit": record.credit,
-                "date": _month_year(record.taken_at),
-                "permalink": record.permalink,
-                "synthetic": False,
-            }
-        )
+    if featured and featured not in records:
+        records = [featured] + records[: count - 1]
+    return [_as_frame(record) for record in records]
 
+
+def archive_frames(count=12):
+    """Devolve até ``count`` quadros, priorizando o acervo publicado.
+
+    Imagens de reserva completam a lista e são marcadas como sintéticas.
+    """
+    frames = _published(count)
     if len(frames) < count:
-        seeded = _seeded(count - len(frames))
-        frames.extend(seeded)
-
+        frames.extend(_seeded(count - len(frames)))
     return frames[:count]
+
+
+# Fotografias do mosaico “A vida em comunidade”, além da que abre a página.
+MOSAIC_PHOTOS = 4
+
+
+def home_archive(count=12):
+    """Divide o acervo da home em abertura, mosaico de fotografias e mural de artes.
+
+    Sem nenhuma fotografia real, abertura e mosaico usam as imagens ilustrativas —
+    nunca misturadas a fotos reais. O mural só mostra artes publicadas.
+    ``count`` é o total de quadros publicados na home (abertura, mosaico e mural).
+    """
+    # O limite configurado vale para o total; fotografias têm a vez primeiro,
+    # para uma sequência de cartazes recentes não esvaziar abertura e mosaico.
+    photos = _published(min(count, 1 + MOSAIC_PHOTOS), kind="photo")
+    posters = _published(count - len(photos), kind="art")
+
+    is_seeded = not photos
+    if is_seeded:
+        photos = _seeded(1 + MOSAIC_PHOTOS)
+
+    hero = next((frame for frame in photos if frame["featured"]), photos[0])
+    mosaic = [frame for frame in photos if frame is not hero][:MOSAIC_PHOTOS]
+    # Com poucas fotos, um convite para enviar fotos fecha o mosaico sem buracos.
+    invite = len(mosaic) < MOSAIC_PHOTOS
+    return {
+        "hero": hero,
+        "photos": mosaic,
+        "posters": posters,
+        "invite": invite,
+        "mosaic_size": len(mosaic) + int(invite),
+        "is_seeded": is_seeded,
+    }

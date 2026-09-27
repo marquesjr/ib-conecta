@@ -822,6 +822,10 @@ class ArchiveFrame(models.Model):
         INSTAGRAM = "instagram", "Instagram"
         CURATED = "curated", "Curado no CMS"
 
+    class Kind(models.TextChoices):
+        PHOTO = "photo", "Fotografia"
+        ART = "art", "Arte ou cartaz"
+
     source = models.CharField(
         max_length=20,
         default=Source.CURATED,
@@ -873,9 +877,26 @@ class ArchiveFrame(models.Model):
         default=True,
         verbose_name="Exibir no site",
     )
+    kind = models.CharField(
+        max_length=10,
+        default=Kind.PHOTO,
+        choices=Kind.choices,
+        verbose_name="Tipo",
+        help_text=(
+            "Fotografia entra na abertura e em “A vida em comunidade”. "
+            "Arte ou cartaz (imagem com texto) vai inteira para o Mural, sem recorte."
+        ),
+    )
+    featured = models.BooleanField(
+        default=False,
+        verbose_name="Destaque na abertura",
+        help_text="Só vale para fotografia. Sem destaque, a abertura usa a fotografia mais recente.",
+    )
 
     panels = [
         FieldPanel("image"),
+        FieldPanel("kind"),
+        FieldPanel("featured"),
         FieldPanel("alt_text"),
         FieldPanel("caption"),
         FieldPanel("credit"),

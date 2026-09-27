@@ -1,6 +1,6 @@
 # Proposta: Encontro 2 — homepage com o acervo real do Instagram
 
-Status: **proposta, não aprovada** (27/09/2026). Evolui o Editorial acolhedor aprovado em 16/09/2026; não troca identidade, paleta nem tipografia.
+Status: **aprovada e implementada** em 27/09/2026. Evolui o Editorial acolhedor aprovado em 16/09/2026; não troca identidade, paleta nem tipografia.
 
 Referências visuais:
 
@@ -37,6 +37,12 @@ Das 9 publicações importadas, 3 são fotografia (Consagração, Missões, Pedr
 9. **Pedir à comunicação os originais** das fotos (≥1600px). O Instagram entrega 640px; a abertura precisa de mais.
 
 Já corrigido junto com esta proposta: mês das legendas em português (`apps/public/archive.py`).
+
+## Implementação
+
+- `ArchiveFrame.kind` (Fotografia | Arte ou cartaz) e `ArchiveFrame.featured`; migração 0014 marca os cinco cartazes importados em 0012.
+- `apps/public/archive.home_archive()` divide abertura, mosaico e mural. O limite configurado dá a vez às fotografias primeiro.
+- Versículo removido da abertura (fica na logo e no rodapé). Item 9 (originais em alta) depende da comunicação.
 
 ## Fora do escopo
 

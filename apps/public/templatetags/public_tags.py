@@ -2,6 +2,7 @@ import re
 
 from django import template
 from django.conf import settings
+from django.utils import timezone
 from django.utils.html import format_html
 
 from apps.public.whatsapp import build_whatsapp_share_url, split_whatsapp_welcome
@@ -17,6 +18,16 @@ def editorial_headline(value):
     if not ending:
         return value
     return format_html("{}<em>{}</em>", value[:ending.start()], value[ending.start():])
+
+
+@register.filter
+def hour_label(value):
+    """Horário no jeito falado da igreja: ``19h`` ou ``19h30``."""
+    if not value:
+        return ""
+    if timezone.is_aware(value):
+        value = timezone.localtime(value)
+    return f"{value.hour}h{value.minute:02d}" if value.minute else f"{value.hour}h"
 
 
 @register.simple_tag
