@@ -110,6 +110,7 @@ def add_frames(apps, schema_editor):
             caption=caption,
             alt_text=alt_text,
             permalink=link,
+            credit="Instagram @igrejabatista.santaleopoldina",
             taken_at=datetime(year, month, day, 12, 0, tzinfo=TZ),
             is_visible=True,
         )
@@ -129,7 +130,7 @@ def remove_frames(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("public", "0010_instagramcredential_and_more"),
+        ("public", "0011_archiveframe_credit"),
     ]
 
     operations = [
