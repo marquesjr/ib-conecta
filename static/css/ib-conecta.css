@@ -55,7 +55,7 @@ p { margin: 0 0 1rem; }
 .cta:disabled { opacity: .55; cursor: not-allowed; }
 .actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.8rem; }
 .icon-arrow { width: 21px; height: 21px; flex: none; vertical-align: middle; }
-.text-link { display: inline-flex; align-items: center; gap: .65rem; font-weight: 500; text-decoration: none; }
+.text-link { display: inline-flex; align-items: center; gap: .65rem; min-height: 24px; font-weight: 500; text-decoration: none; }
 .text-link:hover { text-decoration: underline; }
 .welcome { max-width: 90rem; margin: auto; padding: 1.5rem var(--page-gutter) 3rem; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 32rem); gap: clamp(2rem, 5vw, 5rem); align-items: center; }
 .welcome-copy { padding: 1.5rem 0; }
@@ -150,6 +150,7 @@ p { margin: 0 0 1rem; }
 .site-footer h3 { color: var(--graphite); }
 .footer-product { font-size: .8rem; margin-top: 2rem; }
 .social-links { display: flex; flex-wrap: wrap; gap: 1rem; }
+.social-links a { display: inline-flex; align-items: center; min-height: 24px; }
 .whatsapp-welcome { max-width: var(--measure); }
 .muted, .news-meta, .caption { color: var(--archive-gray); font-size: .9rem; }
 .label { display: block; font-weight: 600; font-size: .9rem; margin-bottom: .4rem; }
@@ -543,6 +544,8 @@ form input:focus,
 form textarea:focus,
 form select:focus {
   border-color: var(--ink-red);
+  outline: 2px solid var(--ink-red);
+  outline-offset: 2px;
 }
 
 form input[type="checkbox"],
@@ -634,18 +637,21 @@ th {
 form label { display: block; color: var(--graphite); font-size: .95rem; letter-spacing: 0; }
 form input:not([type="checkbox"]):not([type="radio"]), form textarea, form select { border-radius: 8px; min-height: 46px; font-size: 1rem; }
 form textarea { resize: vertical; }
-form input[type="checkbox"], form input[type="radio"] { min-width: 18px; min-height: 18px; vertical-align: middle; }
+form input[type="checkbox"], form input[type="radio"] { min-width: 24px; min-height: 24px; vertical-align: middle; }
 form input:disabled, form select:disabled { background: var(--paper-warm); color: var(--archive-gray); cursor: not-allowed; }
 form [aria-invalid="true"] { border-color: var(--ink-red); }
+.form-errors .errorlist { margin: 0; padding: 0; border: 0; background: none; }
 .helptext { font-size: .85rem; }
 table { display: block; max-width: 100%; overflow-x: auto; }
+.table-scroll { max-width: 100%; overflow-x: auto; }
+.table-scroll > table { display: table; overflow: visible; }
 th { background: var(--paper-warm); }
 th, td { padding: .85rem; min-width: 5rem; }
 .messages { max-width: var(--sheet); margin: 1rem auto; padding: 0 var(--page-gutter); }
 .messages li, .errorlist, .form-errors { border-radius: 8px; }
 .demo-notice { margin: 0; padding: .65rem var(--page-gutter); background: var(--paper-warm); color: var(--graphite); font-size: .85rem; text-align: center; }
-.check-field { display: grid; grid-template-columns: 22px minmax(0, 1fr); align-items: start; gap: .65rem; margin-bottom: 1rem; }
-.check-field input { margin: .35rem 0 0; }
+.check-field { display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: start; gap: .65rem; margin-bottom: 1rem; }
+.check-field input { margin: .2rem 0 0; }
 .check-field label { margin: 0; min-height: 32px; cursor: pointer; }
 .check-field .errorlist { grid-column: 2; }
 .tag, .register-tag { border-radius: 5px; }
@@ -663,7 +669,7 @@ th, td { padding: .85rem; min-width: 5rem; }
 @media (max-width: 900px) {
   .site-header { flex-wrap: wrap; min-height: 5.5rem; padding-block: 1rem; }
   .site-header nav { width: 100%; flex-wrap: wrap; font-size: 1rem; gap: .5rem 1.5rem; }
-  .has-js .nav-toggle:not([hidden]) { display: inline-flex; }
+  .has-js .nav-toggle { display: inline-flex; }
   .has-js .site-header nav { display: none; }
   .has-js .site-header nav.is-open { display: flex; }
   .nav-dropdown { left: 0; right: auto; }
