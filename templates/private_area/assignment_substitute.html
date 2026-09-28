@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load person_tags %}
 
 {% block title %}Substituição — Igreja Batista em Santa Leopoldina{% endblock %}
 
@@ -8,16 +9,16 @@
   <section class="cms-page">
     <h1>Registrar substituição</h1>
     <p class="lede">
-      {{ assignment.function }} — {{ assignment.participant.username }}
+      {{ assignment.function }} — {{ assignment.participant|person_name }}
       em {{ assignment.starts_at|date:"d/m/Y H:i" }}
     </p>
     <form method="post">
       {% csrf_token %}
       {{ form.as_p }}
-      <button class="cta" type="submit">Salvar substituição</button>
+      <div class="actions">
+        <button class="cta" type="submit">Salvar substituição</button>
+        <a class="cta secondary" href="{% url 'private_area:schedule_detail' assignment.schedule_id %}">Voltar à escala</a>
+      </div>
     </form>
-    <p>
-      <a href="{% url 'private_area:schedule_detail' assignment.schedule_id %}">Voltar à escala</a>
-    </p>
   </section>
 {% endblock %}

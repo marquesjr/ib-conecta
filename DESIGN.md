@@ -81,7 +81,7 @@ components:
     rounded: "{rounded.panel}"
     padding: "clamp(1.25rem, 3vw, 2rem)"
   state:
-    rounded: "{rounded.badge}"
+    rounded: "999px"
     padding: ".16em .5em .16em .42em"
 ---
 
@@ -168,7 +168,7 @@ O foco geral usa contorno vinho de 2px afastado 5px; sobre a faixa vinho, o cont
 
 ### Chips
 
-Estados têm texto e marcas geométricas além da cor: quadrado vazio para pendente, cheio para confirmado e cortado para encerrado. Tags também distinguem confirmação, pendência e recusa por preenchimento e bordas contínuas, tracejadas ou duplas. O raio compacto suaviza as marcas sem eliminar suas diferenças.
+Estados têm texto e marcas geométricas além da cor, num selo de cantos totalmente arredondados: círculo vazio para pendente, cheio para confirmado e cortado para encerrado. A marca é redonda porque um quadrado vazio se lê como caixa de marcar (decisão de 27/09/2026). Tags também distinguem confirmação, pendência e recusa por preenchimento e bordas contínuas, tracejadas ou duplas. Tags usam o raio compacto de 5px, que as diferencia do selo de estado.
 
 ### Cards / Containers
 
