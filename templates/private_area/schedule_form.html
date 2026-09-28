@@ -1,18 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}Nova escala — {{ ministry.name }} — Igreja Batista em Santa Leopoldina{% endblock %}
+{% block title %}{% if schedule %}Editar escala de {{ schedule.label }}{% else %}Nova escala{% endif %} — {{ ministry.name }} — Igreja Batista em Santa Leopoldina{% endblock %}
 
 {% block share %}{% endblock %}
 
 {% block content %}
   <section class="cms-page">
-    <h1>Montar escala mensal</h1>
+    <h1>{% if schedule %}Editar escala mensal{% else %}Montar escala mensal{% endif %}</h1>
     <p class="lede">{{ ministry.name }}</p>
     <form method="post">
       {% csrf_token %}
       {{ form.as_p }}
-      <button class="cta" type="submit">Criar escala</button>
+      <button class="cta" type="submit">{% if schedule %}Salvar alterações{% else %}Criar escala{% endif %}</button>
     </form>
-    <p><a href="{% url 'private_area:ministry_detail' ministry.pk %}">Voltar ao ministério</a></p>
+    {% if schedule %}
+      <p><a href="{% url 'private_area:schedule_detail' schedule.pk %}">Voltar à escala</a></p>
+    {% else %}
+      <p><a href="{% url 'private_area:ministry_detail' ministry.pk %}">Voltar ao ministério</a></p>
+    {% endif %}
   </section>
 {% endblock %}

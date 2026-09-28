@@ -17,6 +17,9 @@
         <p class="lede">{{ schedule.ministry.name }}{% if schedule.notes %} · {{ schedule.notes }}{% endif %}</p>
       </div>
       <div class="actions">
+        {% if can_manage_schedules %}
+          <a class="cta compact" href="{% url 'private_area:schedule_edit' schedule.pk %}">Editar escala</a>
+        {% endif %}
         {% if share_url %}
           <a class="cta secondary compact" href="{{ share_url }}" target="_blank" rel="noopener noreferrer">
             Compartilhar no WhatsApp

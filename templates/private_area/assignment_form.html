@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Editar convocação — Igreja Batista em Santa Leopoldina{% endblock %}
+
+{% block share %}{% endblock %}
+
+{% block content %}
+  <section class="cms-page">
+    <h1>Editar convocação</h1>
+    <p class="lede">
+      Escala de {{ assignment.schedule.label }} — {{ assignment.schedule.ministry.name }}
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <datalist id="worship-functions">
+        {% for function in worship_functions %}
+          <option value="{{ function }}"></option>
+        {% endfor %}
+      </datalist>
+      <p class="muted">Se a pessoa ou a data mudar, a convocação volta a ficar pendente de confirmação.</p>
+      <button class="cta" type="submit">Salvar alterações</button>
+    </form>
+    <form method="post" action="{% url 'private_area:assignment_remove' assignment.pk %}">
+      {% csrf_token %}
+      <button class="cta secondary" type="submit">Remover da escala</button>
+    </form>
+    <p>
+      <a href="{% url 'private_area:schedule_detail' assignment.schedule_id %}">Voltar à escala</a>
+    </p>
+  </section>
+{% endblock %}
