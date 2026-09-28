@@ -41,7 +41,7 @@ class SeedDemoTests(TestCase):
         self.assertContains(live, "youtube-nocookie.com/embed/")
 
         visit = self.client.get(reverse("plan_visit"))
-        self.assertContains(visit, "Rua do Comércio")
+        self.assertContains(visit, "Av. Pres. Vargas, 38")
         self.assertContains(visit, "wa.me/5527999999999")
         self.assertContains(visit, "zona rural")
 

@@ -99,11 +99,9 @@ DEMO_SETTINGS = {
         "Domingo: 9h (escola bíblica) e 19h (culto de celebração)\n"
         "Quarta-feira: 19h30 (estudo bíblico)"
     ),
-    "address_line": "Rua do Comércio, Centro, Santa Leopoldina - ES",
+    "address_line": "Av. Pres. Vargas, 38 - Centro, Santa Leopoldina - ES, 29640-000",
     "address_references": "Em frente à praça, próximo ao ponto de ônibus do Centro.",
-    "map_url": (
-        "https://www.openstreetmap.org/?mlat=-20.1006&mlon=-40.5297#map=16/-20.1006/-40.5297"
-    ),
+    "map_url": "https://maps.app.goo.gl/wZdYwYxUpUJpA1DG9",
     "accessibility_info": "Entrada pela rampa lateral. Há banco reservado próximo à frente.",
     "transport_info": (
         "Visitantes da zona rural podem combinar carona pelo WhatsApp da igreja "
