@@ -101,3 +101,35 @@ class PageTitleTests(TestCase):
             self.assertRegex(body, r"<title>[^<]+ — Igreja Batista em Santa Leopoldina</title>", name)
             self.assertNotIn("— IB Conecta</title>", body)
 
+
+
+class FooterLocationTests(TestCase):
+    def setUp(self):
+        site = Site.objects.get(is_default_site=True)
+        self.settings = ChurchSettings.for_site(site)
+        self.settings.address_line = "Av. Pres. Vargas, 38 - Centro, Santa Leopoldina - ES, 29640-000"
+        self.settings.map_url = "https://maps.app.goo.gl/wZdYwYxUpUJpA1DG9"
+        self.settings.save()
+
+    def test_footer_shows_full_address_and_lazy_map(self):
+        response = self.client.get(reverse("home"))
+        self.assertContains(
+            response,
+            "<address>Av. Pres. Vargas, 38 - Centro, Santa Leopoldina - ES, 29640-000</address>",
+            html=True,
+        )
+        self.assertContains(
+            response,
+            "https://www.google.com/maps?q=Av.%20Pres.%20Vargas%2C%2038%20-%20Centro%2C"
+            "%20Santa%20Leopoldina%20-%20ES%2C%2029640-000&amp;output=embed",
+        )
+        self.assertContains(response, 'loading="lazy"')
+        self.assertContains(response, 'title="Mapa com a localização da Igreja Batista')
+        self.assertContains(response, "Abrir no Google Maps")
+        self.assertContains(response, "https://maps.app.goo.gl/wZdYwYxUpUJpA1DG9")
+
+    def test_footer_hides_map_without_address(self):
+        self.settings.address_line = ""
+        self.settings.save()
+        response = self.client.get(reverse("home"))
+        self.assertNotContains(response, "google.com/maps")
