@@ -26,9 +26,23 @@ class PrayerRequestForm(HoneypotForm):
         required=False,
         label="Enviar de forma anônima",
     )
-    name = forms.CharField(label="Nome", max_length=120, required=False)
-    email = forms.EmailField(label="E-mail", required=False)
-    phone = forms.CharField(label="Telefone", max_length=30, required=False)
+    name = forms.CharField(
+        label="Nome",
+        max_length=120,
+        required=False,
+        widget=forms.TextInput(attrs={"autocomplete": "name"}),
+    )
+    email = forms.EmailField(
+        label="E-mail",
+        required=False,
+        widget=forms.EmailInput(attrs={"autocomplete": "email"}),
+    )
+    phone = forms.CharField(
+        label="Telefone",
+        max_length=30,
+        required=False,
+        widget=forms.TextInput(attrs={"type": "tel", "autocomplete": "tel"}),
+    )
     body = forms.CharField(
         label="Pedido de oração",
         widget=forms.Textarea(attrs={"rows": 5}),
@@ -70,9 +84,22 @@ class PrayerRequestForm(HoneypotForm):
 
 
 class KnowChurchForm(HoneypotForm):
-    name = forms.CharField(label="Nome", max_length=120)
-    email = forms.EmailField(label="E-mail", required=False)
-    phone = forms.CharField(label="Telefone", max_length=30, required=False)
+    name = forms.CharField(
+        label="Nome",
+        max_length=120,
+        widget=forms.TextInput(attrs={"autocomplete": "name"}),
+    )
+    email = forms.EmailField(
+        label="E-mail",
+        required=False,
+        widget=forms.EmailInput(attrs={"autocomplete": "email"}),
+    )
+    phone = forms.CharField(
+        label="Telefone",
+        max_length=30,
+        required=False,
+        widget=forms.TextInput(attrs={"type": "tel", "autocomplete": "tel"}),
+    )
     message = forms.CharField(
         label="Mensagem (opcional)",
         required=False,
@@ -101,9 +128,21 @@ class KnowChurchForm(HoneypotForm):
 
 
 class EventRegistrationForm(forms.Form):
-    name = forms.CharField(label="Nome", max_length=120)
-    email = forms.EmailField(label="E-mail")
-    phone = forms.CharField(label="Telefone", max_length=30, required=False)
+    name = forms.CharField(
+        label="Nome",
+        max_length=120,
+        widget=forms.TextInput(attrs={"autocomplete": "name"}),
+    )
+    email = forms.EmailField(
+        label="E-mail",
+        widget=forms.EmailInput(attrs={"autocomplete": "email"}),
+    )
+    phone = forms.CharField(
+        label="Telefone",
+        max_length=30,
+        required=False,
+        widget=forms.TextInput(attrs={"type": "tel", "autocomplete": "tel"}),
+    )
 
 
 class EventFamilyMemberForm(forms.Form):
@@ -139,9 +178,21 @@ FamilyMemberFormSet = forms.formset_factory(EventFamilyMemberForm, extra=2, max_
 
 
 class RetreatRegistrationForm(forms.Form):
-    name = forms.CharField(label="Nome", max_length=120)
-    email = forms.EmailField(label="E-mail")
-    phone = forms.CharField(label="Telefone", max_length=30, required=False)
+    name = forms.CharField(
+        label="Nome",
+        max_length=120,
+        widget=forms.TextInput(attrs={"autocomplete": "name"}),
+    )
+    email = forms.EmailField(
+        label="E-mail",
+        widget=forms.EmailInput(attrs={"autocomplete": "email"}),
+    )
+    phone = forms.CharField(
+        label="Telefone",
+        max_length=30,
+        required=False,
+        widget=forms.TextInput(attrs={"type": "tel", "autocomplete": "tel"}),
+    )
     birth_date = forms.DateField(
         label="Data de nascimento",
         widget=forms.DateInput(attrs={"type": "date"}),

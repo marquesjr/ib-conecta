@@ -1,9 +1,17 @@
 (() => {
+  // Após um envio com erros, leva o foco ao primeiro campo inválido (WCAG 3.3.1).
+  const invalid = document.querySelector('form [aria-invalid="true"], form .form-errors');
+  if (invalid) {
+    if (!invalid.matches('input, select, textarea')) invalid.setAttribute('tabindex', '-1');
+    invalid.focus();
+  }
+})();
+
+(() => {
   const toggle = document.querySelector('.nav-toggle');
   const nav = document.querySelector('#primary-nav');
   if (!toggle || !nav) return;
   toggle.hidden = false;
-  document.documentElement.classList.add('has-js');
   const close = () => {
     toggle.setAttribute('aria-expanded', 'false');
     nav.classList.remove('is-open');

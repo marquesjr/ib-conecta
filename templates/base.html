@@ -4,11 +4,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>document.documentElement.classList.add('has-js');</script>
   <title>{% block title %}Igreja Batista em Santa Leopoldina{% endblock %}</title>
   <link rel="icon" href="{% static 'img/icons/favicon.ico' %}" sizes="32x32" />
   <link rel="icon" href="{% static 'img/icons/icon.svg' %}" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="{% static 'img/icons/apple-touch-icon.png' %}" />
   <link rel="manifest" href="{% static 'site.webmanifest' %}" />
+  <meta name="description" content="{% block meta_description %}{% if page.search_description %}{{ page.search_description }}{% else %}Igreja Batista em Santa Leopoldina: horários dos cultos, agenda, notícias, sermões e como planejar sua visita.{% endif %}{% endblock %}" />
   <meta name="theme-color" content="#862d36" />
   <link rel="stylesheet" href="{% static 'css/ib-conecta.css' %}" />
   <script src="{% static 'js/navigation.js' %}" defer></script>

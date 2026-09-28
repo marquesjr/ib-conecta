@@ -13,9 +13,9 @@
     <div class="panel">
       <form method="post">
         {% csrf_token %}
-        <p class="hp">{{ form.website.label_tag }} {{ form.website }}</p>
+        <p class="hp" aria-hidden="true">{{ form.website.label_tag }} {{ form.website }}</p>
         {% if form.non_field_errors %}
-          <ul class="form-errors">{{ form.non_field_errors }}</ul>
+          <div class="form-errors" role="alert">{{ form.non_field_errors }}</div>
         {% endif %}
         <p>
           {{ form.name.label_tag }}
