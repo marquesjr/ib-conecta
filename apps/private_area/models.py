@@ -74,6 +74,11 @@ class PrivateDocument(models.Model):
 class Ministry(models.Model):
     name = models.CharField(max_length=120, verbose_name="Nome")
     description = models.TextField(blank=True, default="", verbose_name="Descrição")
+    uses_repertoire = models.BooleanField(
+        default=False,
+        verbose_name="Usa repertório",
+        help_text="Marque para ministérios que montam playlist semanal de louvores.",
+    )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,

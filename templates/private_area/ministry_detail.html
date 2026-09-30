@@ -17,7 +17,9 @@
       {% if can_manage_schedules %}
         <div class="actions">
           <a class="cta compact" href="{% url 'private_area:schedule_create' ministry.pk %}">Montar escala mensal</a>
-          <a class="cta secondary compact" href="{% url 'private_area:playlist_create' ministry.pk %}">Montar playlist semanal</a>
+          {% if ministry.uses_repertoire %}
+            <a class="cta secondary compact" href="{% url 'private_area:playlist_create' ministry.pk %}">Montar playlist semanal</a>
+          {% endif %}
         </div>
       {% endif %}
     </div>
