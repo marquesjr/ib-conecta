@@ -53,6 +53,15 @@
     {% block share %}<div class="share-area">{% whatsapp_share %}</div>{% endblock %}
   </main>
   {% block after_nav %}{% endblock %}
+  {% if request.resolver_match.app_name == "private_area" or request.resolver_match.app_name == "accounts" %}
+  <footer class="site-footer site-footer--compact">
+    <p class="footer-church">Igreja Batista em Santa Leopoldina <span class="footer-product">IB Conecta</span></p>
+    <nav class="footer-links" aria-label="Rodapé">
+      <a href="{% url 'privacy' %}">Privacidade</a>
+      {% if user.is_authenticated %}<form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="footer-logout" type="submit">Sair</button></form>{% endif %}
+    </nav>
+  </footer>
+  {% else %}
   <footer class="site-footer">
     <div class="footer-intro"><h2>Igreja Batista<br>em Santa Leopoldina</h2><p>“Deus é o nosso refúgio e fortaleza”</p>
       <p class="footer-product">IB Conecta</p>
@@ -74,5 +83,6 @@
     </div>
     {% endif %}
   </footer>
+  {% endif %}
 </body>
 </html>
