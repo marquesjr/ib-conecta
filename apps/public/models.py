@@ -182,7 +182,12 @@ class EventPage(RoutablePageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         from apps.public.forms import EventRegistrationForm, FamilyMemberFormSet, RetreatRegistrationForm
 
+        from apps.public.event_facts import directions_url, spots_left, when_label
+
         context = super().get_context(request, *args, **kwargs)
+        context["event_when"] = when_label(self.starts_at, self.ends_at)
+        context["event_directions_url"] = directions_url(self.location)
+        context["event_spots_left"] = spots_left(self)
         if self.is_retreat:
             context["registration_form"] = RetreatRegistrationForm()
             context["family_formset"] = FamilyMemberFormSet(prefix="family")

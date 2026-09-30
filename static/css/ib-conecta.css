@@ -150,6 +150,13 @@ p { margin: 0 0 1rem; }
 .cms-page { max-width: var(--sheet); margin: auto; padding: 3.5rem var(--page-gutter); }
 .cms-page > h1 { margin-bottom: 1rem; }
 .cms-page > .lede { max-width: 62ch; margin-bottom: 2.5rem; }
+.event-facts { background: var(--paper-warm); border-radius: 14px; padding: clamp(1.25rem, 3vw, 1.75rem); margin: 0 0 2.5rem; }
+.event-facts dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr)); gap: 1.25rem 2rem; margin: 0; }
+.event-fact dt { color: var(--archive-gray); font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: .3rem; }
+.event-fact dd { margin: 0; color: var(--graphite); font-size: 1.05rem; line-height: 1.5; overflow-wrap: anywhere; }
+.event-fact-note { display: block; color: var(--archive-gray); font-size: .9rem; }
+.event-fact-link { display: block; width: fit-content; margin-top: .35rem; color: var(--ink-red); font-size: .95rem; font-weight: 500; min-height: 24px; }
+.event-facts-actions { margin: 1.25rem 0 0; }
 .page-head { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--paper-shade); }
 .page-head h1 { margin: 0; }
 .panel { background: var(--mount); border: 1px solid var(--paper-shade); border-radius: 14px; padding: clamp(1.25rem, 3vw, 2rem); margin-bottom: 1.25rem; overflow-wrap: anywhere; }
