@@ -1,0 +1,11 @@
+{% if share_url %}
+  <a class="cta secondary compact" href="{{ share_url }}" target="_blank" rel="noopener noreferrer">
+    Compartilhar no WhatsApp
+  </a>
+{% endif %}
+<a class="cta secondary compact" href="{% url 'private_area:schedule_calendar' schedule.pk %}">
+  Adicionar ao calendário
+</a>
+<a class="cta secondary compact" href="{% url 'private_area:schedule_print' schedule.pk %}">
+  Imprimir / salvar PDF
+</a>
