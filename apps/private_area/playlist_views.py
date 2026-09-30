@@ -1,7 +1,9 @@
 from django.contrib import messages
+from django.db import transaction
 from django.db.models import Max
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
 from apps.accounts.audit import AuditAction, log_audit
@@ -9,7 +11,7 @@ from apps.accounts.decorators import permission_required
 from apps.accounts.permissions import Permission, user_has_permission
 from apps.private_area.calendar import build_playlist_ics
 from apps.private_area.forms import PlaylistItemForm, WeeklyPlaylistForm
-from apps.private_area.models import Ministry, WeeklyPlaylist
+from apps.private_area.models import Ministry, PlaylistItem, WeeklyPlaylist
 from apps.private_area.songbook import resolve_print_layout
 from apps.public.whatsapp import build_whatsapp_share_url
 
@@ -93,9 +95,8 @@ def playlist_item_add(request: HttpRequest, pk: int) -> HttpResponse:
     if form.is_valid():
         item = form.save(commit=False)
         item.playlist = playlist
-        if not item.position:
-            last = playlist.items.aggregate(Max("position"))["position__max"] or 0
-            item.position = last + 1
+        last = playlist.items.aggregate(Max("position"))["position__max"] or 0
+        item.position = last + 1
         item.save()
         log_audit(
             actor=request.user,
@@ -112,6 +113,84 @@ def playlist_item_add(request: HttpRequest, pk: int) -> HttpResponse:
             request,
             "Não foi possível adicionar. Use um louvor publicado da coletânea.",
         )
+    return redirect("private_area:playlist_detail", pk=playlist.pk)
+
+
+def _save_order(playlist: WeeklyPlaylist, items: list[PlaylistItem]) -> None:
+    with transaction.atomic():
+        for position, item in enumerate(items, start=1):
+            if item.position != position:
+                item.position = position
+                item.save(update_fields=["position"])
+
+
+def _wants_json(request: HttpRequest) -> bool:
+    return "application/json" in request.headers.get("Accept", "")
+
+
+@permission_required(Permission.MANAGE_MINISTRY_SCHEDULES)
+@require_http_methods(["POST"])
+def playlist_item_move(request: HttpRequest, pk: int, item_pk: int) -> HttpResponse:
+    playlist = _playlist_or_404(pk)
+    items = list(playlist.items.all())
+    index = next((i for i, item in enumerate(items) if item.pk == item_pk), None)
+    if index is None:
+        raise Http404
+    target = index - 1 if request.POST.get("direction") == "up" else index + 1
+    if 0 <= target < len(items):
+        items[index], items[target] = items[target], items[index]
+        _save_order(playlist, items)
+        log_audit(
+            actor=request.user,
+            action=AuditAction.PLAYLIST_REORDERED,
+            metadata={"playlist_id": playlist.pk, "order": [i.pk for i in items]},
+        )
+    return redirect(
+        reverse("private_area:playlist_detail", args=[playlist.pk])
+        + f"#item-{item_pk}"
+    )
+
+
+@permission_required(Permission.MANAGE_MINISTRY_SCHEDULES)
+@require_http_methods(["POST"])
+def playlist_reorder(request: HttpRequest, pk: int) -> HttpResponse:
+    playlist = _playlist_or_404(pk)
+    items = {item.pk: item for item in playlist.items.all()}
+    try:
+        order = [int(value) for value in request.POST.getlist("item")]
+    except ValueError:
+        order = []
+    if sorted(order) != sorted(items):
+        if _wants_json(request):
+            return JsonResponse({"ok": False}, status=400)
+        messages.error(request, "A ordem enviada não confere com a playlist.")
+        return redirect("private_area:playlist_detail", pk=playlist.pk)
+    _save_order(playlist, [items[item_pk] for item_pk in order])
+    log_audit(
+        actor=request.user,
+        action=AuditAction.PLAYLIST_REORDERED,
+        metadata={"playlist_id": playlist.pk, "order": order},
+    )
+    if _wants_json(request):
+        return JsonResponse({"ok": True})
+    messages.success(request, "Ordem da playlist atualizada.")
+    return redirect("private_area:playlist_detail", pk=playlist.pk)
+
+
+@permission_required(Permission.MANAGE_MINISTRY_SCHEDULES)
+@require_http_methods(["POST"])
+def playlist_item_remove(request: HttpRequest, pk: int, item_pk: int) -> HttpResponse:
+    playlist = _playlist_or_404(pk)
+    item = get_object_or_404(playlist.items.select_related("song"), pk=item_pk)
+    title = item.song.title
+    item.delete()
+    _save_order(playlist, list(playlist.items.all()))
+    log_audit(
+        actor=request.user,
+        action=AuditAction.PLAYLIST_ITEM_REMOVED,
+        metadata={"playlist_id": playlist.pk, "song_id": item.song_id},
+    )
+    messages.success(request, f"“{title}” saiu da playlist.")
     return redirect("private_area:playlist_detail", pk=playlist.pk)
 
 

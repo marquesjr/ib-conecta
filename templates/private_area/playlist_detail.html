@@ -1,8 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}{{ playlist.label }} — {{ playlist.ministry.name }} — Igreja Batista em Santa Leopoldina{% endblock %}
 
 {% block share %}{% endblock %}
+
+{% block extra_head %}{% if can_manage_playlists %}<script src="{% static 'js/playlist.js' %}" defer></script>{% endif %}{% endblock %}
 
 {% block content %}
   <section class="cms-page">
@@ -32,34 +35,55 @@
     </p>
 
     {% if items %}
-      <ol class="news-list">
+      <ol class="playlist-items" data-reorder-url="{% if can_manage_playlists %}{% url 'private_area:playlist_reorder' playlist.pk %}{% endif %}">
         {% for item in items %}
-          <li>
-            <strong>{{ item.song.title }}</strong>
-            {% if item.display_key %} — Tom {{ item.display_key }}{% endif %}
-            {% if item.version %} · {{ item.version.name }}{% endif %}
-            {% if item.notes %}
-              <p>{{ item.notes }}</p>
+          <li class="playlist-item" id="item-{{ item.pk }}" data-item="{{ item.pk }}">
+            {% if can_manage_playlists %}
+              <span class="playlist-handle" aria-hidden="true" title="Arraste para mudar a ordem" hidden>⠿</span>
             {% endif %}
-            <p class="news-meta">
-              <a href="{% url 'private_area:song_detail' item.song.slug %}">Ver na coletânea</a>
-            </p>
+            <div class="playlist-song">
+              <strong>{{ item.song.title }}</strong>
+              {% if item.display_key %} — Tom {{ item.display_key }}{% endif %}
+              {% if item.version %} · {{ item.version.name }}{% endif %}
+              {% if item.notes %}
+                <p class="playlist-note">{{ item.notes }}</p>
+              {% endif %}
+              <p class="news-meta">
+                <a href="{% url 'private_area:song_detail' item.song.slug %}">Ver na coletânea</a>
+              </p>
+            </div>
+            {% if can_manage_playlists %}
+              <div class="playlist-actions">
+                <form method="post" action="{% url 'private_area:playlist_item_move' playlist.pk item.pk %}">
+                  {% csrf_token %}
+                  <button class="icon-button" type="submit" name="direction" value="up" aria-label="Subir {{ item.song.title }}"{% if forloop.first %} disabled{% endif %}>↑</button>
+                  <button class="icon-button" type="submit" name="direction" value="down" aria-label="Descer {{ item.song.title }}"{% if forloop.last %} disabled{% endif %}>↓</button>
+                </form>
+                <form method="post" action="{% url 'private_area:playlist_item_remove' playlist.pk item.pk %}" data-confirm="Tirar “{{ item.song.title }}” da playlist?">
+                  {% csrf_token %}
+                  <button class="icon-button danger" type="submit" aria-label="Remover {{ item.song.title }}">×</button>
+                </form>
+              </div>
+            {% endif %}
           </li>
         {% endfor %}
       </ol>
+      {% if can_manage_playlists and items|length > 1 %}
+        <p class="muted playlist-hint" hidden>Arraste pelo ⠿ ou use as setas para mudar a ordem.</p>
+      {% endif %}
     {% else %}
       <p class="muted">Nenhum louvor nesta playlist ainda.</p>
     {% endif %}
 
     {% if item_form %}
-      <div class="panel">
-        <h2>Adicionar louvor</h2>
+      <details class="panel playlist-add"{% if not items %} open{% endif %}>
+        <summary>Adicionar louvor</summary>
         <form method="post" action="{% url 'private_area:playlist_item_add' playlist.pk %}">
           {% csrf_token %}
           {{ item_form.as_p }}
-          <button class="cta" type="submit">Incluir na ordem</button>
+          <button class="cta" type="submit">Incluir no fim da playlist</button>
         </form>
-      </div>
+      </details>
     {% endif %}
 
     <p>

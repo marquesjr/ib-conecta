@@ -135,6 +135,21 @@ urlpatterns = [
         name="playlist_item_add",
     ),
     path(
+        "area-privada/playlists/<int:pk>/itens/ordem/",
+        playlist_views.playlist_reorder,
+        name="playlist_reorder",
+    ),
+    path(
+        "area-privada/playlists/<int:pk>/itens/<int:item_pk>/mover/",
+        playlist_views.playlist_item_move,
+        name="playlist_item_move",
+    ),
+    path(
+        "area-privada/playlists/<int:pk>/itens/<int:item_pk>/remover/",
+        playlist_views.playlist_item_remove,
+        name="playlist_item_remove",
+    ),
+    path(
         "area-privada/playlists/<int:pk>/calendario/",
         playlist_views.playlist_calendar,
         name="playlist_calendar",

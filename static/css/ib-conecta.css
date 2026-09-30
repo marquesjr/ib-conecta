@@ -316,6 +316,32 @@ p { margin: 0 0 1rem; }
   .more-actions-menu { left: 0; right: 0; min-width: 0; }
 }
 
+/* Playlist semanal */
+.playlist-items { list-style: none; margin: 0 0 1rem; padding: 0; counter-reset: playlist; }
+.playlist-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .5rem 1rem; padding: .9rem 0; border-bottom: var(--hair) solid var(--paper-shade); counter-increment: playlist; background: var(--paper); }
+.playlist-song::before { content: counter(playlist) ". "; color: var(--archive-gray); font-variant-numeric: tabular-nums; }
+.playlist-items.is-sortable .playlist-item { grid-template-columns: auto minmax(0, 1fr) auto; }
+.playlist-note { margin: .25rem 0 0; }
+.playlist-actions { display: flex; gap: .5rem; }
+.playlist-actions form { display: flex; gap: .5rem; margin: 0; }
+.playlist-handle { display: inline-grid; place-items: center; width: 44px; height: 44px; color: var(--archive-gray); font-size: 1.3rem; cursor: grab; touch-action: none; user-select: none; }
+.playlist-handle[hidden] { display: none; }
+.playlist-item.is-dragging { opacity: .7; box-shadow: 0 6px 18px rgba(23, 25, 22, .15); position: relative; z-index: 1; }
+.playlist-item.is-dragging .playlist-handle { cursor: grabbing; }
+.icon-button { display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid var(--paper-shade); border-radius: 10px; background: var(--mount); color: var(--ink-red); font-size: 1.1rem; cursor: pointer; }
+.icon-button:hover { background: var(--paper-warm); }
+.icon-button:disabled { color: var(--archive-gray); opacity: .45; cursor: default; background: transparent; }
+.icon-button.danger { border-color: var(--ink-red); }
+.playlist-hint { margin-top: 0; }
+.playlist-add > summary { font-weight: 600; color: var(--ink-red); }
+.playlist-add[open] > summary { margin-bottom: 1rem; }
+.playlist-add textarea { min-height: 3.5rem; }
+@media (max-width: 40rem) {
+  .playlist-item { grid-template-columns: minmax(0, 1fr); }
+  .playlist-items.is-sortable .playlist-item { grid-template-columns: auto minmax(0, 1fr); }
+  .playlist-items.is-sortable .playlist-actions { grid-column: 2; }
+}
+
 .register-entry {
   display: grid;
   grid-template-columns: 5.5rem 1fr;
