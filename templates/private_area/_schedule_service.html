@@ -23,11 +23,11 @@
           {% if not service.is_past %}
             <span class="roster-actions">
               {% if request.user == assignment.participant and assignment.status == "pending" %}
-                <a href="{% url 'private_area:assignment_respond' assignment.pk %}">Responder</a>
+                <a class="roster-action" href="{% url 'private_area:assignment_respond' assignment.pk %}">Responder</a>
               {% endif %}
               {% if can_manage_schedules %}
-                <a href="{% url 'private_area:assignment_edit' assignment.pk %}">Editar</a>
-                <a href="{% url 'private_area:assignment_substitute' assignment.pk %}">Substituir</a>
+                <a class="roster-action" href="{% url 'private_area:assignment_edit' assignment.pk %}" aria-label="Editar convocação de {{ assignment.participant|person_name }}">Editar</a>
+                <a class="roster-action" href="{% url 'private_area:assignment_substitute' assignment.pk %}" aria-label="Substituir {{ assignment.participant|person_name }}">Substituir</a>
               {% endif %}
             </span>
           {% endif %}

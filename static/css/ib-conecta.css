@@ -236,7 +236,13 @@ p { margin: 0 0 1rem; }
 .roster-person { font-weight: 500; }
 .roster-person small { font-weight: 400; color: var(--archive-gray); }
 .roster-note { display: block; font-size: .8rem; }
-.roster-actions { display: flex; gap: .9rem; font-size: .9rem; }
+.roster-actions { display: flex; flex-wrap: wrap; gap: .5rem; font-size: .9rem; }
+.roster-action { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; padding: .4rem .9rem; border: var(--hair) solid var(--paper-shade); border-radius: 10px; background: var(--mount); font-weight: 500; line-height: 1.2; text-decoration: none; }
+.roster-action:hover { border-color: var(--ink-red); background: var(--paper-warm); }
+@media (max-width: 40rem) {
+  .roster-actions { padding-top: .35rem; }
+  .roster-action { flex: 1 1 0; }
+}
 .service--past .service-day { color: var(--archive-gray); }
 .service--past .service-roster { background: transparent; }
 .past-services { margin: 1rem 0 2rem; border-top: var(--hair) solid var(--paper-shade); padding-top: 1rem; }
