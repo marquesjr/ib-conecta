@@ -170,6 +170,14 @@ p { margin: 0 0 1rem; }
 .footer-location address { font-style: normal; color: var(--graphite); }
 .footer-map { aspect-ratio: 4 / 3; margin: 1rem 0; background: var(--mount); border: 1px solid var(--paper-shade); border-radius: 12px; overflow: hidden; }
 .footer-map iframe { display: block; width: 100%; height: 100%; border: 0; }
+.site-footer.site-footer--compact { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 2rem; margin-top: 3rem; padding-top: 1.5rem; padding-bottom: 1.5rem; }
+.footer-church { margin: 0; color: var(--graphite); font-weight: 500; }
+.footer-church .footer-product { margin: 0 0 0 .5rem; font-weight: 400; color: var(--archive-gray); }
+.footer-links { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.5rem; }
+.footer-links a, .footer-logout { display: inline-flex; align-items: center; min-height: 44px; }
+.footer-links form { margin: 0; }
+.footer-logout { padding: 0; border: 0; background: none; color: var(--ink-red); font: inherit; text-decoration: underline; text-underline-offset: .22em; cursor: pointer; }
+.footer-logout:hover { color: var(--ink-red-hover); }
 .social-links { display: flex; flex-wrap: wrap; gap: 1rem; }
 .social-links a { display: inline-flex; align-items: center; min-height: 24px; }
 .whatsapp-welcome { max-width: var(--measure); }
