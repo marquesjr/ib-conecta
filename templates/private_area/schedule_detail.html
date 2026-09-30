@@ -48,10 +48,11 @@
 
     {% if assignments %}
       <p class="schedule-summary">
-        <span><strong>{{ assignments|length }}</strong> convocações</span>
-        <span><strong>{{ confirmed_count }}</strong> confirmadas</span>
-        <span><strong>{{ pending_count }}</strong> pendentes</span>
-        {% if declined_count %}<span><strong>{{ declined_count }}</strong> recusadas</span>{% endif %}
+        <span class="schedule-summary-scope">{% if upcoming_services %}Próximos cultos:{% else %}Cultos já realizados:{% endif %}</span>
+        <span><strong>{{ summary_total }}</strong> convocaç{{ summary_total|pluralize:"ão,ões" }}</span>
+        <span><strong>{{ confirmed_count }}</strong> confirmada{{ confirmed_count|pluralize }}</span>
+        <span><strong>{{ pending_count }}</strong> pendente{{ pending_count|pluralize }}</span>
+        {% if declined_count %}<span><strong>{{ declined_count }}</strong> recusada{{ declined_count|pluralize }}</span>{% endif %}
       </p>
 
       {% for service in upcoming_services %}

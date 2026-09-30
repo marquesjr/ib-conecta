@@ -1,18 +1,37 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Entrar — Igreja Batista em Santa Leopoldina{% endblock %}
 {% block share %}{% endblock %}
+{% block extra_head %}<script src="{% static 'js/login.js' %}" defer></script>{% endblock %}
 
 {% block content %}
   <section class="cms-page">
     <h1>Entrar</h1>
     <div class="panel">
-      <form method="post">
+      <form method="post" class="login-form">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button class="cta" type="submit">Entrar</button>
+        {% if form.non_field_errors %}
+          <div class="form-errors" role="alert">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <p>
+          {{ form.username.label_tag }}
+          {{ form.username }}
+          {{ form.username.errors }}
+        </p>
+        <p>
+          {{ form.password.label_tag }}
+          <span class="password-field">
+            {{ form.password }}
+            <button type="button" class="password-toggle" aria-controls="{{ form.password.id_for_label }}" hidden>Mostrar senha</button>
+          </span>
+          {{ form.password.errors }}
+        </p>
+        <div class="login-actions">
+          <button class="cta" type="submit">Entrar</button>
+          <a href="{% url 'accounts:password_reset' %}">Esqueci minha senha</a>
+        </div>
       </form>
-      <p><a href="{% url 'accounts:password_reset' %}">Esqueci minha senha</a></p>
     </div>
   </section>
 {% endblock %}

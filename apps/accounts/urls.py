@@ -8,6 +8,11 @@ urlpatterns = [
     path("conta/", views.account_home, name="account_home"),
     path("conta/entrar/", views.login_view, name="login"),
     path("conta/sair/", views.logout_view, name="logout"),
+    path(
+        "conta/senha/",
+        views.AccountPasswordChangeView.as_view(),
+        name="password_change",
+    ),
     path("conta/2fa/", views.two_factor_setup, name="two_factor_setup"),
     path("conta/2fa/verificar/", views.two_factor_verify, name="two_factor_verify"),
     path("conta/usuarios/", views.manage_users_demo, name="manage_users_demo"),

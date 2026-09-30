@@ -48,29 +48,26 @@
 </section>
 <div class="home-content">
   <div class="editorial-pair">
-    <section aria-labelledby="agenda-title">
-      <h2 id="agenda-title">Próximos encontros</h2>
-      <p class="section-intro">Acompanhe a agenda da igreja.</p>
+    <section class="home-section" aria-labelledby="agenda-title">
+      <div class="section-heading"><div><h2 id="agenda-title">Próximos encontros</h2><p class="section-intro">Acompanhe a agenda da igreja.</p></div></div>
       <ul class="editorial-list">{% for event in upcoming_events %}
         <li><a href="{{ event.url }}"><time class="date-stack" datetime="{{ event.starts_at|date:'c' }}"><b>{{ event.starts_at|date:"d" }}</b><span>{{ event.starts_at|date:"D" }} · {{ event.starts_at|date:"b" }}</span></time><span class="entry"><span class="entry-title">{{ event.title }}</span><span class="entry-meta">{{ event.starts_at|hour_label }}{% if event.location %} · {{ event.location }}{% endif %}</span></span>{% include "public/_arrow.html" %}</a></li>
         {% empty %}<li class="empty">Nenhum evento publicado no momento.</li>{% endfor %}
       </ul>
-      {% if agenda_index_url %}<a class="text-link" href="{{ agenda_index_url }}">Ver toda a agenda {% include "public/_arrow.html" %}</a>{% endif %}
+      {% if agenda_index_url %}<a class="text-link section-more" href="{{ agenda_index_url }}">Ver toda a agenda {% include "public/_arrow.html" %}</a>{% endif %}
     </section>
-    <section aria-labelledby="sermons-title">
-      <h2 id="sermons-title">Palavra para a vida</h2>
-      <p class="section-intro">Ouça os sermões e acompanhe as mensagens.</p>
+    <section class="home-section" aria-labelledby="sermons-title">
+      <div class="section-heading"><div><h2 id="sermons-title">Palavra para a vida</h2><p class="section-intro">Ouça os sermões e acompanhe as mensagens.</p></div></div>
       <ul class="editorial-list">{% for sermon in recent_sermons %}
         <li><a href="{{ sermon.url }}"><time class="date-stack" datetime="{{ sermon.first_published_at|date:'c' }}"><b>{{ sermon.first_published_at|date:"d" }}</b><span>{{ sermon.first_published_at|date:"b" }}</span></time><span class="entry"><span class="entry-title">{{ sermon.title }}</span>{% if sermon.specific.intro %}<span class="entry-meta">{{ sermon.specific.intro|truncatechars:90 }}</span>{% endif %}</span>{% include "public/_arrow.html" %}</a></li>
         {% empty %}<li class="empty">Nenhum sermão publicado no momento.</li>{% endfor %}
       </ul>
-      {% if sermon_index_url %}<a class="text-link" href="{{ sermon_index_url }}">Todos os sermões {% include "public/_arrow.html" %}</a>{% endif %}
+      {% if sermon_index_url %}<a class="text-link section-more" href="{{ sermon_index_url }}">Todos os sermões {% include "public/_arrow.html" %}</a>{% endif %}
     </section>
   </div>
-  {% if archive.posters %}<section class="mural" aria-labelledby="mural-title" aria-roledescription="carrossel">
+  {% if archive.posters %}<section class="mural home-section" aria-labelledby="mural-title" aria-roledescription="carrossel">
     <div class="section-heading"><div><h2 id="mural-title">Mural da igreja</h2><p class="section-intro">Convites e datas que a igreja publicou.</p></div>
       <div class="mural-aside">
-        {% if church_settings.instagram_url %}<a class="text-link instagram-link" href="{{ church_settings.instagram_url }}" target="_blank" rel="noopener noreferrer">@{{ church_settings.instagram_handle|default:"igrejabatista.santaleopoldina" }} {% include "public/_arrow.html" %}</a>{% endif %}
         <div class="mural-controls" hidden>
           <p class="mural-status" aria-live="polite"></p>
           <button class="mural-button" type="button" data-direction="-1" aria-controls="mural-track" aria-label="Cartazes anteriores"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 12H5m6-6-6 6 6 6"/></svg></button>
@@ -86,11 +83,10 @@
         <figcaption>{{ frame.caption }}{% if frame.byline %} · {{ frame.byline }}{% endif %}{% if frame.date %}<span class="poster-date">{{ frame.date }}</span>{% endif %}</figcaption>
       </figure></li>
     {% endfor %}</ul>
+    {% if church_settings.instagram_url %}<a class="text-link instagram-link section-more" href="{{ church_settings.instagram_url }}" target="_blank" rel="noopener noreferrer">@{{ church_settings.instagram_handle|default:"igrejabatista.santaleopoldina" }} {% include "public/_arrow.html" %}</a>{% endif %}
   </section>{% endif %}
-  <section class="community" aria-labelledby="community-title">
-    <div class="section-heading"><div><h2 id="community-title">A vida em comunidade</h2><p class="section-intro">Encontros, fé e comunhão.</p></div>
-      {% if church_settings.instagram_url and not archive.posters %}<a class="text-link instagram-link" href="{{ church_settings.instagram_url }}" target="_blank" rel="noopener noreferrer">@{{ church_settings.instagram_handle|default:"igrejabatista.santaleopoldina" }} {% include "public/_arrow.html" %}</a>{% endif %}
-    </div>
+  <section class="community home-section" aria-labelledby="community-title">
+    <div class="section-heading"><div><h2 id="community-title">A vida em comunidade</h2><p class="section-intro">Encontros, fé e comunhão.</p></div></div>
     {% if archive_is_seeded %}<p class="image-notice" id="acervo-exemplo">As imagens de exemplo são ilustrativas, não fotos da igreja. As fotos reais publicadas na galeria ou sincronizadas do Instagram têm prioridade.</p>{% endif %}
     <div class="mosaic" data-size="{{ archive.mosaic_size }}">
     {% for frame in archive.photos %}
@@ -108,10 +104,12 @@
       {% else %}<a class="text-link" href="{% url 'know_church' %}">Falar com a igreja {% include "public/_arrow.html" %}</a>{% endif %}
     </div>{% endif %}
     </div>
+    {% if church_settings.instagram_url and not archive.posters %}<a class="text-link instagram-link section-more" href="{{ church_settings.instagram_url }}" target="_blank" rel="noopener noreferrer">@{{ church_settings.instagram_handle|default:"igrejabatista.santaleopoldina" }} {% include "public/_arrow.html" %}</a>{% endif %}
   </section>
-  <section class="home-news" aria-labelledby="news-title">
-    <div class="section-heading"><h2 id="news-title">Notícias da igreja</h2>{% if news_index_url %}<a class="text-link" href="{{ news_index_url }}">Todas as notícias {% include "public/_arrow.html" %}</a>{% endif %}</div>
+  <section class="home-news home-section" aria-labelledby="news-title">
+    <div class="section-heading"><h2 id="news-title">Notícias da igreja</h2></div>
     <ul class="editorial-list">{% for item in recent_news %}<li><a href="{{ item.url }}"><time class="date-stack" datetime="{{ item.first_published_at|date:'c' }}"><b>{{ item.first_published_at|date:"d" }}</b><span>{{ item.first_published_at|date:"b" }}</span></time><span class="entry"><span class="entry-title">{{ item.title }}</span></span>{% include "public/_arrow.html" %}</a></li>{% empty %}<li class="empty">Nenhuma notícia publicada no momento.</li>{% endfor %}</ul>
+    {% if news_index_url %}<a class="text-link section-more" href="{{ news_index_url }}">Todas as notícias {% include "public/_arrow.html" %}</a>{% endif %}
   </section>
   <section class="invitation"><h2>Podemos orar por você?</h2><p>Envie seu pedido de oração. O conteúdo não é publicado no site.</p><a class="cta secondary" href="{% url 'prayer_request' %}">Enviar pedido de oração {% include "public/_arrow.html" %}</a></section>
 </div>

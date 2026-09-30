@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.http import FileResponse, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
 from apps.accounts.audit import AuditAction, log_audit
@@ -14,6 +15,7 @@ from apps.private_area.models import (
     EventChecklistItem,
     EventOperation,
     EventTask,
+    AssignmentStatus,
     PrivateDocument,
     ScheduleAssignment,
     WeeklyPlaylist,
@@ -22,6 +24,12 @@ from apps.private_area.models import (
 
 @permission_required(Permission.ACCESS_PRIVATE_AREA)
 def home(request: HttpRequest) -> HttpResponse:
+    my_assignments = ScheduleAssignment.objects.filter(participant=request.user).select_related(
+        "schedule__ministry"
+    )
+    awaiting_answer = my_assignments.filter(
+        status=AssignmentStatus.PENDING, starts_at__gte=timezone.now()
+    ).order_by("starts_at")
     return render(
         request,
         "private_area/home.html",
@@ -36,11 +44,10 @@ def home(request: HttpRequest) -> HttpResponse:
                 request.user, Permission.MANAGE_EVENT_OPERATIONS
             )
             or user_has_permission(request.user, Permission.MANAGE_FINANCES),
-            "my_assignments": ScheduleAssignment.objects.filter(
-                participant=request.user
-            )
-            .select_related("schedule__ministry")
-            .order_by("starts_at")[:12],
+            "awaiting_answer": awaiting_answer,
+            "my_assignments": my_assignments.exclude(
+                pk__in=awaiting_answer.values("pk")
+            ).order_by("starts_at")[:12],
             "upcoming_playlists": WeeklyPlaylist.objects.select_related("ministry").order_by(
                 "starts_at"
             )[:8],
