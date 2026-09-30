@@ -532,7 +532,7 @@ def _seed_public_inbox(events: dict, *, force: bool) -> None:
         )
         EventRegistration.objects.create(
             event=retreat,
-            name="Família Rocha (lista de espera)",
+            name="Família Rocha",
             email="rocha@demo.ibconecta.local",
             phone="27988880009",
             birth_date="1982-03-30",

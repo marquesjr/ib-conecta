@@ -193,11 +193,41 @@ def two_factor_setup(request: HttpRequest) -> HttpResponse:
 def event_registrations(request: HttpRequest) -> HttpResponse:
     from apps.public.models import EventRegistration
 
-    registrations = EventRegistration.objects.select_related("event").all()
+    registrations = EventRegistration.objects.select_related("event").order_by(
+        "event__starts_at", "event_id", "name"
+    )
+    events = []
+    for registration in registrations:
+        if not events or events[-1]["event"].pk != registration.event_id:
+            events.append({"event": registration.event, "registrations": []})
+        events[-1]["registrations"].append(registration)
+
+    selected_event = request.GET.get("evento", "")
+    shown = [group for group in events if str(group["event"].pk) == selected_event] or events
+    if len(shown) == len(events):
+        selected_event = ""
+
+    # Ativas primeiro; canceladas descem para o fim do grupo.
+    status_order = {
+        EventRegistration.Status.CONFIRMED: 0,
+        EventRegistration.Status.WAITLISTED: 1,
+        EventRegistration.Status.CANCELLED: 2,
+    }
+    for group in shown:
+        items = group["registrations"]
+        items.sort(key=lambda item: status_order.get(item.status, 1))
+        group["confirmed_count"] = sum(item.status == "confirmed" for item in items)
+        group["waitlisted_count"] = sum(item.status == "waitlisted" for item in items)
+        group["cancelled_count"] = sum(item.status == "cancelled" for item in items)
+
     return render(
         request,
         "public/event_registrations.html",
-        {"registrations": registrations},
+        {
+            "events": events,
+            "groups": shown,
+            "selected_event": selected_event,
+        },
     )
 
 
@@ -210,7 +240,11 @@ def event_registration_cancel(request: HttpRequest, pk: int) -> HttpResponse:
     registration.status = EventRegistration.Status.CANCELLED
     registration.save(update_fields=["status"])
     messages.success(request, f"Inscrição de {registration.name} cancelada.")
-    return redirect("accounts:event_registrations")
+    url = reverse("accounts:event_registrations")
+    selected_event = request.POST.get("evento", "")
+    if selected_event.isdigit():
+        url = f"{url}?evento={selected_event}"
+    return redirect(url)
 
 
 @permission_required(Permission.MANAGE_PRAYER_REQUESTS)
