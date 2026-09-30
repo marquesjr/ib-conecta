@@ -657,6 +657,20 @@ th, td { padding: .85rem; min-width: 5rem; }
 .check-field input { margin: .2rem 0 0; }
 .check-field label { margin: 0; min-height: 32px; cursor: pointer; }
 .check-field .errorlist { grid-column: 2; }
+/* Check-in do retiro: contador, busca e uma linha por pessoa com o mesmo botão. */
+.checkin-count { margin: 0 0 1rem; color: var(--archive-gray); }
+.checkin-count strong { color: var(--graphite); font-size: 1.35rem; font-variant-numeric: tabular-nums; }
+.checkin-search { margin-bottom: .5rem; }
+.checkin-search-row { display: flex; gap: .5rem; align-items: stretch; max-width: 28rem; }
+.checkin-search-row input { flex: 1; min-width: 0; }
+.panel .checkin-search-row .cta { margin: 0; }
+.news-list .checkin-people { list-style: none; margin: .75rem 0 0; padding: 0; }
+.news-list .checkin-people li { display: flex; align-items: center; justify-content: space-between; gap: .5rem 1rem; padding: .35rem 0; border-bottom: 0; min-height: 48px; }
+.news-list .checkin-people form { margin: 0; }
+.panel .checkin-people .cta { margin: 0; min-width: 7.5rem; }
+.checkin-person small { color: var(--archive-gray); font-size: .82rem; }
+.checkin-sensitive { margin-top: .5rem; }
+.checkin-sensitive > summary { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-red); font-size: .9rem; }
 .tag, .register-tag { border-radius: 5px; }
 .state { border-radius: 999px; }
 @keyframes welcome-reveal { from { clip-path: inset(0 3% 0 0 round 18px); } to { clip-path: inset(0 0 0 0 round 18px); } }
