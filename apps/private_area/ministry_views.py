@@ -188,8 +188,14 @@ def schedule_detail(request: HttpRequest, pk: int) -> HttpResponse:
     )
     now = timezone.now()
     services = _group_by_service(assignments, now)
+    upcoming_services = [s for s in services if not s.is_past]
+    # Os totais do topo falam dos próximos cultos; os já realizados ficam
+    # recolhidos e só entram na conta quando não há mais nenhum pela frente.
+    summary_assignments = (
+        [a for s in upcoming_services for a in s.assignments] if upcoming_services else assignments
+    )
     status_counts = {status: 0 for status in AssignmentStatus.values}
-    for assignment in assignments:
+    for assignment in summary_assignments:
         status_counts[assignment.status] += 1
     return render(
         request,
@@ -197,7 +203,7 @@ def schedule_detail(request: HttpRequest, pk: int) -> HttpResponse:
         {
             "schedule": schedule,
             "assignments": assignments,
-            "upcoming_services": [s for s in services if not s.is_past],
+            "upcoming_services": upcoming_services,
             "past_services": [s for s in services if s.is_past],
             "my_pending": [
                 a
@@ -206,6 +212,7 @@ def schedule_detail(request: HttpRequest, pk: int) -> HttpResponse:
                 and a.status == AssignmentStatus.PENDING
                 and a.starts_at >= now
             ],
+            "summary_total": len(summary_assignments),
             "confirmed_count": status_counts[AssignmentStatus.CONFIRMED],
             "pending_count": status_counts[AssignmentStatus.PENDING],
             "declined_count": status_counts[AssignmentStatus.DECLINED],
