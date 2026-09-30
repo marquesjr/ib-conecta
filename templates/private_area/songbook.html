@@ -1,7 +1,9 @@
 {% extends "base.html" %}
-{% load state_tags %}
+{% load static state_tags %}
 
 {% block title %}Coletânea de louvores — Igreja Batista em Santa Leopoldina{% endblock %}
+
+{% block extra_head %}<script src="{% static 'js/songbook.js' %}" defer></script>{% endblock %}
 
 {% block share %}{% endblock %}
 
@@ -9,31 +11,41 @@
   <section class="cms-page">
     <h1>Coletânea de louvores</h1>
     <p class="lede">Letras, cifras e partituras para uso autorizado na igreja.</p>
-    <form method="get">
+    <form method="get" class="songbook-search" role="search">
       <p>
-        <label for="id_q">Buscar</label>
-        <input id="id_q" type="text" name="q" value="{{ query }}">
+        <label for="id_q">Buscar pelo título</label>
+        <input id="id_q" type="search" name="q" value="{{ query }}" autocomplete="off" data-song-search>
+        {% if tag %}<input type="hidden" name="tag" value="{{ tag }}">{% endif %}
+        <button class="cta secondary compact" type="submit">Buscar</button>
       </p>
-      <p>
-        <label for="id_tag">Tag</label>
-        <input id="id_tag" type="text" name="tag" value="{{ tag }}">
-      </p>
-      <button class="cta" type="submit">Filtrar</button>
     </form>
-    <p class="no-print actions">
+    {% if tags %}
+      <nav class="tag-chips" aria-label="Filtrar por tag">
+        <a class="tag-chip" href="?q={{ query|urlencode }}"{% if not tag %} aria-current="true"{% endif %}>Todas</a>
+        {% for item in tags %}
+          <a class="tag-chip" href="?tag={{ item|urlencode }}&amp;q={{ query|urlencode }}"{% if item|lower == tag|lower %} aria-current="true"{% endif %}>{{ item }}</a>
+        {% endfor %}
+      </nav>
+    {% endif %}
+    <div class="no-print actions songbook-actions">
       {% if can_manage_songbook %}
         <a class="cta" href="{% url 'private_area:song_create' %}">Cadastrar louvor</a>
       {% endif %}
-      <a class="cta secondary" href="{% url 'private_area:songbook_print' %}?tag={{ tag|urlencode }}&amp;q={{ query|urlencode }}">Imprimir coletânea</a>
-      <a class="cta secondary" href="{% url 'private_area:songbook_print' %}?layout=lyrics&amp;tag={{ tag|urlencode }}&amp;q={{ query|urlencode }}">Só letras</a>
-      <a class="cta secondary" href="{% url 'private_area:songbook_print' %}?layout=chords&amp;tag={{ tag|urlencode }}&amp;q={{ query|urlencode }}">Letras com cifras</a>
-      <a class="cta secondary" href="{% url 'private_area:songbook_print' %}?layout=index&amp;tag={{ tag|urlencode }}&amp;q={{ query|urlencode }}">Índice</a>
-    </p>
+      <details class="print-menu">
+        <summary class="cta secondary">Imprimir</summary>
+        <ul class="print-menu-list">
+          <li><a data-print-link href="{% url 'private_area:songbook_print' %}?tag={{ tag|urlencode }}&amp;q={{ query|urlencode }}">Coletânea completa</a></li>
+          <li><a data-print-link href="{% url 'private_area:songbook_print' %}?layout=lyrics&amp;tag={{ tag|urlencode }}&amp;q={{ query|urlencode }}">Só letras</a></li>
+          <li><a data-print-link href="{% url 'private_area:songbook_print' %}?layout=chords&amp;tag={{ tag|urlencode }}&amp;q={{ query|urlencode }}">Letras com cifras</a></li>
+          <li><a data-print-link href="{% url 'private_area:songbook_print' %}?layout=index&amp;tag={{ tag|urlencode }}&amp;q={{ query|urlencode }}">Índice</a></li>
+        </ul>
+      </details>
+    </div>
     {% if songs %}
-      <ul class="news-list">
+      <ul class="news-list" data-song-list>
         {% for song in songs %}
-          <li>
-            <strong>{{ song.title }}</strong>
+          <li data-title="{{ song.title }}">
+            <a class="song-title" href="{% url 'private_area:song_detail' song.slug %}">{{ song.title }}</a>
             <p class="news-meta">
               {% if song.key %}Tom {{ song.key }}{% endif %}
               {% if song.tags %}{% if song.key %} · {% endif %}{{ song.tags }}{% endif %}
@@ -42,10 +54,10 @@
                 {% state song.status song.get_status_display %}
               {% endif %}
             </p>
-            <p><a href="{% url 'private_area:song_detail' song.slug %}">Abrir louvor</a></p>
           </li>
         {% endfor %}
       </ul>
+      <p class="muted" data-song-empty hidden>Nenhum louvor com esse título.</p>
     {% else %}
       <p class="muted">Nenhum louvor nesta coletânea.</p>
     {% endif %}
