@@ -140,6 +140,13 @@ p { margin: 0 0 1rem; }
 .panel h2 { font-size: 1.8rem; margin-bottom: 1rem; }
 .panel h3 { margin-top: 1.5rem; }
 .panel .cta { margin: .25rem .3rem .25rem 0; }
+.song-lyrics { white-space: pre-wrap; }
+/* Cifra: os acordes dependem do alinhamento das colunas, então o bloco rola sozinho em vez de quebrar a linha. */
+.chord-sheet { max-width: 100%; overflow-x: auto; overflow-wrap: normal; font-size: var(--chord-size, .9rem); line-height: 1.5; padding-bottom: .5rem; }
+.chord-size { display: flex; gap: .4rem; margin-bottom: .75rem; }
+.chord-size[hidden] { display: none; }
+.chord-size-button { min-width: 2.75rem; min-height: 2.75rem; padding: .3rem .6rem; border: 1px solid var(--paper-shade); border-radius: 8px; background: var(--paper); color: inherit; font: inherit; font-weight: 600; cursor: pointer; }
+.chord-size-button:disabled { opacity: .45; cursor: default; }
 .panel-set { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr)); gap: 1.25rem; align-items: start; }
 .rich-text { max-width: var(--measure); }
 .rich-text img { max-width: 100%; height: auto; border-radius: 12px; }

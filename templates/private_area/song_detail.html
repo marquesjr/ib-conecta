@@ -1,7 +1,9 @@
 {% extends "base.html" %}
-{% load state_tags %}
+{% load static state_tags %}
 
 {% block title %}{{ song.title }} — Coletânea de louvores{% endblock %}
+
+{% block extra_head %}<script src="{% static 'js/chord-sheet.js' %}" defer></script>{% endblock %}
 
 {% block share %}{% endblock %}
 
@@ -31,13 +33,17 @@
     {% if song.lyrics %}
       <div class="panel">
         <h2>Letra</h2>
-        <pre>{{ song.lyrics }}</pre>
+        <pre class="song-lyrics">{{ song.lyrics }}</pre>
       </div>
     {% endif %}
     {% if song.chords %}
       <div class="panel">
         <h2>Cifra</h2>
-        <pre>{{ song.chords }}</pre>
+        <div class="chord-size" role="group" aria-label="Tamanho da letra da cifra" hidden>
+          <button type="button" class="chord-size-button" data-chord-step="-1" aria-label="Diminuir letra da cifra">A−</button>
+          <button type="button" class="chord-size-button" data-chord-step="1" aria-label="Aumentar letra da cifra">A+</button>
+        </div>
+        <pre class="chord-sheet" tabindex="0" aria-label="Cifra de {{ song.title }}">{{ song.chords }}</pre>
       </div>
     {% endif %}
     {% if song.versions.all %}
@@ -46,10 +52,10 @@
         {% for version in song.versions.all %}
           <h3>{{ version.name }}{% if version.key %} — Tom {{ version.key }}{% endif %}</h3>
           {% if version.lyrics %}
-            <pre>{{ version.lyrics }}</pre>
+            <pre class="song-lyrics">{{ version.lyrics }}</pre>
           {% endif %}
           {% if version.chords %}
-            <pre>{{ version.chords }}</pre>
+            <pre class="chord-sheet" tabindex="0" aria-label="Cifra de {{ version.name }}">{{ version.chords }}</pre>
           {% endif %}
         {% endfor %}
       </div>
