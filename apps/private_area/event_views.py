@@ -1,3 +1,4 @@
+from decimal import Decimal
 from pathlib import Path
 
 from django.conf import settings
@@ -141,24 +142,44 @@ def event_operation_detail(request: HttpRequest, pk: int) -> HttpResponse:
     )
     can_manage = user_has_permission(request.user, Permission.MANAGE_EVENT_OPERATIONS)
     can_review_finances = user_has_permission(request.user, Permission.MANAGE_FINANCES)
+    registrations = list(EventRegistration.objects.filter(event=operation.public_event))
+    tasks = list(operation.tasks.select_related("assignee"))
+    checklist_items = list(operation.checklist_items.select_related("assignee"))
+    budget_lines = list(operation.budget_lines.all())
+    summary = {
+        "open_tasks": sum(1 for task in tasks if not task.done),
+        "open_checklist": sum(1 for item in checklist_items if not item.done),
+        "budget_approved": sum(
+            (line.amount for line in budget_lines if line.status == BudgetLineStatus.APPROVED),
+            Decimal("0"),
+        ),
+        "budget_pending": sum(
+            (line.amount for line in budget_lines if line.status == BudgetLineStatus.PENDING),
+            Decimal("0"),
+        ),
+        "confirmed_registrations": sum(
+            1 for item in registrations if item.status == EventRegistration.Status.CONFIRMED
+        ),
+    }
     return render(
         request,
         "private_area/event_operation_detail.html",
         {
             "operation": operation,
-            "registrations": EventRegistration.objects.filter(event=operation.public_event),
+            "summary": summary,
+            "registrations": registrations,
             "teams": operation.teams.prefetch_related("members__user"),
             "team_form": EventTeamForm() if can_manage else None,
             "team_member_form": EventTeamMemberForm() if can_manage else None,
-            "tasks": operation.tasks.select_related("assignee"),
+            "tasks": tasks,
             "task_form": EventTaskForm() if can_manage else None,
-            "checklist_items": operation.checklist_items.select_related("assignee"),
+            "checklist_items": checklist_items,
             "checklist_form": EventChecklistForm() if can_manage else None,
             "suppliers": operation.suppliers.all(),
             "supplier_form": EventSupplierForm() if can_manage else None,
             "materials": operation.materials.all(),
             "material_form": EventMaterialForm() if can_manage else None,
-            "budget_lines": operation.budget_lines.all(),
+            "budget_lines": budget_lines,
             "budget_form": EventBudgetLineForm() if can_manage else None,
             "planning_form": EventPlanningForm(instance=operation) if can_manage else None,
             "message_form": EventRegistrantMessageForm() if can_manage else None,
