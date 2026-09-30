@@ -37,11 +37,11 @@
           {{ form.message }}
           {{ form.message.errors }}
         </p>
-        <p>
+        <div class="check-field">
           {{ form.lgpd_consent }}
           {{ form.lgpd_consent.label_tag }}
           {{ form.lgpd_consent.errors }}
-        </p>
+        </div>
         <p class="muted">
           Uso, prazos e direitos estão na
           <a href="{% url 'privacy' %}">política de privacidade</a>.

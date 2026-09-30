@@ -42,9 +42,15 @@
       {% if agenda_index_url %}<a href="{{ agenda_index_url }}">Agenda</a>{% endif %}
       {% if sermon_index_url %}<a href="{{ sermon_index_url }}">Sermões</a>{% endif %}
       {% if live_stream_url %}<a href="{{ live_stream_url }}">Ao vivo</a>{% endif %}
-      {% if user.is_authenticated %}<a href="{% url 'private_area:home' %}">Área privada</a><a href="{% url 'accounts:account_home' %}">Minha conta</a>
-      {% else %}<a href="{% url 'accounts:login' %}">Entrar</a>{% endif %}
-      <a class="cta nav-visit" href="{% url 'plan_visit' %}">Planeje sua visita</a>
+      {% if user.is_authenticated %}
+      <details class="nav-group nav-account"><summary aria-label="Menu da conta de {{ user.get_short_name|default:user.get_username }}"><span class="nav-account-name">{{ user.get_short_name|default:user.get_username }}</span> <svg class="icon-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="nav-dropdown">
+        <p class="nav-account-who">{{ user.get_full_name|default:user.get_username }}</p>
+        <a href="{% url 'private_area:home' %}">Área privada</a>
+        <a href="{% url 'accounts:account_home' %}">Minha conta</a>
+        <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button type="submit">Sair</button></form>
+      </div></details>
+      {% else %}<a href="{% url 'accounts:login' %}">Entrar</a>
+      <a class="cta nav-visit" href="{% url 'plan_visit' %}">Planeje sua visita</a>{% endif %}
     </nav>
   </header>
   <main id="conteudo" tabindex="-1">
@@ -53,6 +59,15 @@
     {% block share %}<div class="share-area">{% whatsapp_share %}</div>{% endblock %}
   </main>
   {% block after_nav %}{% endblock %}
+  {% if request.resolver_match.app_name == "private_area" or request.resolver_match.app_name == "accounts" %}
+  <footer class="site-footer site-footer--compact">
+    <p class="footer-church">Igreja Batista em Santa Leopoldina <span class="footer-product">IB Conecta</span></p>
+    <nav class="footer-links" aria-label="Rodapé">
+      <a href="{% url 'privacy' %}">Privacidade</a>
+      {% if user.is_authenticated %}<form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="footer-logout" type="submit">Sair</button></form>{% endif %}
+    </nav>
+  </footer>
+  {% else %}
   <footer class="site-footer">
     <div class="footer-intro"><h2>Igreja Batista<br>em Santa Leopoldina</h2><p>“Deus é o nosso refúgio e fortaleza”</p>
       <p class="footer-product">IB Conecta</p>
@@ -74,5 +89,6 @@
     </div>
     {% endif %}
   </footer>
+  {% endif %}
 </body>
 </html>

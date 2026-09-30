@@ -6,32 +6,46 @@
 
 {% block content %}
   <section class="cms-page">
-    <h1>Comissão de eventos</h1>
-    <p class="lede">Calendário anual de {{ year }}.</p>
-    <p class="news-meta">
-      <a href="{% url 'private_area:event_calendar' %}?year={{ previous_year }}">{{ previous_year }}</a>
-      · {{ year }}
-      · <a href="{% url 'private_area:event_calendar' %}?year={{ next_year }}">{{ next_year }}</a>
-    </p>
-    <p>
+    <header class="page-heading">
+      <div>
+        <h1>Comissão de eventos</h1>
+        <p class="lede">Calendário anual de {{ year }}.</p>
+      </div>
       {% if can_manage_operations %}
-        <a class="cta" href="{% url 'private_area:event_operation_create' %}">Operar evento</a>
+        <p class="actions">
+          <a class="cta compact" href="{% url 'private_area:event_operation_create' %}">Adicionar evento</a>
+        </p>
       {% endif %}
-    </p>
+    </header>
+    <nav class="year-nav" aria-label="Escolher ano do calendário">
+      <a class="year-nav-step" href="{% url 'private_area:event_calendar' %}?year={{ previous_year }}" aria-label="Ano anterior, {{ previous_year }}">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+        <span>{{ previous_year }}</span>
+      </a>
+      <strong class="year-nav-current" aria-current="page">{{ year }}</strong>
+      <a class="year-nav-step" href="{% url 'private_area:event_calendar' %}?year={{ next_year }}" aria-label="Próximo ano, {{ next_year }}">
+        <span>{{ next_year }}</span>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      </a>
+    </nav>
     {% if operations %}
-      <ul class="news-list">
-        {% for operation in operations %}
-          <li>
-            <a href="{% url 'private_area:event_operation_detail' operation.pk %}">
-              {{ operation.public_event.title }}
-            </a>
-            <p class="news-meta">
-              {% if operation.public_event.is_retreat %}Retiro · {% endif %}
-              {{ operation.public_event.starts_at|date:"d/m/Y H:i" }}
-            </p>
-          </li>
-        {% endfor %}
-      </ul>
+      {% regroup operations by public_event.starts_at|date:"F" as months %}
+      {% for month in months %}
+        <h2 class="section-label calendar-month">{{ month.grouper|capfirst }}</h2>
+        <ul class="news-list">
+          {% for operation in month.list %}
+            <li>
+              <a href="{% url 'private_area:event_operation_detail' operation.pk %}">
+                {{ operation.public_event.title }}
+              </a>
+              <p class="news-meta">
+                {% if operation.public_event.is_retreat %}Retiro · {% endif %}
+                {{ operation.public_event.starts_at|date:"d/m/Y H:i" }}
+              </p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endfor %}
     {% else %}
       <p class="muted">Ainda não há eventos em operação neste ano.</p>
     {% endif %}

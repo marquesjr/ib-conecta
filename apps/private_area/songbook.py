@@ -30,6 +30,17 @@ def filter_songs(queryset: QuerySet[Song], *, query: str = "", tag: str = "") ->
     return queryset
 
 
+def song_tags(queryset: QuerySet[Song]) -> list[str]:
+    """Tags distintas da coletânea, na ordem alfabética, para os chips de filtro."""
+    tags: dict[str, str] = {}
+    for raw in queryset.values_list("tags", flat=True):
+        for tag in raw.split(","):
+            tag = tag.strip()
+            if tag:
+                tags.setdefault(tag.casefold(), tag)
+    return sorted(tags.values(), key=str.casefold)
+
+
 def resolve_print_layout(value: str | None) -> str:
     if value in PRINT_LAYOUTS:
         return value

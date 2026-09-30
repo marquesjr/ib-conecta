@@ -1,7 +1,11 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags public_tags %}
+{% load static wagtailcore_tags public_tags %}
 
 {% block title %}{{ page.title }} — Igreja Batista em Santa Leopoldina{% endblock %}
+
+{% block extra_head %}
+  {% if page.is_retreat and page.requires_registration %}<script src="{% static 'js/retreat-form.js' %}" defer></script>{% endif %}
+{% endblock %}
 
 {% block content %}
   <article class="cms-page">
@@ -48,25 +52,74 @@
             Veja a <a href="{% url 'privacy' %}">política de privacidade</a>.
           </p>
         {% endif %}
-        <form method="post" action="{{ page.url }}inscrever/">
-          {% csrf_token %}
-          {{ registration_form.as_p }}
-          {% if page.is_retreat and family_formset %}
-            {{ family_formset.management_form }}
-            {% for member_form in family_formset %}
-              <fieldset>
-                <legend>Familiar {{ forloop.counter }} (opcional)</legend>
-                {{ member_form.as_p }}
+        {% if page.is_retreat %}
+          <form class="retreat-form" method="post" action="{{ page.url }}inscrever/">
+            {% csrf_token %}
+            {{ registration_form.non_field_errors }}
+            {% for field in registration_form.hidden_fields %}{{ field }}{% endfor %}
+            {% for section in registration_form.sections %}
+              <fieldset class="form-section">
+                <legend>{{ section.title }}</legend>
+                {% if section.hint %}<p class="helptext">{{ section.hint }}</p>{% endif %}
+                <div class="form-grid">
+                  {% for field in section.fields %}
+                    <div class="form-field{% if field.widget_type == 'textarea' %} form-field-wide{% endif %}">
+                      {{ field.as_field_group }}
+                    </div>
+                  {% endfor %}
+                </div>
               </fieldset>
             {% endfor %}
-          {% endif %}
-          <button class="cta" type="submit">Confirmar inscrição</button>
-        </form>
+            {% if family_formset %}
+              <fieldset class="form-section" data-family-members>
+                <legend>Familiares</legend>
+                <p class="helptext">Inscreva junto quem vai com você. Quem vai sozinho pode pular esta parte.</p>
+                {{ family_formset.management_form }}
+                {{ family_formset.non_form_errors }}
+                {% for member_form in family_formset %}
+                  <fieldset class="family-member"{% if not member_form.has_changed and not member_form.errors %} data-empty{% endif %}>
+                    <legend>Familiar {{ forloop.counter }}</legend>
+                    <div class="form-grid">
+                      {% for field in member_form.visible_fields %}
+                        <div class="form-field{% if field.widget_type == 'textarea' %} form-field-wide{% endif %}">
+                          {{ field.as_field_group }}
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </fieldset>
+                {% endfor %}
+                <template data-family-template>
+                  <fieldset class="family-member">
+                    <legend>Familiar __number__</legend>
+                    <div class="form-grid">
+                      {% for field in family_formset.empty_form.visible_fields %}
+                        <div class="form-field{% if field.widget_type == 'textarea' %} form-field-wide{% endif %}">
+                          {{ field.as_field_group }}
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </fieldset>
+                </template>
+                <button class="cta secondary" type="button" data-add-family hidden>Adicionar familiar</button>
+              </fieldset>
+            {% endif %}
+            {% for field in registration_form.closing_fields %}
+              <div class="form-field">{{ field.as_field_group }}</div>
+            {% endfor %}
+            <button class="cta" type="submit">Confirmar inscrição</button>
+          </form>
+        {% else %}
+          <form method="post" action="{{ page.url }}inscrever/">
+            {% csrf_token %}
+            {{ registration_form.as_p }}
+            <button class="cta" type="submit">Confirmar inscrição</button>
+          </form>
+        {% endif %}
       </div>
     {% endif %}
   </article>
 {% endblock %}
 
 {% block share %}
-  {% whatsapp_share page.title %}
+  <div class="share-area">{% whatsapp_share page.title %}</div>
 {% endblock %}

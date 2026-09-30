@@ -27,8 +27,10 @@
                 {% if sermon.intro %}
                   <span class="register-note">{{ sermon.intro }}</span>
                 {% endif %}
-                {# Sermão com áudio ou vídeo é a norma; quem varre precisa saber
-                   quando *não* há o que ouvir. Marcar a exceção, não a regra. #}
+                {% comment %}
+                  Sermão com áudio ou vídeo é a norma; quem varre precisa saber
+                  quando *não* há o que ouvir. Marcar a exceção, não a regra.
+                {% endcomment %}
                 {% if not sermon.media_url %}
                   <span class="register-tags">
                     <span class="register-tag">Somente texto</span>
