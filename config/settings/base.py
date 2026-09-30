@@ -113,6 +113,8 @@ PRIVATE_MEDIA_ROOT = Path(
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+AUTHENTICATION_BACKENDS = ["apps.accounts.backends.EmailOrUsernameBackend"]
+
 LOGIN_URL = "accounts:login"
 LOGIN_REDIRECT_URL = "accounts:account_home"
 LOGOUT_REDIRECT_URL = "home"

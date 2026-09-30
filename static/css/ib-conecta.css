@@ -572,6 +572,16 @@ form select:focus {
   outline-offset: 2px;
 }
 
+/* Login: campo de senha com botão "Mostrar senha" e link separado do botão (#78). */
+.password-field { display: flex; align-items: stretch; gap: var(--space-xs); max-width: 28rem; }
+.password-field input[type="password"],
+.password-field input[type="text"] { flex: 1; min-width: 0; }
+.password-toggle { flex: none; min-height: 44px; padding: 0 .8rem; border: var(--hair) solid var(--archive-gray); border-radius: 8px; background: var(--paper); color: var(--ink-red); font: inherit; font-size: .85rem; font-weight: 600; cursor: pointer; }
+.password-toggle:hover { background: var(--paper-warm); }
+.password-toggle:focus-visible { outline: 2px solid var(--ink-red); outline-offset: 2px; }
+.login-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md) var(--space-lg); margin-top: var(--space-lg); }
+.panel .login-actions .cta { margin: 0; }
+
 form input[type="checkbox"],
 form input[type="radio"] {
   width: auto;

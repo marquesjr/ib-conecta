@@ -3,8 +3,22 @@ from django.contrib.auth.forms import AuthenticationForm
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(label="Usuário")
-    password = forms.CharField(label="Senha", widget=forms.PasswordInput)
+    username = forms.CharField(
+        label="E-mail ou usuário",
+        widget=forms.TextInput(
+            attrs={"autocomplete": "username", "autocapitalize": "none", "spellcheck": "false"}
+        ),
+    )
+    password = forms.CharField(
+        label="Senha",
+        strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "current-password"}),
+    )
+
+    error_messages = {
+        **AuthenticationForm.error_messages,
+        "invalid_login": "E-mail, usuário ou senha incorretos. Confira e tente de novo.",
+    }
 
 
 class OTPTokenForm(forms.Form):
