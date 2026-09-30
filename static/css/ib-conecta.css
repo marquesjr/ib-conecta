@@ -725,11 +725,10 @@ th, td { padding: .85rem; min-width: 5rem; }
   .has-js .site-header nav.is-open { display: flex; }
   .nav-dropdown { left: 0; right: auto; }
   .nav-visit { font-size: .95rem; }
-  .welcome { grid-template-columns: 1fr; padding: .5rem var(--page-gutter) 2rem; gap: 1.25rem; }
+  .welcome { grid-template-columns: minmax(0, 1fr) minmax(0, 17rem); padding: .5rem var(--page-gutter) 2rem; gap: 1.75rem; }
   .welcome-copy { padding: 0; }
-  .welcome h1 { font-size: clamp(2.6rem, 7.5vw, 4.5rem); max-width: 16ch; }
-  .welcome-photo { order: -1; }
-  .welcome-photo img { aspect-ratio: 4 / 3; object-position: 50% 30%; border-radius: 14px; }
+  .welcome h1 { font-size: clamp(2.4rem, 5.6vw, 3.4rem); max-width: 16ch; }
+  .welcome-photo img { border-radius: 14px; }
   .welcome .lede { max-width: 58ch; }
   .visit-inner { grid-template-columns: 1fr; gap: 1.2rem; padding-block: 1.6rem; }
   .visit-inner > div + div { border-left: 0; border-top: 1px solid #b06e75; padding: 1.2rem 0 0; }
@@ -744,6 +743,10 @@ th, td { padding: .85rem; min-width: 5rem; }
   .site-footer { grid-template-columns: 1fr 1fr; gap: 2rem; }
   .footer-location { grid-column: 1 / -1; }
   .footer-map { aspect-ratio: auto; height: 20rem; }
+}
+@media (max-width: 600px) {
+  .welcome { grid-template-columns: 1fr; gap: 1.5rem; }
+  .welcome-photo img { aspect-ratio: 16 / 9; object-position: 50% 20%; }
 }
 @media (max-width: 600px) {
   .brand-image { height: 58px; }
