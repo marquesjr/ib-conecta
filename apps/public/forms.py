@@ -241,9 +241,38 @@ class RetreatRegistrationForm(forms.Form):
         ),
     )
 
+    # Seções exibidas como blocos separados no formulário público; os campos
+    # fora delas (o consentimento) aparecem no fim, depois dos familiares.
+    SECTIONS = (
+        ("Você", "", ("name", "email", "phone", "birth_date")),
+        (
+            "Responsável e emergência",
+            "O responsável legal é obrigatório quando houver menores de 18 anos.",
+            (
+                "guardian_name",
+                "guardian_phone",
+                "guardian_relationship",
+                "emergency_name",
+                "emergency_phone",
+            ),
+        ),
+        ("Saúde", "", ("dietary_restrictions", "medical_notes")),
+        ("Transporte e hospedagem", "", ("transport_needed", "boarding_point", "accommodation")),
+    )
+
     def __init__(self, *args, event=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.event = event
+
+    def sections(self):
+        return [
+            {"title": title, "hint": hint, "fields": [self[name] for name in names]}
+            for title, hint, names in self.SECTIONS
+        ]
+
+    def closing_fields(self):
+        in_sections = {name for _, _, names in self.SECTIONS for name in names}
+        return [field for field in self.visible_fields() if field.name not in in_sections]
 
     def clean(self):
         data = super().clean()

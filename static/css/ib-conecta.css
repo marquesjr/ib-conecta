@@ -575,6 +575,24 @@ form input[type="radio"] {
   color: var(--archive-gray);
 }
 
+/* Formulário em seções (inscrição do retiro): uma coluna no celular, duas no computador. */
+.form-section { margin: 0 0 1.5rem; padding: 0; border: 0; min-width: 0; }
+.form-section > legend { padding: 0; margin-bottom: .75rem; font-family: var(--font-display); font-size: 1.3rem; color: var(--graphite); }
+.form-section > .helptext { margin: -.35rem 0 .85rem; }
+.form-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 1.25rem; }
+.form-field { margin: 0 0 .85rem; min-width: 0; }
+.form-grid .form-field input:not([type="checkbox"]):not([type="radio"]),
+.form-grid .form-field textarea,
+.form-grid .form-field select { max-width: none; }
+.form-grid .form-field textarea { min-height: 4.5rem; }
+.family-member { margin: 0 0 1rem; padding: 1rem 1rem .25rem; border: 1px solid var(--paper-shade); border-radius: 10px; min-width: 0; }
+.family-member > legend { padding: 0 .35rem; font-weight: 600; color: var(--graphite); }
+.family-member[hidden] { display: none; }
+@media (min-width: 48rem) {
+  .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .form-field-wide { grid-column: 1 / -1; }
+}
+
 
 
 table {
