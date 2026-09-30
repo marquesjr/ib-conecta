@@ -95,6 +95,14 @@ p { margin: 0 0 1rem; }
 .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 2rem; margin-bottom: 1.5rem; }
 .section-heading p { margin-bottom: 0; }
 .instagram-link { font-size: .85rem; overflow-wrap: anywhere; }
+/* "Ver todos" de cada seção da home: um só link no fim da seção; em telas largas sobe para a direita do título. */
+.home-section { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-content: start; column-gap: 2rem; }
+.home-section > * { grid-column: 1 / -1; min-width: 0; }
+.home-section > .section-heading { grid-column: 1; grid-row: 1; }
+.home-section > .section-more { grid-column: 2; grid-row: 1; align-self: end; justify-self: end; margin-bottom: 1.5rem; }
+@media (max-width: 900px) {
+  .home-section > .section-more { grid-column: 1 / -1; grid-row: auto; justify-self: start; margin: 1.25rem 0 0; }
+}
 .image-notice { font-size: .85rem; color: var(--archive-gray); max-width: 72ch; margin-bottom: 1.5rem; scroll-margin-top: 1rem; }
 /* Mural em slide: páginas inteiras de cartazes, setas no título. Sem JavaScript, continua deslizável. */
 .mural-aside { display: flex; align-items: center; gap: 1.5rem; }
@@ -710,7 +718,6 @@ th, td { padding: .85rem; min-width: 5rem; }
   .mural, .community, .home-news { margin-top: 3.5rem; }
   .mural-track { grid-auto-columns: 78%; margin-right: calc(-1 * var(--page-gutter)); padding-right: var(--page-gutter); scroll-padding-right: var(--page-gutter); }
   .mural-aside { width: 100%; flex-wrap: wrap; gap: .75rem; }
-  .mural-aside .instagram-link { flex-basis: 100%; }
   .mural-controls:not([hidden]) { margin-left: auto; }
   .community-photo figcaption { left: .5rem; right: .5rem; bottom: .5rem; font-size: .75rem; }
   .editorial-list a { grid-template-columns: 3.6rem minmax(0, 1fr) auto; gap: .75rem; }
