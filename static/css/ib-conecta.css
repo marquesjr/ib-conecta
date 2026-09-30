@@ -812,6 +812,11 @@ th, td { padding: .85rem; min-width: 5rem; }
 .check-field input { margin: .2rem 0 0; }
 .check-field label { margin: 0; min-height: 32px; cursor: pointer; }
 .check-field .errorlist { grid-column: 2; }
+/* Caixas de seleção renderizadas por form.as_p (<p><label> <input>) seguem o mesmo padrão de .check-field: caixa à esquerda, rótulo clicável ao lado. */
+form p:has(> input[type="checkbox"]) { display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: start; gap: .25rem .65rem; margin-bottom: 1rem; }
+form p:has(> input[type="checkbox"]) > input[type="checkbox"] { grid-column: 1; grid-row: 1; margin: .2rem 0 0; }
+form p:has(> input[type="checkbox"]) > label { grid-column: 2; grid-row: 1; margin: 0; min-height: 32px; cursor: pointer; }
+form p:has(> input[type="checkbox"]) > .helptext { grid-column: 2; }
 .tag, .register-tag { border-radius: 5px; }
 .state { border-radius: 999px; }
 @keyframes welcome-reveal { from { clip-path: inset(0 3% 0 0 round 18px); } to { clip-path: inset(0 0 0 0 round 18px); } }
