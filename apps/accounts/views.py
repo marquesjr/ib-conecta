@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import (
+    PasswordChangeView,
     PasswordResetCompleteView,
     PasswordResetConfirmView,
     PasswordResetDoneView,
@@ -15,7 +16,12 @@ from django.views.decorators.http import require_http_methods
 
 from apps.accounts.audit import AuditAction, log_audit
 from apps.accounts.decorators import permission_required
-from apps.accounts.forms import LoginForm, OTPTokenForm
+from apps.accounts.forms import (
+    AccountDetailsForm,
+    AccountPasswordChangeForm,
+    LoginForm,
+    OTPTokenForm,
+)
 from apps.accounts.models import Role
 from apps.accounts.permissions import Permission, user_has_permission
 
@@ -69,29 +75,53 @@ def logout_view(request: HttpRequest) -> HttpResponse:
 
 
 @login_required
+@require_http_methods(["GET", "POST"])
 def account_home(request: HttpRequest) -> HttpResponse:
+    user = request.user
+    details_form = AccountDetailsForm(request.POST or None, instance=user)
+    if request.method == "POST" and details_form.is_valid():
+        details_form.save()
+        log_audit(
+            actor=user,
+            action=AuditAction.ACCOUNT_DETAILS_UPDATED,
+            metadata={"username": user.username, "fields": details_form.changed_data},
+        )
+        messages.success(request, "Seus dados foram atualizados.")
+        return redirect("accounts:account_home")
+
     can_manage_event_registrations = user_has_permission(
-        request.user, Permission.MANAGE_EVENT_OPERATIONS
-    ) or user_has_permission(request.user, Permission.MANAGE_CONTENT)
-    can_manage_prayer_requests = user_has_permission(
-        request.user, Permission.MANAGE_PRAYER_REQUESTS
-    )
-    can_access_event_operations = user_has_permission(
-        request.user, Permission.MANAGE_EVENT_OPERATIONS
-    ) or user_has_permission(request.user, Permission.MANAGE_FINANCES)
-    can_manage_content = user_has_permission(request.user, Permission.MANAGE_CONTENT)
+        user, Permission.MANAGE_EVENT_OPERATIONS
+    ) or user_has_permission(user, Permission.MANAGE_CONTENT)
+    can_manage_prayer_requests = user_has_permission(user, Permission.MANAGE_PRAYER_REQUESTS)
+    can_manage_content = user_has_permission(user, Permission.MANAGE_CONTENT)
     return render(
         request,
         "accounts/account_home.html",
         {
-            "profile": request.user.profile,
-            "can_manage_2fa": user_has_permission(request.user, Permission.MANAGE_TWO_FACTOR),
+            "profile": user.profile,
+            "details_form": details_form,
+            "can_manage_2fa": user_has_permission(user, Permission.MANAGE_TWO_FACTOR),
             "can_manage_event_registrations": can_manage_event_registrations,
             "can_manage_prayer_requests": can_manage_prayer_requests,
-            "can_access_event_operations": can_access_event_operations,
             "can_manage_content": can_manage_content,
         },
     )
+
+
+class AccountPasswordChangeView(PasswordChangeView):
+    form_class = AccountPasswordChangeForm
+    template_name = "accounts/password_change.html"
+    success_url = reverse_lazy("accounts:account_home")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        log_audit(
+            actor=self.request.user,
+            action=AuditAction.PASSWORD_CHANGED,
+            metadata={"username": self.request.user.username},
+        )
+        messages.success(self.request, "Senha alterada.")
+        return response
 
 
 @require_http_methods(["GET", "POST"])
