@@ -104,7 +104,7 @@ def two_factor_verify(request: HttpRequest) -> HttpResponse:
     form = OTPTokenForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         if user.profile.verify_totp(form.cleaned_data["token"]):
-            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+            login(request, user, backend="apps.accounts.backends.EmailOrUsernameBackend")
             request.session.pop(OTP_SESSION_KEY, None)
             log_audit(
                 actor=user,
