@@ -8,6 +8,7 @@ from django.db import IntegrityError, transaction
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_http_methods
 
 from apps.accounts.audit import AuditAction, log_audit
@@ -188,8 +189,14 @@ def schedule_detail(request: HttpRequest, pk: int) -> HttpResponse:
     )
     now = timezone.now()
     services = _group_by_service(assignments, now)
+    upcoming_services = [s for s in services if not s.is_past]
+    # Os totais do topo falam dos próximos cultos; os já realizados ficam
+    # recolhidos e só entram na conta quando não há mais nenhum pela frente.
+    summary_assignments = (
+        [a for s in upcoming_services for a in s.assignments] if upcoming_services else assignments
+    )
     status_counts = {status: 0 for status in AssignmentStatus.values}
-    for assignment in assignments:
+    for assignment in summary_assignments:
         status_counts[assignment.status] += 1
     return render(
         request,
@@ -197,7 +204,7 @@ def schedule_detail(request: HttpRequest, pk: int) -> HttpResponse:
         {
             "schedule": schedule,
             "assignments": assignments,
-            "upcoming_services": [s for s in services if not s.is_past],
+            "upcoming_services": upcoming_services,
             "past_services": [s for s in services if s.is_past],
             "my_pending": [
                 a
@@ -206,6 +213,7 @@ def schedule_detail(request: HttpRequest, pk: int) -> HttpResponse:
                 and a.status == AssignmentStatus.PENDING
                 and a.starts_at >= now
             ],
+            "summary_total": len(summary_assignments),
             "confirmed_count": status_counts[AssignmentStatus.CONFIRMED],
             "pending_count": status_counts[AssignmentStatus.PENDING],
             "declined_count": status_counts[AssignmentStatus.DECLINED],
@@ -319,6 +327,13 @@ def assignment_respond(request: HttpRequest, pk: int) -> HttpResponse:
                 metadata={"assignment_id": assignment.pk},
             )
             messages.success(request, "Convocação recusada.")
+        next_url = request.POST.get("next", "")
+        if url_has_allowed_host_and_scheme(
+            next_url,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        ):
+            return redirect(next_url)
         return redirect("private_area:assignment_respond", pk=assignment.pk)
     return render(
         request,

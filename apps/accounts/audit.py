@@ -12,6 +12,8 @@ class AuditAction:
     TWO_FACTOR_ENABLED = "two_factor_enabled"
     PASSWORD_RESET_REQUESTED = "password_reset_requested"
     PASSWORD_RESET_COMPLETED = "password_reset_completed"
+    PASSWORD_CHANGED = "password_changed"
+    ACCOUNT_DETAILS_UPDATED = "account_details_updated"
     ROLE_CHANGED = "role_changed"
     PRAYER_REQUEST_STATUS_CHANGED = "prayer_request_status_changed"
     KNOW_CHURCH_CONTACT_STATUS_CHANGED = "know_church_contact_status_changed"
@@ -37,6 +39,8 @@ class AuditAction:
     SONG_PUBLISHED = "song_published"
     PLAYLIST_CREATED = "playlist_created"
     PLAYLIST_ITEM_ADDED = "playlist_item_added"
+    PLAYLIST_ITEM_REMOVED = "playlist_item_removed"
+    PLAYLIST_REORDERED = "playlist_reordered"
 
 
 REDACT_KEYS = {

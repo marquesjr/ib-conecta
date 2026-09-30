@@ -532,7 +532,7 @@ def _seed_public_inbox(events: dict, *, force: bool) -> None:
         )
         EventRegistration.objects.create(
             event=retreat,
-            name="Família Rocha (lista de espera)",
+            name="Família Rocha",
             email="rocha@demo.ibconecta.local",
             phone="27988880009",
             birth_date="1982-03-30",
@@ -620,8 +620,15 @@ def _seed_private_area(users: dict, *, force: bool) -> dict[str, int]:
 
     louvor, _ = Ministry.objects.get_or_create(
         name="Louvor",
-        defaults={"description": "Cânticos, instrumentos e projeção.", "created_by": lider},
+        defaults={
+            "description": "Cânticos, instrumentos e projeção.",
+            "uses_repertoire": True,
+            "created_by": lider,
+        },
     )
+    if not louvor.uses_repertoire:
+        louvor.uses_repertoire = True
+        louvor.save(update_fields=["uses_repertoire"])
     Ministry.objects.get_or_create(
         name="Recepção",
         defaults={"description": "Acolhida na porta e na nave.", "created_by": lider},

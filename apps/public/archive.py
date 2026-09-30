@@ -52,6 +52,7 @@ def _seeded(count):
                 "permalink": "",
                 "kind": "photo",
                 "featured": False,
+                "focus": "",
                 "synthetic": True,
             }
         )
@@ -78,6 +79,20 @@ def _byline(credit):
     return credit
 
 
+# Ponto de foco escolhido no CMS, como valor de ``object-position``. O centro
+# fica vazio: é o padrão do navegador e dispensa o atributo ``style``.
+FOCAL_POSITIONS = {
+    "top": "50% 0%",
+    "bottom": "50% 100%",
+    "left": "0% 50%",
+    "right": "100% 50%",
+    "top-left": "0% 0%",
+    "top-right": "100% 0%",
+    "bottom-left": "0% 100%",
+    "bottom-right": "100% 100%",
+}
+
+
 def _as_frame(record):
     return {
         "url": record.image.url,
@@ -89,6 +104,7 @@ def _as_frame(record):
         "permalink": record.permalink,
         "kind": record.kind,
         "featured": record.featured,
+        "focus": FOCAL_POSITIONS.get(record.focal_point, ""),
         "synthetic": False,
     }
 

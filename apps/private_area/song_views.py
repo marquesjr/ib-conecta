@@ -16,6 +16,7 @@ from apps.private_area.songbook import (
     filter_songs,
     print_references,
     resolve_print_layout,
+    song_tags,
     visible_songs,
 )
 
@@ -37,7 +38,8 @@ def _song_forms(request: HttpRequest, song: Song):
 def songbook(request: HttpRequest) -> HttpResponse:
     query = request.GET.get("q", "")
     tag = request.GET.get("tag", "")
-    songs = filter_songs(visible_songs(request.user), query=query, tag=tag)
+    visible = visible_songs(request.user)
+    songs = filter_songs(visible, query=query, tag=tag)
     return render(
         request,
         "private_area/songbook.html",
@@ -45,6 +47,7 @@ def songbook(request: HttpRequest) -> HttpResponse:
             "songs": songs,
             "query": query,
             "tag": tag,
+            "tags": song_tags(visible),
             "can_manage_songbook": can_manage_songbook(request.user),
         },
     )
