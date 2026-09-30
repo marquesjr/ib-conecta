@@ -645,6 +645,19 @@ form input:disabled, form select:disabled { background: var(--paper-warm); color
 form [aria-invalid="true"] { border-color: var(--ink-red); }
 .form-errors .errorlist { margin: 0; padding: 0; border: 0; background: none; }
 .helptext { font-size: .85rem; }
+/* Formulários longos em seções, com salvar fixo no rodapé (cadastro de louvor). */
+.sectioned-form .form-section { margin: 0 0 1.5rem; padding: 1.25rem 1.25rem .5rem; border: 1px solid var(--paper-shade); border-radius: 12px; background: var(--mount); }
+.sectioned-form .form-section > legend { padding: 0 .4rem; font-size: 1.15rem; font-weight: 600; color: var(--graphite); }
+.sectioned-form .form-field, .sectioned-form .form-section p { margin: 0 0 1rem; }
+.sectioned-form .form-field > label { margin-bottom: .3rem; }
+.sectioned-form .form-section-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0 1rem; }
+.sectioned-form .form-section-item + .form-section-item { padding-top: 1rem; border-top: 1px solid var(--paper-shade); }
+.sectioned-form textarea { min-height: 4.5rem; max-height: 70vh; field-sizing: content; resize: vertical; }
+.form-sticky-actions { position: sticky; bottom: 0; z-index: 10; display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.25rem; margin: 0 calc(-1 * var(--page-gutter)); padding: .75rem var(--page-gutter); border-top: 1px solid var(--paper-shade); background: var(--paper); }
+@media (max-width: 40rem) {
+  .sectioned-form .form-section { padding: 1rem .85rem .25rem; }
+  .form-sticky-actions .cta { flex: 1 1 auto; }
+}
 table { display: block; max-width: 100%; overflow-x: auto; }
 .table-scroll { max-width: 100%; overflow-x: auto; }
 .table-scroll > table { display: table; overflow: visible; }
