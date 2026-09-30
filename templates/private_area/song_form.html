@@ -1,6 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}{% if editing %}Revisar louvor{% else %}Cadastrar louvor{% endif %} — Igreja Batista em Santa Leopoldina{% endblock %}
+
+{% block extra_head %}<script src="{% static 'js/song-form.js' %}" defer></script>{% endblock %}
 
 {% block share %}{% endblock %}
 
@@ -10,21 +13,57 @@
     <p class="lede">
       Só armazene letra, cifra ou partitura com autorização de uso registrada.
     </p>
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" class="sectioned-form">
       {% csrf_token %}
-      {{ form.as_p }}
-      <h2>Referências externas</h2>
-      {{ references.management_form }}
-      {% for reference_form in references %}
-        {{ reference_form.as_p }}
-      {% endfor %}
-      <h2>Versões</h2>
-      {{ versions.management_form }}
-      {% for version_form in versions %}
-        {{ version_form.as_p }}
-      {% endfor %}
-      <button class="cta" type="submit">{% if editing %}Salvar revisão{% else %}Salvar rascunho{% endif %}</button>
+      {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+      {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+
+      <fieldset class="form-section" id="secao-dados">
+        <legend>Dados</legend>
+        <div class="form-field">{{ form.title.as_field_group }}</div>
+        <div class="form-section-row">
+          <div class="form-field">{{ form.key.as_field_group }}</div>
+          <div class="form-field">{{ form.tempo.as_field_group }}</div>
+        </div>
+        <div class="form-field">{{ form.tags.as_field_group }}</div>
+      </fieldset>
+
+      <fieldset class="form-section" id="secao-letra">
+        <legend>Letra e cifra</legend>
+        <div class="form-field">{{ form.lyrics.as_field_group }}</div>
+        <div class="form-field">{{ form.chords.as_field_group }}</div>
+        <div class="form-field">{{ form.score.as_field_group }}</div>
+      </fieldset>
+
+      <fieldset class="form-section" id="secao-licenca">
+        <legend>Licença</legend>
+        <div class="form-field">{{ form.authors.as_field_group }}</div>
+        <div class="form-field">{{ form.source.as_field_group }}</div>
+        <div class="form-field">{{ form.license.as_field_group }}</div>
+        <div class="form-field">{{ form.permitted_uses.as_field_group }}</div>
+        <div class="form-field">{{ form.authorized.as_field_group }}</div>
+      </fieldset>
+
+      <fieldset class="form-section" id="secao-referencias">
+        <legend>Referências externas</legend>
+        {{ references.management_form }}
+        {% for reference_form in references %}
+          <div class="form-section-item">{{ reference_form.as_p }}</div>
+        {% endfor %}
+      </fieldset>
+
+      <fieldset class="form-section" id="secao-versoes">
+        <legend>Versões</legend>
+        {{ versions.management_form }}
+        {% for version_form in versions %}
+          <div class="form-section-item">{{ version_form.as_p }}</div>
+        {% endfor %}
+      </fieldset>
+
+      <div class="form-sticky-actions">
+        <button class="cta" type="submit">{% if editing %}Salvar revisão{% else %}Salvar rascunho{% endif %}</button>
+        <a href="{% url 'private_area:songbook' %}">Voltar à coletânea</a>
+      </div>
     </form>
-    <p><a href="{% url 'private_area:songbook' %}">Voltar à coletânea</a></p>
   </section>
 {% endblock %}
