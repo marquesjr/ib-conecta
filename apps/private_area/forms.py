@@ -379,7 +379,8 @@ class WeeklyPlaylistForm(forms.ModelForm):
 class PlaylistItemForm(forms.ModelForm):
     class Meta:
         model = PlaylistItem
-        fields = ("song", "version", "key", "notes", "position")
+        fields = ("song", "version", "key", "notes")
+        widgets = {"notes": forms.Textarea(attrs={"rows": 2})}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -392,8 +393,6 @@ class PlaylistItemForm(forms.ModelForm):
         self.fields["version"].required = False
         self.fields["key"].required = False
         self.fields["notes"].required = False
-        self.fields["position"].required = False
-        self.fields["position"].help_text = "Deixe em branco para colocar no fim."
 
     def clean_song(self):
         song = self.cleaned_data["song"]
