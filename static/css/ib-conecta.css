@@ -127,7 +127,7 @@ p { margin: 0 0 1rem; }
 .mural-track > li { scroll-snap-align: start; }
 .poster { margin: 0; }
 .poster a { display: block; }
-.poster img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; background: var(--mount); border: 1px solid var(--paper-shade); border-radius: 12px; }
+.poster img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: contain; background: var(--mount); border: 1px solid var(--paper-shade); border-radius: 12px; }
 .poster figcaption { padding-top: .55rem; font-size: .88rem; line-height: 1.35; }
 .poster-date { display: block; margin-top: .15rem; color: var(--archive-gray); font-size: .8rem; }
 .mosaic { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: repeat(2, 15rem); gap: 1.25rem; }

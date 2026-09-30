@@ -835,6 +835,17 @@ class ArchiveFrame(models.Model):
         PHOTO = "photo", "Fotografia"
         ART = "art", "Arte ou cartaz"
 
+    class FocalPoint(models.TextChoices):
+        CENTER = "center", "Centro"
+        TOP = "top", "Topo"
+        BOTTOM = "bottom", "Base"
+        LEFT = "left", "Esquerda"
+        RIGHT = "right", "Direita"
+        TOP_LEFT = "top-left", "Topo à esquerda"
+        TOP_RIGHT = "top-right", "Topo à direita"
+        BOTTOM_LEFT = "bottom-left", "Base à esquerda"
+        BOTTOM_RIGHT = "bottom-right", "Base à direita"
+
     source = models.CharField(
         max_length=20,
         default=Source.CURATED,
@@ -901,11 +912,22 @@ class ArchiveFrame(models.Model):
         verbose_name="Destaque na abertura",
         help_text="Só vale para fotografia. Sem destaque, a abertura usa a fotografia mais recente.",
     )
+    focal_point = models.CharField(
+        max_length=12,
+        default=FocalPoint.CENTER,
+        choices=FocalPoint.choices,
+        verbose_name="Ponto de foco",
+        help_text=(
+            "Parte da fotografia que não pode sumir quando o quadro é recortado "
+            "no mosaico. Artes vão inteiras para o Mural e não são recortadas."
+        ),
+    )
 
     panels = [
         FieldPanel("image"),
         FieldPanel("kind"),
         FieldPanel("featured"),
+        FieldPanel("focal_point"),
         FieldPanel("alt_text"),
         FieldPanel("caption"),
         FieldPanel("credit"),
