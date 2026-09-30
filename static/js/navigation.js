@@ -24,12 +24,16 @@
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape') return;
     const group = document.querySelector('.nav-group[open]');
-    if (group) { group.open = false; group.querySelector('summary').focus(); }
+    if (group) {
+      document.querySelectorAll('.nav-group[open]').forEach((open) => { open.open = false; });
+      group.querySelector('summary').focus();
+    }
     else if (toggle.getAttribute('aria-expanded') === 'true') { close(); toggle.focus(); }
   });
   document.addEventListener('click', (event) => {
-    const group = document.querySelector('.nav-group[open]');
-    if (group && !group.contains(event.target)) group.open = false;
+    document.querySelectorAll('.nav-group[open]').forEach((group) => {
+      if (!group.contains(event.target)) group.open = false;
+    });
     if (!event.target.closest('.site-header')) close();
   });
   nav.querySelectorAll('a').forEach((link) => {
