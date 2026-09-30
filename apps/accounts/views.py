@@ -8,9 +8,10 @@ from django.contrib.auth.views import (
     PasswordResetDoneView,
     PasswordResetView,
 )
+from django.db.models import Case, Count, IntegerField, Value, When
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_http_methods
 
 from apps.accounts.audit import AuditAction, log_audit
@@ -186,12 +187,33 @@ def event_registration_cancel(request: HttpRequest, pk: int) -> HttpResponse:
 def prayer_requests(request: HttpRequest) -> HttpResponse:
     from apps.public.models import PrayerRequest
 
+    Status = PrayerRequest.Status
+    selected = request.GET.get("situacao", "")
+    if selected not in Status.values:
+        selected = ""
+    counts = {
+        row["status"]: row["total"] for row in PrayerRequest.objects.values("status").annotate(total=Count("pk"))
+    }
+    # Novos primeiro, depois em acompanhamento e concluídos; mais recentes dentro de cada grupo.
+    status_order = Case(
+        *(When(status=value, then=Value(index)) for index, value in enumerate(Status.values)),
+        default=Value(len(Status.values)),
+        output_field=IntegerField(),
+    )
+    items = PrayerRequest.objects.annotate(status_order=status_order).order_by("status_order", "-created_at")
+    if selected:
+        items = items.filter(status=selected)
+    filters = [("", "Todos", sum(counts.values()))] + [
+        (value, label, counts.get(value, 0)) for value, label in Status.choices
+    ]
     return render(
         request,
         "public/prayer_requests.html",
         {
-            "requests": PrayerRequest.objects.all(),
-            "statuses": PrayerRequest.Status.choices,
+            "requests": items,
+            "statuses": Status.choices,
+            "filters": filters,
+            "selected_status": selected,
         },
     )
 
@@ -217,7 +239,11 @@ def prayer_request_status(request: HttpRequest, pk: int) -> HttpResponse:
             },
         )
         messages.success(request, "Situação do pedido atualizada.")
-    return redirect("accounts:prayer_requests")
+    url = reverse("accounts:prayer_requests")
+    selected = request.POST.get("situacao", "")
+    if selected in PrayerRequest.Status.values:
+        url = f"{url}?situacao={selected}"
+    return redirect(url)
 
 
 @permission_required(Permission.MANAGE_PRAYER_REQUESTS)

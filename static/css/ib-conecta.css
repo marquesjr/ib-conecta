@@ -161,6 +161,14 @@ p { margin: 0 0 1rem; }
 .news-list li { padding: 1rem 0; border-bottom: 1px solid var(--paper-shade); }
 .news-list a { font-weight: 500; text-decoration: none; }
 .news-meta { margin: .35rem 0 0; }
+.status-filter { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-bottom: var(--space-lg); }
+.status-filter a { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; padding: 0 .9rem; border: var(--hair) solid var(--paper-shade); border-radius: 999px; color: var(--graphite); text-decoration: none; font-size: .9rem; }
+.status-filter a:hover { border-color: var(--graphite); }
+.status-filter a[aria-current="page"] { background: var(--graphite); border-color: var(--graphite); color: var(--mount); }
+.status-filter-count { color: inherit; opacity: .75; font-variant-numeric: tabular-nums; }
+.status-form { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); }
+.status-form label { font-weight: 600; font-size: .9rem; }
+.status-form select { width: auto; min-width: 14rem; }
 
 /* Ministérios e escala */
 .breadcrumb { margin: 0 0 .5rem; color: var(--archive-gray); font-size: .9rem; }
