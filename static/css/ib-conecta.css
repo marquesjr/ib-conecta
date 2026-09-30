@@ -162,6 +162,20 @@ p { margin: 0 0 1rem; }
 .news-list a { font-weight: 500; text-decoration: none; }
 .news-meta { margin: .35rem 0 0; }
 
+/* Inscritos em eventos */
+.registrations-filter { margin: 0 0 1rem; }
+.registrations-filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.registrations-filter-row select { flex: 1 1 14rem; }
+.registrations-event .section-label { margin-top: 2.5rem; }
+.registrations-list { margin: 0; }
+.registration-heading { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .75rem; }
+.registration-cancel { margin-top: .5rem; font-size: .9rem; }
+.registration-cancel > summary { display: inline-flex; align-items: center; min-height: 24px; color: var(--archive-gray); text-decoration: underline; text-underline-offset: .22em; }
+.registration-cancel > summary:hover { color: var(--ink-red); }
+.registration-cancel[open] > summary { color: var(--graphite); }
+.registration-cancel form { margin-top: .5rem; padding: .75rem 1rem; background: var(--paper-warm); border-left: 3px solid var(--ink-red); border-radius: 8px; }
+.registration-cancel form p { margin: 0 0 .6rem; }
+
 /* Ministérios e escala */
 .breadcrumb { margin: 0 0 .5rem; color: var(--archive-gray); font-size: .9rem; }
 .breadcrumb a { text-decoration: none; }

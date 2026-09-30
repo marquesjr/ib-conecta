@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load state_tags %}
 
 {% block title %}Inscritos em eventos — Igreja Batista em Santa Leopoldina{% endblock %}
 
@@ -9,25 +10,56 @@
     <h1>Inscritos em eventos</h1>
     <p class="lede">Acompanhe e gerencie as inscrições públicas da agenda.</p>
 
-    {% if registrations %}
-      <ul class="news-list">
-        {% for item in registrations %}
-          <li>
-            <strong>{{ item.name }}</strong>
-            <p class="news-meta">
-              {{ item.event.title }} · {{ item.email }}
-              {% if item.phone %} · {{ item.phone }}{% endif %}
-              · {{ item.get_status_display }}
-            </p>
-            {% if item.status != "cancelled" %}
-              <form method="post" action="{% url 'accounts:event_registration_cancel' item.pk %}">
-                {% csrf_token %}
-                <button class="cta secondary" type="submit">Cancelar inscrição</button>
-              </form>
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ul>
+    {% if events %}
+      {% if events|length > 1 %}
+        <form method="get" class="registrations-filter">
+          <label for="registrations-event">Evento</label>
+          <div class="registrations-filter-row">
+            <select id="registrations-event" name="evento">
+              <option value="">Todos os eventos</option>
+              {% for group in events %}
+                <option value="{{ group.event.pk }}"{% if selected_event == group.event.pk|stringformat:"s" %} selected{% endif %}>{{ group.event.title }} ({{ group.registrations|length }})</option>
+              {% endfor %}
+            </select>
+            <button class="cta secondary compact" type="submit">Filtrar</button>
+          </div>
+        </form>
+      {% endif %}
+
+      {% for group in groups %}
+        <section class="registrations-event" aria-labelledby="registrations-event-{{ group.event.pk }}">
+          <h2 class="section-label" id="registrations-event-{{ group.event.pk }}">{{ group.event.title }}</h2>
+          <p class="schedule-summary">
+            <span><strong>{{ group.confirmed_count }}</strong> confirmada{{ group.confirmed_count|pluralize }}</span>
+            {% if group.waitlisted_count %}<span><strong>{{ group.waitlisted_count }}</strong> na lista de espera</span>{% endif %}
+            {% if group.cancelled_count %}<span><strong>{{ group.cancelled_count }}</strong> cancelada{{ group.cancelled_count|pluralize }}</span>{% endif %}
+          </p>
+          <ul class="news-list registrations-list">
+            {% for item in group.registrations %}
+              <li>
+                <div class="registration-heading">
+                  <strong>{{ item.name }}</strong>
+                  {% state item.status item.get_status_display %}
+                </div>
+                <p class="news-meta">
+                  {{ item.email }}{% if item.phone %} · {{ item.phone }}{% endif %}
+                </p>
+                {% if item.status != "cancelled" %}
+                  <details class="registration-cancel">
+                    <summary>Cancelar inscrição</summary>
+                    <form method="post" action="{% url 'accounts:event_registration_cancel' item.pk %}">
+                      {% csrf_token %}
+                      {% if selected_event %}<input type="hidden" name="evento" value="{{ selected_event }}">{% endif %}
+                      <p>Cancelar a inscrição de {{ item.name }} em {{ group.event.title }}? A pessoa perde a vaga.</p>
+                      <button class="cta compact" type="submit">Sim, cancelar inscrição</button>
+                    </form>
+                  </details>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endfor %}
     {% else %}
       <p class="muted">Nenhuma inscrição registrada.</p>
     {% endif %}
