@@ -1,6 +1,10 @@
+import unicodedata
+from urllib.parse import urlencode
+
 from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
@@ -25,6 +29,25 @@ def require_retreat_staff(user, operation: EventOperation) -> None:
         raise PermissionDenied
 
 
+def _fold(text: str) -> str:
+    """Nome sem acentos e sem caixa, para a busca achar "Sonia" em "Sônia"."""
+    decomposed = unicodedata.normalize("NFKD", text or "")
+    return "".join(char for char in decomposed if not unicodedata.combining(char)).casefold()
+
+
+def _registration_matches(registration: EventRegistration, query: str) -> bool:
+    names = [registration.name, *(member.name for member in registration.family_members.all())]
+    return any(query in _fold(name) for name in names)
+
+
+def _roster_redirect(request: HttpRequest, operation: EventOperation) -> HttpResponse:
+    url = reverse("private_area:retreat_roster", args=[operation.pk])
+    query = request.POST.get("q", "").strip()
+    if query:
+        url = f"{url}?{urlencode({'q': query})}"
+    return redirect(url)
+
+
 @permission_required(Permission.ACCESS_PRIVATE_AREA)
 def retreat_roster(request: HttpRequest, pk: int) -> HttpResponse:
     operation = get_object_or_404(
@@ -40,6 +63,16 @@ def retreat_roster(request: HttpRequest, pk: int) -> HttpResponse:
     )
     confirmed = [item for item in registrations if item.status == EventRegistration.Status.CONFIRMED]
     waitlisted = [item for item in registrations if item.status == EventRegistration.Status.WAITLISTED]
+    expected_count = sum(1 + len(item.family_members.all()) for item in confirmed)
+    present_count = sum(
+        (item.checked_in_at is not None)
+        + sum(member.checked_in_at is not None for member in item.family_members.all())
+        for item in confirmed
+    )
+    query = request.GET.get("q", "").strip()
+    if query:
+        folded = _fold(query)
+        confirmed = [item for item in confirmed if _registration_matches(item, folded)]
     return render(
         request,
         "private_area/retreat_roster.html",
@@ -47,6 +80,9 @@ def retreat_roster(request: HttpRequest, pk: int) -> HttpResponse:
             "operation": operation,
             "confirmed": confirmed,
             "waitlisted": waitlisted,
+            "query": query,
+            "expected_count": expected_count,
+            "present_count": present_count,
             "pix_choices": EventRegistration.PixStatus.choices,
             "can_manage_pix": user_has_permission(
                 request.user, Permission.MANAGE_EVENT_OPERATIONS
@@ -96,7 +132,7 @@ def retreat_check_in(request: HttpRequest, pk: int) -> HttpResponse:
             action=AuditAction.RETREAT_CHECKED_IN,
             metadata={"registration_id": registration.pk},
         )
-    return redirect("private_area:retreat_roster", pk=operation.pk)
+    return _roster_redirect(request, operation)
 
 
 @permission_required(Permission.ACCESS_PRIVATE_AREA)
@@ -116,4 +152,4 @@ def retreat_member_check_in(request: HttpRequest, pk: int) -> HttpResponse:
             action=AuditAction.RETREAT_CHECKED_IN,
             metadata={"family_member_id": member.pk},
         )
-    return redirect("private_area:retreat_roster", pk=operation.pk)
+    return _roster_redirect(request, operation)

@@ -29,6 +29,20 @@
     {% endif %}
     <div class="panel">
       <h2>Lista de presença</h2>
+      <p class="checkin-count" aria-live="polite"><strong>{{ present_count }} de {{ expected_count }}</strong> presentes</p>
+      <form class="checkin-search" method="get" role="search">
+        <label for="checkin-q">Buscar por nome</label>
+        <div class="checkin-search-row">
+          <input id="checkin-q" type="search" name="q" value="{{ query }}" autocomplete="off" />
+          <button class="cta secondary" type="submit">Buscar</button>
+        </div>
+        {% if query %}
+          <p class="news-meta">
+            {{ confirmed|length }} {% if confirmed|length == 1 %}inscrição{% else %}inscrições{% endif %} para “{{ query }}” ·
+            <a href="{% url 'private_area:retreat_roster' operation.pk %}">Limpar busca</a>
+          </p>
+        {% endif %}
+      </form>
       {% if confirmed %}
         <ul class="news-list">
           {% for item in confirmed %}
@@ -39,39 +53,61 @@
                 {% if item.boarding_point %} · {{ item.boarding_point }}{% endif %}
                 {% if item.accommodation %} · {{ item.accommodation }}{% endif %}
                 {% if item.pix_status %}{% state item.pix_status item.get_pix_status_display %}{% endif %}
-                {% if item.checked_in_at %}{% state "checked_in" "Presente" %}{% else %}{% state "pending" "Pendente" %}{% endif %}
               </p>
-              {% if item.guardian_name %}
-                <p class="news-meta">Responsável: {{ item.guardian_name }} · {{ item.guardian_phone }}</p>
-              {% endif %}
-              {% if item.emergency_name %}
-                <p class="news-meta">Emergência: {{ item.emergency_name }} · {{ item.emergency_phone }}</p>
-              {% endif %}
-              {% if item.dietary_restrictions %}
-                <p class="news-meta">Alimentação: {{ item.dietary_restrictions }}</p>
-              {% endif %}
-              {% if item.medical_notes %}
-                <p class="news-meta">Médico: {{ item.medical_notes }}</p>
-              {% endif %}
-              {% for member in item.family_members.all %}
-                <p class="news-meta">
-                  Familiar: {{ member.name }}
-                  {% if member.dietary_restrictions %} · {{ member.dietary_restrictions }}{% endif %}
-                  {% if member.medical_notes %} · {{ member.medical_notes }}{% endif %}
-                  {% if member.checked_in_at %}{% state "checked_in" "Presente" %}{% else %}{% state "pending" "Pendente" %}{% endif %}
-                </p>
-                {% if not member.checked_in_at %}
-                  <form method="post" action="{% url 'private_area:retreat_member_check_in' member.pk %}">
-                    {% csrf_token %}
-                    <button class="cta secondary" type="submit">Check-in de {{ member.name }}</button>
-                  </form>
-                {% endif %}
-              {% endfor %}
-              {% if not item.checked_in_at %}
-                <form method="post" action="{% url 'private_area:retreat_check_in' item.pk %}">
-                  {% csrf_token %}
-                  <button class="cta" type="submit">Check-in de {{ item.name }}</button>
-                </form>
+              <ul class="checkin-people">
+                <li>
+                  <span class="checkin-person">{{ item.name }} <small>titular</small></span>
+                  {% if item.checked_in_at %}
+                    {% state "checked_in" "Presente" %}
+                  {% else %}
+                    <form method="post" action="{% url 'private_area:retreat_check_in' item.pk %}">
+                      {% csrf_token %}
+                      {% if query %}<input type="hidden" name="q" value="{{ query }}" />{% endif %}
+                      <button class="cta secondary" type="submit" aria-label="Check-in de {{ item.name }}">Check-in</button>
+                    </form>
+                  {% endif %}
+                </li>
+                {% for member in item.family_members.all %}
+                  <li>
+                    <span class="checkin-person">{{ member.name }} <small>familiar</small></span>
+                    {% if member.checked_in_at %}
+                      {% state "checked_in" "Presente" %}
+                    {% else %}
+                      <form method="post" action="{% url 'private_area:retreat_member_check_in' member.pk %}">
+                        {% csrf_token %}
+                        {% if query %}<input type="hidden" name="q" value="{{ query }}" />{% endif %}
+                        <button class="cta secondary" type="submit" aria-label="Check-in de {{ member.name }}">Check-in</button>
+                      </form>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+              {% if item.guardian_name or item.emergency_name or item.dietary_restrictions or item.medical_notes or item.family_members.all %}
+                <details class="checkin-sensitive">
+                  <summary>Saúde e contatos de emergência</summary>
+                  {% if item.guardian_name %}
+                    <p class="news-meta">Responsável: {{ item.guardian_name }} · {{ item.guardian_phone }}</p>
+                  {% endif %}
+                  {% if item.emergency_name %}
+                    <p class="news-meta">Emergência: {{ item.emergency_name }} · {{ item.emergency_phone }}</p>
+                  {% endif %}
+                  {% if item.dietary_restrictions %}
+                    <p class="news-meta">Alimentação: {{ item.dietary_restrictions }}</p>
+                  {% endif %}
+                  {% if item.medical_notes %}
+                    <p class="news-meta">Médico: {{ item.medical_notes }}</p>
+                  {% endif %}
+                  {% for member in item.family_members.all %}
+                    {% if member.dietary_restrictions or member.medical_notes %}
+                      <p class="news-meta">
+                        {{ member.name }}:
+                        {% if member.dietary_restrictions %}alimentação: {{ member.dietary_restrictions }}{% endif %}
+                        {% if member.dietary_restrictions and member.medical_notes %} · {% endif %}
+                        {% if member.medical_notes %}médico: {{ member.medical_notes }}{% endif %}
+                      </p>
+                    {% endif %}
+                  {% endfor %}
+                </details>
               {% endif %}
               {% if can_manage_pix %}
                 <form method="post" action="{% url 'private_area:retreat_pix_status' item.pk %}">
@@ -90,6 +126,8 @@
             </li>
           {% endfor %}
         </ul>
+      {% elif query %}
+        <p class="muted">Ninguém encontrado com esse nome.</p>
       {% else %}
         <p class="muted">Nenhuma inscrição confirmada.</p>
       {% endif %}

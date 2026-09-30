@@ -906,6 +906,20 @@ th, td { padding: .85rem; min-width: 5rem; }
 .check-field input { margin: .2rem 0 0; }
 .check-field label { margin: 0; min-height: 32px; cursor: pointer; }
 .check-field .errorlist { grid-column: 2; }
+/* Check-in do retiro: contador, busca e uma linha por pessoa com o mesmo botão. */
+.checkin-count { margin: 0 0 1rem; color: var(--archive-gray); }
+.checkin-count strong { color: var(--graphite); font-size: 1.35rem; font-variant-numeric: tabular-nums; }
+.checkin-search { margin-bottom: .5rem; }
+.checkin-search-row { display: flex; gap: .5rem; align-items: stretch; max-width: 28rem; }
+.checkin-search-row input { flex: 1; min-width: 0; }
+.panel .checkin-search-row .cta { margin: 0; }
+.news-list .checkin-people { list-style: none; margin: .75rem 0 0; padding: 0; }
+.news-list .checkin-people li { display: flex; align-items: center; justify-content: space-between; gap: .5rem 1rem; padding: .35rem 0; border-bottom: 0; min-height: 48px; }
+.news-list .checkin-people form { margin: 0; }
+.panel .checkin-people .cta { margin: 0; min-width: 7.5rem; }
+.checkin-person small { color: var(--archive-gray); font-size: .82rem; }
+.checkin-sensitive { margin-top: .5rem; }
+.checkin-sensitive > summary { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-red); font-size: .9rem; }
 /* Caixas de seleção renderizadas por form.as_p (<p><label> <input>) seguem o mesmo padrão de .check-field: caixa à esquerda, rótulo clicável ao lado. */
 form p:has(> input[type="checkbox"]) { display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: start; gap: .25rem .65rem; margin-bottom: 1rem; }
 form p:has(> input[type="checkbox"]) > input[type="checkbox"] { grid-column: 1; grid-row: 1; margin: .2rem 0 0; }
