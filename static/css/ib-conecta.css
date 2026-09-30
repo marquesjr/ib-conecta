@@ -45,6 +45,16 @@ p { margin: 0 0 1rem; }
 .nav-dropdown { position: absolute; right: 0; top: 100%; width: 15rem; z-index: 20; padding: .6rem; background: var(--mount); border: 1px solid var(--paper-shade); border-radius: 12px; }
 .nav-dropdown a { display: block; padding: .7rem .8rem; border-radius: 6px; }
 .nav-dropdown a:hover { background: var(--paper-warm); }
+.nav-account summary { min-height: 48px; padding: .6rem 1.1rem; border: 1px solid var(--ink-red); border-radius: 10px; color: var(--ink-red); font-weight: 500; }
+.nav-account summary:hover, .nav-account[open] summary { background: var(--paper-warm); }
+.nav-account-name { max-width: 12ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nav-account-who { margin: 0 0 .4rem; padding: .4rem .8rem .7rem; border-bottom: 1px solid var(--paper-shade); color: var(--graphite); font-size: .85rem; overflow-wrap: anywhere; }
+.nav-dropdown form { margin: 0; }
+.nav-dropdown button { display: block; width: 100%; padding: .7rem .8rem; border: 0; border-radius: 6px; background: none; color: var(--graphite); font: inherit; text-align: left; cursor: pointer; }
+.nav-dropdown button:hover { background: var(--paper-warm); color: var(--ink-red); }
+@media (max-width: 600px) {
+  .nav-account summary { width: 100%; justify-content: space-between; }
+}
 .nav-toggle { display: none; align-items: center; gap: .7rem; padding: .65rem .8rem; border: 1px solid var(--paper-shade); border-radius: 8px; background: var(--mount); color: var(--graphite); }
 .cta { display: inline-flex; align-items: center; justify-content: center; gap: .8rem; min-height: 48px; padding: .8rem 1.35rem; border: 1px solid var(--ink-red); border-radius: 10px; background: var(--ink-red); color: var(--mount); font-size: .95rem; font-weight: 500; text-decoration: none; line-height: 1.4; cursor: pointer; transition: background-color .18s ease-out; }
 .cta:hover { background: var(--ink-red-hover); border-color: var(--ink-red-hover); color: var(--mount); }
