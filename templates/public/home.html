@@ -81,7 +81,7 @@
     <ul class="mural-track" id="mural-track" role="list">{% for frame in archive.posters %}
       <li><figure class="poster">
         {% if frame.permalink %}<a href="{{ frame.permalink }}" target="_blank" rel="noopener noreferrer">{% endif %}
-        <img src="{{ frame.url }}" alt="{{ frame.alt }}" width="640" height="640" loading="lazy" decoding="async" />
+        <img src="{{ frame.url }}" alt="{{ frame.alt }}" width="640" height="800" loading="lazy" decoding="async" />
         {% if frame.permalink %}</a>{% endif %}
         <figcaption>{{ frame.caption }}{% if frame.byline %} · {{ frame.byline }}{% endif %}{% if frame.date %}<span class="poster-date">{{ frame.date }}</span>{% endif %}</figcaption>
       </figure></li>
@@ -96,7 +96,7 @@
     {% for frame in archive.photos %}
       <figure class="community-photo">
         {% if frame.permalink %}<a href="{{ frame.permalink }}" target="_blank" rel="noopener noreferrer">{% endif %}
-        <img src="{{ frame.url }}" alt="{{ frame.alt }}" width="640" height="640" loading="lazy" decoding="async" />
+        <img src="{{ frame.url }}" alt="{{ frame.alt }}" width="640" height="640" loading="lazy" decoding="async"{% if frame.focus %} style="object-position: {{ frame.focus }}"{% endif %} />
         {% if frame.permalink %}</a>{% endif %}
         <figcaption>{% if frame.synthetic %}Imagem ilustrativa{% else %}{{ frame.caption }}{% if frame.byline %} · {{ frame.byline }}{% endif %}{% if frame.date %} · <span class="caption-date">{{ frame.date }}</span>{% endif %}{% endif %}</figcaption>
       </figure>
