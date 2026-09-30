@@ -8,6 +8,7 @@ from django.db import IntegrityError, transaction
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_http_methods
 
 from apps.accounts.audit import AuditAction, log_audit
@@ -326,6 +327,13 @@ def assignment_respond(request: HttpRequest, pk: int) -> HttpResponse:
                 metadata={"assignment_id": assignment.pk},
             )
             messages.success(request, "Convocação recusada.")
+        next_url = request.POST.get("next", "")
+        if url_has_allowed_host_and_scheme(
+            next_url,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        ):
+            return redirect(next_url)
         return redirect("private_area:assignment_respond", pk=assignment.pk)
     return render(
         request,

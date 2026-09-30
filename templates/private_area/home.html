@@ -11,6 +11,32 @@
     <p class="lede">
       Espaço dos membros autenticados. Conteúdos daqui não são públicos.
     </p>
+    {% if awaiting_answer %}
+      <div class="panel awaiting-answer" aria-labelledby="awaiting-answer-title">
+        <h2 id="awaiting-answer-title">Precisa da sua resposta</h2>
+        <ul class="awaiting-list">
+          {% for assignment in awaiting_answer %}
+            <li>
+              <div>
+                <a href="{% url 'private_area:assignment_respond' assignment.pk %}">
+                  {{ assignment.schedule.ministry.name }} — {{ assignment.function }}
+                </a>
+                <p class="news-meta">
+                  <span>{{ assignment.starts_at|date:"d/m/Y H:i" }}</span>
+                  {% state assignment.status assignment.get_status_display %}
+                </p>
+              </div>
+              <form method="post" action="{% url 'private_area:assignment_respond' assignment.pk %}" class="awaiting-actions">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button class="cta" type="submit" name="action" value="confirm">Confirmar</button>
+                <button class="cta secondary" type="submit" name="action" value="decline">Recusar</button>
+              </form>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
     <div class="panel">
       <h2>Ministérios e escalas</h2>
       <p>Equipes da igreja, escala mensal e confirmação de convocações.</p>
@@ -29,7 +55,7 @@
                 {{ assignment.schedule.ministry.name }} — {{ assignment.function }}
               </a>
               <p class="news-meta">
-                {{ assignment.starts_at|date:"d/m/Y H:i" }}
+                <span>{{ assignment.starts_at|date:"d/m/Y H:i" }}</span>
                 {% state assignment.status assignment.get_status_display %}
               </p>
             </li>
