@@ -492,6 +492,54 @@ p { margin: 0 0 1rem; }
   user-select: all;
 }
 
+.pix-copy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs) 0.75rem;
+  margin: 0 0 1rem;
+}
+
+.pix-copy strong {
+  flex-basis: 100%;
+}
+
+.pix-copy .pix-key {
+  margin-top: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.pix-copy .cta {
+  margin: 0;
+}
+
+.pix-copy-status {
+  color: var(--graphite);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.pix-payload {
+  font-size: 0.75rem;
+}
+
+.pix-qr {
+  margin: 0 0 1rem;
+}
+
+.pix-qr-code svg {
+  display: block;
+  width: min(15rem, 100%);
+  height: auto;
+  background: #fff;
+  border: var(--hair) solid var(--paper-shade);
+}
+
+.pix-qr figcaption {
+  margin-top: var(--space-xs);
+}
+
 
 
 .hp {

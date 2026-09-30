@@ -14,6 +14,7 @@ from apps.public.models import (
     PrayerRequest,
     SermonPage,
 )
+from apps.public.pix import contribution_pix
 from apps.public.privacy import (
     DEFAULT_RETREAT_SENSITIVE_RETAIN_DAYS,
     EVENT_REGISTRATION_RETENTION_DAYS,
@@ -79,7 +80,9 @@ def plan_visit(request):
 
 
 def contribute(request):
-    return render(request, "public/contribute.html")
+    site = Site.find_for_request(request) or Site.objects.filter(is_default_site=True).first()
+    pix = contribution_pix(ChurchSettings.for_site(site)) if site else {}
+    return render(request, "public/contribute.html", {"pix": pix})
 
 
 def privacy(request):

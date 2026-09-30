@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block extra_head %}<script src="{% static 'js/pix.js' %}" defer></script>{% endblock %}
+
 {% block title %}Contribuições — Igreja Batista em Santa Leopoldina{% endblock %}
 
 {% block content %}
@@ -13,11 +17,25 @@
     {% if church_settings.pix_key %}
       <div class="panel">
         <h2>PIX</h2>
-        <p>Abra o aplicativo do seu banco, escolha PIX e cole a chave abaixo.</p>
-        <p>
-          <strong>Chave PIX</strong><br />
-          <span class="pix-key">{{ church_settings.pix_key }}</span>
-        </p>
+        <p>Abra o aplicativo do seu banco, escolha PIX e cole a chave abaixo{% if pix %} ou leia o QR Code{% endif %}.</p>
+        <div class="pix-copy">
+          <strong id="pix-key-label">Chave PIX</strong>
+          <span class="pix-key" id="pix-key" aria-labelledby="pix-key-label">{{ church_settings.pix_key }}</span>
+          <button type="button" class="cta compact" data-copy-target="pix-key" data-copy-status="pix-key-status" data-copy-done="Chave copiada!" hidden>Copiar chave</button>
+          <span class="pix-copy-status" id="pix-key-status" role="status" aria-live="polite"></span>
+        </div>
+        {% if pix %}
+          <figure class="pix-qr">
+            <div class="pix-qr-code">{{ pix.qr_svg|safe }}</div>
+            <figcaption class="muted">Aponte a câmera do app do banco para pagar com PIX. O valor você escolhe no app.</figcaption>
+          </figure>
+          <div class="pix-copy">
+            <strong id="pix-payload-label">PIX copia e cola</strong>
+            <span class="pix-key pix-payload" id="pix-payload" aria-labelledby="pix-payload-label">{{ pix.payload }}</span>
+            <button type="button" class="cta compact secondary" data-copy-target="pix-payload" data-copy-status="pix-payload-status" data-copy-done="Código copiado!" hidden>Copiar código</button>
+            <span class="pix-copy-status" id="pix-payload-status" role="status" aria-live="polite"></span>
+          </div>
+        {% endif %}
         {% if church_settings.pix_key_type %}
           <p class="muted">Tipo: {{ church_settings.get_pix_key_type_display }}</p>
         {% endif %}
