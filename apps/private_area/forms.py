@@ -63,7 +63,7 @@ class PrivateDocumentForm(forms.ModelForm):
 class MinistryForm(forms.ModelForm):
     class Meta:
         model = Ministry
-        fields = ("name", "description")
+        fields = ("name", "description", "uses_repertoire")
 
 
 class MonthlyScheduleForm(forms.ModelForm):
