@@ -300,6 +300,12 @@ p { margin: 0 0 1rem; }
 .service-roster { list-style: none; margin: 0; padding: 0; background: var(--mount); border: var(--hair) solid var(--paper-shade); border-radius: 12px; }
 .service-roster li { display: grid; grid-template-columns: 9rem minmax(0, 1fr) auto auto; align-items: center; gap: .25rem 1rem; padding: .7rem 1rem; border-top: var(--hair) solid var(--paper-shade); }
 .service-roster li:first-child { border-top: 0; }
+/* Colunas compartilhadas por todas as linhas (subgrid): status e ações alinham mesmo quando uma linha tem mais botões. */
+@supports (grid-template-columns: subgrid) {
+  .service-roster { display: grid; grid-template-columns: 9rem minmax(0, 1fr) auto auto; }
+  .service-roster li { grid-column: 1 / -1; grid-template-columns: subgrid; }
+  .roster-actions { justify-content: flex-end; }
+}
 .service-roster li.is-me { background: var(--paper); }
 .roster-function { color: var(--archive-gray); font-size: .9rem; }
 .roster-person { font-weight: 500; }
@@ -329,6 +335,7 @@ p { margin: 0 0 1rem; }
   .service { grid-template-columns: 1fr; gap: 0; }
   .service-date { display: none; }
   .service-roster li { grid-template-columns: minmax(0, 1fr) auto; }
+  @supports (grid-template-columns: subgrid) { .service-roster { grid-template-columns: minmax(0, 1fr) auto; } .service-roster li { grid-template-columns: subgrid; } }
   .roster-function { grid-column: 1; grid-row: 2; font-size: .82rem; }
   .roster-person { grid-column: 1; grid-row: 1; }
   .roster-state { grid-column: 2; grid-row: 1 / span 2; }
