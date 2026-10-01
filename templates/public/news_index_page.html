@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load wagtailimages_tags %}
 
 {% block title %}{{ page.title }} — Igreja Batista em Santa Leopoldina{% endblock %}
 
@@ -28,6 +29,7 @@
                   <span class="register-note">{{ news.intro }}</span>
                 {% endif %}
               </span>
+              {% if news.cover_image %}{% image news.cover_image fill-160x120 class="register-thumb" alt="" %}{% endif %}
             </a>
           </li>
         {% endfor %}

@@ -1006,3 +1006,12 @@ form p:has(> input[type="checkbox"]) > .helptext { grid-column: 2; }
   table { display: table; overflow: visible; }
   .state, .state-mark { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
+
+/* Imagem de capa opcional (#73): miniatura nas listas, imagem larga no topo do detalhe. */
+.cover-figure { margin: 0 0 1.5rem; }
+.cover-image { display: block; width: 100%; max-width: var(--width-reading, 76rem); height: auto; max-height: 28rem; object-fit: cover; border-radius: 12px; }
+.register-thumb { display: none; }
+@media (min-width: 34.01rem) {
+  .register-entry:has(.register-thumb) { grid-template-columns: 5.5rem minmax(0, 1fr) auto auto; }
+  .register-thumb { display: block; width: 120px; height: 90px; object-fit: cover; border-radius: 8px; align-self: center; }
+}
