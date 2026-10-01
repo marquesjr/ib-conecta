@@ -1,0 +1,7 @@
+<nav class="private-nav" aria-label="Área privada">
+  <ul>
+    {% for item in items %}
+      <li><a href="{{ item.url }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+    {% endfor %}
+  </ul>
+</nav>
