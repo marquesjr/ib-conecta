@@ -104,6 +104,7 @@
               <strong>{{ task.title }}</strong>
               <p class="news-meta">
                 {{ task.assignee.username }}
+                {% if task.due_date %}· prazo {{ task.due_date|date:"d/m" }}{% endif %}
                 {% if task.done %}{% state "done" "Concluída" %}{% else %}{% state "pending" "Pendente" %}{% endif %}
               </p>
             </li>
