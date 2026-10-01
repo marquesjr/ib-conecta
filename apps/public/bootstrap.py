@@ -4,6 +4,7 @@ from apps.accounts.models import Profile
 from apps.public.cms import (
     AGENDA_INDEX_SLUG,
     INSTITUTIONAL_PAGE_SEEDS,
+    INSTITUTIONAL_PLACEHOLDER,
     LIVE_STREAM_SLUG,
     NEWS_INDEX_SLUG,
     SERMON_INDEX_SLUG,
@@ -50,7 +51,7 @@ def ensure_institutional_pages() -> None:
             intro=intro,
             body=(
                 f"<p>{intro}</p>"
-                "<p>Edite este conteúdo no CMS Wagtail quando estiver pronto para publicar a versão final.</p>"
+                f"<p>{INSTITUTIONAL_PLACEHOLDER} quando estiver pronto para publicar a versão final.</p>"
             ),
         )
         root.add_child(instance=page)

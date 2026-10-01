@@ -2,6 +2,7 @@ from wagtail.models import Site
 
 from apps.public.cms import (
     AGENDA_INDEX_SLUG,
+    INSTITUTIONAL_PLACEHOLDER,
     LIVE_STREAM_SLUG,
     NEWS_INDEX_SLUG,
     SERMON_INDEX_SLUG,
@@ -9,6 +10,7 @@ from apps.public.cms import (
 from apps.public.models import (
     ChurchSettings,
     EventIndexPage,
+    InstitutionalPage,
     LiveStreamPage,
     NewsIndexPage,
     SermonIndexPage,
@@ -29,6 +31,7 @@ def church_settings(request):
             "agenda_index_url": "",
             "sermon_index_url": "",
             "live_stream_url": "",
+            "institutional_pages": [],
         }
 
     settings = ChurchSettings.for_site(site)
@@ -56,7 +59,14 @@ def church_settings(request):
         .filter(slug=LIVE_STREAM_SLUG)
         .first()
     )
+    institutional_pages = list(
+        InstitutionalPage.objects.live()
+        .public()
+        .exclude(body__contains=INSTITUTIONAL_PLACEHOLDER)
+        .order_by("path")
+    )
     return {
+        "institutional_pages": institutional_pages,
         "church_settings": settings,
         "whatsapp_url": build_whatsapp_url(
             settings.whatsapp_number,
