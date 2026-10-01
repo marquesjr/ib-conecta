@@ -163,9 +163,9 @@
     </div>
     <p>
       {% if can_manage_pix %}
-        <a href="{% url 'private_area:event_operation_detail' operation.pk %}">Voltar à operação</a>
+        <a class="text-link back-link" href="{% url 'private_area:event_operation_detail' operation.pk %}">{% include "public/_arrow.html" %} Voltar à operação</a>
       {% else %}
-        <a href="{% url 'private_area:home' %}">Voltar à área privada</a>
+        <a class="text-link back-link" href="{% url 'private_area:home' %}">{% include "public/_arrow.html" %} Voltar à área privada</a>
       {% endif %}
     </p>
   </section>

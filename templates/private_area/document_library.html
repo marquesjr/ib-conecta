@@ -28,6 +28,6 @@
     {% else %}
       <p class="muted">Nenhum documento disponível para o seu perfil.</p>
     {% endif %}
-    <p><a href="{% url 'private_area:home' %}">Voltar à área privada</a></p>
+    <p><a class="text-link back-link" href="{% url 'private_area:home' %}">{% include "public/_arrow.html" %} Voltar à área privada</a></p>
   </section>
 {% endblock %}

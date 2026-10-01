@@ -303,6 +303,6 @@
       </details>
     </div>
     {% endif %}
-    <p><a href="{% url 'private_area:event_calendar' %}">Voltar ao calendário</a></p>
+    <p><a class="text-link back-link" href="{% url 'private_area:event_calendar' %}">{% include "public/_arrow.html" %} Voltar ao calendário</a></p>
   </section>
 {% endblock %}

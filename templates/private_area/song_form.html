@@ -62,7 +62,7 @@
 
       <div class="form-sticky-actions">
         <button class="cta" type="submit">{% if editing %}Salvar revisão{% else %}Salvar rascunho{% endif %}</button>
-        <a href="{% url 'private_area:songbook' %}">Voltar à coletânea</a>
+        <a class="text-link back-link" href="{% url 'private_area:songbook' %}">{% include "public/_arrow.html" %} Voltar à coletânea</a>
       </div>
     </form>
   </section>

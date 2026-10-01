@@ -80,6 +80,6 @@
       <p>{{ song.license }}</p>
       <p>Usos permitidos: {{ song.permitted_uses }}</p>
     </div>
-    <p><a href="{% url 'private_area:songbook' %}">Voltar à coletânea</a></p>
+    <p><a class="text-link back-link" href="{% url 'private_area:songbook' %}">{% include "public/_arrow.html" %} Voltar à coletânea</a></p>
   </section>
 {% endblock %}

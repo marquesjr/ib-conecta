@@ -1006,3 +1006,9 @@ form p:has(> input[type="checkbox"]) > .helptext { grid-column: 2; }
   table { display: table; overflow: visible; }
   .state, .state-mark { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
+
+/* Links: seta para navegar (.text-link), "Voltar" com a seta virada, sublinhado só em texto corrido. */
+.back-link .icon-arrow { transform: scaleX(-1); }
+.social-links a { gap: .65rem; text-decoration: none; font-weight: 500; }
+.social-links a::after { content: ""; flex: none; width: 21px; height: 21px; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6'%3E%3Cpath d='M4 12h15m-6-6 6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6'%3E%3Cpath d='M4 12h15m-6-6 6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat; }
+.social-links a:hover { text-decoration: underline; }

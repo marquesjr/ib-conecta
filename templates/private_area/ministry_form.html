@@ -12,6 +12,6 @@
       {{ form.as_p }}
       <button class="cta" type="submit">Salvar</button>
     </form>
-    <p><a href="{% url 'private_area:ministry_list' %}">Voltar aos ministérios</a></p>
+    <p><a class="text-link back-link" href="{% url 'private_area:ministry_list' %}">{% include "public/_arrow.html" %} Voltar aos ministérios</a></p>
   </section>
 {% endblock %}

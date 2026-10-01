@@ -38,7 +38,7 @@
       <p class="muted">Nenhum participante nesta escala.</p>
     {% endfor %}
     <p class="no-print">
-      <a href="{% url 'private_area:schedule_detail' schedule.pk %}">Voltar à escala</a>
+      <a class="text-link back-link" href="{% url 'private_area:schedule_detail' schedule.pk %}">{% include "public/_arrow.html" %} Voltar à escala</a>
     </p>
   </section>
 {% endblock %}

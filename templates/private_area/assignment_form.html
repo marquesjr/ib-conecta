@@ -26,7 +26,7 @@
       <button class="cta secondary" type="submit">Remover da escala</button>
     </form>
     <p>
-      <a href="{% url 'private_area:schedule_detail' assignment.schedule_id %}">Voltar à escala</a>
+      <a class="text-link back-link" href="{% url 'private_area:schedule_detail' assignment.schedule_id %}">{% include "public/_arrow.html" %} Voltar à escala</a>
     </p>
   </section>
 {% endblock %}
