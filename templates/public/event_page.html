@@ -12,7 +12,10 @@
     <p class="news-meta">
       <a href="{{ page.get_parent.url }}">Agenda</a>
     </p>
-    <h1>{{ page.title }}</h1>
+    <div class="title-row">
+      <h1>{{ page.title }}</h1>
+      {% whatsapp_share_button page.title %}
+    </div>
 
     <section class="event-facts" aria-label="Quando e onde">
       <dl>
@@ -149,8 +152,4 @@
       </div>
     {% endif %}
   </article>
-{% endblock %}
-
-{% block share %}
-  <div class="share-area">{% whatsapp_share page.title %}</div>
 {% endblock %}

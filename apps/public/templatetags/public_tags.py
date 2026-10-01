@@ -3,6 +3,7 @@ import re
 from django import template
 from django.conf import settings
 from django.utils import timezone
+from django.utils.formats import date_format
 from django.utils.html import format_html
 
 from apps.public.whatsapp import build_whatsapp_share_url, split_whatsapp_welcome
@@ -56,3 +57,57 @@ def whatsapp_share(context, title="IB Conecta"):
     if request is not None:
         share_url = build_whatsapp_share_url(title, request.build_absolute_uri())
     return {"share_url": share_url}
+
+
+WEEKDAYS = ("seg", "ter", "qua", "qui", "sex", "sáb", "dom")
+
+
+def _local(value):
+    return timezone.localtime(value) if timezone.is_aware(value) else value
+
+
+@register.filter
+def short_datetime(value):
+    """Formato de listas: ``sáb, 24 out · 17h`` (com o ano quando não é o atual)."""
+    if not value:
+        return ""
+    value = _local(value)
+    pattern = r"j b" if value.year == timezone.localdate().year else r"j b Y"
+    label = f"{WEEKDAYS[value.weekday()]}, {date_format(value, pattern).lower()}"
+    if hasattr(value, "hour"):
+        label = f"{label} · {hour_label(value)}"
+    return label
+
+
+@register.filter
+def long_date(value):
+    """Formato de detalhes, só a data: ``24 de outubro de 2026``."""
+    if not value:
+        return ""
+    return date_format(_local(value), r"j \d\e F \d\e Y").lower()
+
+
+@register.filter
+def long_datetime(value):
+    """Formato de detalhes: ``Sábado, 24 de outubro de 2026 · 17h``."""
+    if not value:
+        return ""
+    value = _local(value)
+    day = date_format(value, r"l, j \d\e F \d\e Y").capitalize()
+    return f"{day} · {hour_label(value)}"
+
+
+@register.inclusion_tag("public/_whatsapp_share_button.html", takes_context=True)
+def whatsapp_share_button(context, title="IB Conecta"):
+    """Botão discreto, para ficar ao lado do título da página."""
+    request = context.get("request")
+    share_url = ""
+    if request is not None:
+        share_url = build_whatsapp_share_url(title, request.build_absolute_uri())
+    return {"share_url": share_url}
+
+
+@register.filter
+def keep_cep_together(value):
+    """Troca o hífen do CEP (``29640-000``) por hífen sem quebra de linha."""
+    return re.sub(r"\b(\d{5})-(\d{3})\b", "\\1\u2011\\2", str(value or ""))
