@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load state_tags %}
+{% load state_tags person_tags %}
 
 {% block title %}Tarefa — Igreja Batista em Santa Leopoldina{% endblock %}
 
@@ -7,13 +7,21 @@
 
 {% block content %}
   <section class="cms-page">
+    <p class="news-meta"><a href="{{ task.operation.public_event.url }}">Voltar ao evento</a></p>
     <h1>{{ task.title }}</h1>
     <p class="lede">{{ task.operation.public_event.title }}</p>
-    <p>Situação: {% if task.done %}{% state "done" "Concluída" %}{% else %}{% state "pending" "Pendente" %}{% endif %}</p>
+    {% if task.description %}
+      <p>{{ task.description|linebreaksbr }}</p>
+    {% endif %}
+    <dl class="task-facts">
+      <div><dt>Responsável</dt><dd>{{ task.assignee|person_name }}</dd></div>
+      <div><dt>Prazo</dt><dd>{% if task.due_date %}{{ task.due_date|date:"j \d\e F \d\e Y"|lower }}{% else %}Sem prazo definido{% endif %}</dd></div>
+      <div><dt>Situação</dt><dd>{% if task.done %}{% state "done" "Concluída" %}{% else %}{% state "pending" "Pendente" %}{% endif %}</dd></div>
+    </dl>
     {% if not task.done %}
       <form method="post">
         {% csrf_token %}
-        <button class="cta" type="submit" name="action" value="complete">Concluir</button>
+        <button class="cta" type="submit" name="action" value="complete">Concluir tarefa</button>
       </form>
     {% endif %}
   </section>

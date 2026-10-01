@@ -83,4 +83,4 @@ class AwaitingAnswerOnHomeTests(TestCase):
     def test_date_and_chip_are_separate_elements(self):
         self._assign(timezone.now() + timedelta(days=2), "Violão")
         response = self.client.get(reverse("private_area:home"))
-        self.assertRegex(response.content.decode(), r"\d{2}:\d{2}</span>\s*<span class=\"state")
+        self.assertRegex(response.content.decode(), r"\d{1,2}h(?:\d{2})?</span>\s*<span class=\"state")

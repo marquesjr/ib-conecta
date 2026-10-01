@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load public_tags %}
 
 {% block title %}Imprimir {{ playlist.label }} — Igreja Batista em Santa Leopoldina{% endblock %}
 
@@ -25,7 +26,7 @@
       <a class="cta secondary" href="{% url 'private_area:playlist_detail' playlist.pk %}">Voltar à playlist</a>
     </p>
     <h1>{{ playlist.get_kind_display }} — {{ playlist.ministry.name }}</h1>
-    <p class="lede">{{ playlist.starts_at|date:"d/m/Y H:i" }}</p>
+    <p class="lede">{{ playlist.starts_at|long_datetime }}</p>
     {% if playlist.notes %}
       <p>{{ playlist.notes }}</p>
     {% endif %}
