@@ -11,16 +11,41 @@
         · {{ page.first_published_at|long_date }}
       {% endif %}
     </p>
-    <h1>{{ page.title }}</h1>
+    <div class="title-row">
+      <h1>{{ page.title }}</h1>
+      {% whatsapp_share_button page.title %}
+    </div>
     {% if page.intro %}
       <p class="lede">{{ page.intro }}</p>
     {% endif %}
     <div class="rich-text">
       {{ page.body|richtext }}
     </div>
+    {% if other_news %}
+      <section class="other-news" aria-labelledby="other-news-title">
+        <h2 id="other-news-title">Outras notícias</h2>
+        <ul class="register">
+          {% for news in other_news %}
+            <li>
+              <a class="register-entry" href="{{ news.url }}">
+                {% if news.first_published_at %}
+                  <time class="register-date" datetime="{{ news.first_published_at|date:'c' }}">
+                    <span class="register-day">{{ news.first_published_at|date:"d" }}</span>
+                    <span class="register-month">{{ news.first_published_at|date:"M Y" }}</span>
+                  </time>
+                {% else %}
+                  <span class="register-date" aria-hidden="true"></span>
+                {% endif %}
+                <span class="register-body">
+                  <span class="register-title">{{ news.title }}</span>
+                </span>
+                {% include "public/_arrow.html" %}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+        <a class="text-link" href="{{ page.get_parent.url }}">Todas as notícias {% include "public/_arrow.html" %}</a>
+      </section>
+    {% endif %}
   </article>
-{% endblock %}
-
-{% block share %}
-  <div class="share-area">{% whatsapp_share page.title %}</div>
 {% endblock %}
