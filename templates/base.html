@@ -70,7 +70,7 @@
   {% else %}
   <footer class="site-footer">
     <div class="footer-intro"><h2>Igreja Batista<br>em Santa Leopoldina</h2><p>“Deus é o nosso refúgio e fortaleza”</p>
-      <p class="footer-product">IB Conecta</p>
+      <p class="footer-copyright">© {% now "Y" %} Igreja Batista em Santa Leopoldina</p>
     </div>
     <div><h3>Vamos conversar?</h3>
       {% if church_settings and church_settings.whatsapp_welcome_text %}{% whatsapp_welcome church_settings.whatsapp_welcome_text %}{% endif %}
@@ -81,7 +81,7 @@
     </div>
     {% if church_settings and church_settings.address_line %}
     <div class="footer-location"><h3>Onde estamos</h3>
-      <address>{{ church_settings.address_line }}</address>
+      {% block footer_address %}<address>{{ church_settings.address_line|keep_cep_together }}</address>{% endblock %}
       <div class="footer-map">
         <iframe src="https://www.google.com/maps?q={{ church_settings.address_line|urlencode:'' }}&amp;output=embed" title="Mapa com a localização da Igreja Batista em Santa Leopoldina" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
