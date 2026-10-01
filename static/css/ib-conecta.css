@@ -1006,3 +1006,8 @@ form p:has(> input[type="checkbox"]) > .helptext { grid-column: 2; }
   table { display: table; overflow: visible; }
   .state, .state-mark { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
+
+.task-facts { display: grid; gap: .6rem; margin: 1.25rem 0; }
+.task-facts > div { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 1rem; align-items: baseline; }
+.task-facts dt { color: var(--archive-gray); font-size: .9rem; }
+.task-facts dd { margin: 0; }
