@@ -1,4 +1,5 @@
 import secrets
+from pathlib import Path
 
 from django.conf import settings
 from django.db import models
@@ -65,6 +66,18 @@ class PrivateDocument(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+    @property
+    def file_type(self) -> str:
+        """Extensão do arquivo em maiúsculas (``PDF``), ou vazio."""
+        return Path(self.file.name).suffix.lstrip(".").upper()
+
+    @property
+    def file_size(self) -> int | None:
+        try:
+            return self.file.size
+        except (OSError, ValueError):
+            return None
 
     def is_visible_to(self, user) -> bool:
         permission = AUDIENCE_PERMISSION.get(self.audience)
