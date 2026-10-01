@@ -70,7 +70,7 @@ class MenuStructureTests(TestCase):
         page.refresh_from_db()
         self.assertIn("Declaração Doutrinária", page.body)
 
-    def test_initial_text_makes_no_claim_about_this_church_beyond_belonging_to_the_story(self):
+    def test_each_seeded_page_renders_without_the_placeholder(self):
         ensure_institutional_pages()
         for slug in ("historia", "crencas", "ministerios", "lideranca"):
             page = self.client.get(f"/{slug}/")
