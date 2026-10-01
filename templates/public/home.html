@@ -3,6 +3,7 @@
 {% block title %}Igreja Batista em Santa Leopoldina{% endblock %}
 {% block body_attrs %} class="home"{% endblock %}
 {% block share %}{% endblock %}
+{% block footer_address %}{% endblock %}
 {% block extra_head %}<script src="{% static 'js/mural.js' %}" defer></script>{% endblock %}
 {% block content %}
 <section class="welcome" aria-labelledby="welcome-title">
@@ -34,7 +35,7 @@
     </div>
     <div>
       <h2>Onde estamos</h2>
-      <p class="visit-fact">{{ church_settings.address_line }}</p>
+      <p class="visit-fact">{{ church_settings.address_line|keep_cep_together }}</p>
       {% if church_settings.map_url %}<a class="text-link" href="{{ church_settings.map_url }}" target="_blank" rel="noopener noreferrer">Abrir no mapa {% include "public/_arrow.html" %}</a>
       {% else %}<a class="text-link" href="{% url 'plan_visit' %}">Como chegar {% include "public/_arrow.html" %}</a>{% endif %}
     </div>

@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 from wagtail.models import Site
 
 from apps.public.models import ChurchSettings
@@ -26,10 +27,10 @@ class HomePageTests(TestCase):
         )
         self.settings.save()
 
-    def test_home_returns_ok_with_project_name(self):
+    def test_home_returns_ok_with_copyright(self):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "IB Conecta")
+        self.assertContains(response, f"© {timezone.now().year} Igreja Batista em Santa Leopoldina")
         self.assertContains(response, "css/ib-conecta.css")
         self.assertContains(response, "Ir para o conteúdo")
 
@@ -113,9 +114,12 @@ class FooterLocationTests(TestCase):
 
     def test_footer_shows_full_address_and_lazy_map(self):
         response = self.client.get(reverse("home"))
+        self.assertContains(response, "<address>", count=0)
+        self.assertContains(response, "29640\u2011000")
+        other = self.client.get(reverse("plan_visit"))
         self.assertContains(
-            response,
-            "<address>Av. Pres. Vargas, 38 - Centro, Santa Leopoldina - ES, 29640-000</address>",
+            other,
+            "<address>Av. Pres. Vargas, 38 - Centro, Santa Leopoldina - ES, 29640\u2011000</address>",
             html=True,
         )
         self.assertContains(
@@ -133,3 +137,10 @@ class FooterLocationTests(TestCase):
         self.settings.save()
         response = self.client.get(reverse("home"))
         self.assertNotContains(response, "google.com/maps")
+
+
+class FooterIdentityTests(TestCase):
+    def test_footer_has_copyright_instead_of_loose_product_name(self):
+        response = self.client.get(reverse("plan_visit"))
+        self.assertContains(response, 'class="footer-copyright"')
+        self.assertNotContains(response, '<p class="footer-product">')

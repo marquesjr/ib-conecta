@@ -66,3 +66,9 @@ def whatsapp_share_button(context, title="IB Conecta"):
     if request is not None:
         share_url = build_whatsapp_share_url(title, request.build_absolute_uri())
     return {"share_url": share_url}
+
+
+@register.filter
+def keep_cep_together(value):
+    """Troca o hífen do CEP (``29640-000``) por hífen sem quebra de linha."""
+    return re.sub(r"\b(\d{5})-(\d{3})\b", "\\1\u2011\\2", str(value or ""))
