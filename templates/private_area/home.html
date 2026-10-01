@@ -159,6 +159,6 @@
       {% endif %}
     </div>
     </div>
-    <p><a href="{% url 'accounts:account_home' %}">Voltar para minha conta</a></p>
+    <p><a class="text-link back-link" href="{% url 'accounts:account_home' %}">{% include "public/_arrow.html" %} Voltar para minha conta</a></p>
   </section>
 {% endblock %}

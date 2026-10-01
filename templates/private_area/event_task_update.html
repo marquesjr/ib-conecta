@@ -7,7 +7,7 @@
 
 {% block content %}
   <section class="cms-page">
-    <p class="news-meta"><a href="{{ task.operation.public_event.url }}">Voltar ao evento</a></p>
+    <p class="news-meta"><a class="text-link back-link" href="{{ task.operation.public_event.url }}">{% include "public/_arrow.html" %} Voltar ao evento</a></p>
     <h1>{{ task.title }}</h1>
     <p class="lede">{{ task.operation.public_event.title }}</p>
     {% if task.description %}

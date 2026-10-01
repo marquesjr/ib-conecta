@@ -174,6 +174,14 @@ Estados têm texto e marcas geométricas além da cor, num selo de cantos totalm
 
 Painéis brancos com borda de papel, raio `panel` e padding fluido acolhem leitura e operação. Listas editoriais permanecem abertas, separadas por fios; não precisam virar cartões. Fotografias mantêm legendas externas, salvo a legenda sobreposta da abertura.
 
+### Links
+
+Três formas, cada uma com um papel:
+
+- **Link com seta** (`.text-link`): leva a outra página ou a um destino externo (mapa, redes sociais, "Ver toda a agenda"). Sem sublinhado; o sublinhado aparece no hover. Os "Voltar…" usam a mesma forma com a seta apontando para a esquerda (`.back-link`).
+- **Sublinhado**: só dentro de texto corrido (parágrafos, avisos, termos). Nunca em links soltos.
+- **Botão** (`.cta`): ação que muda algo (enviar, salvar, confirmar) ou o convite principal de uma tela.
+
 ### Inputs / Fields
 
 Campos brancos, borda cinza, raio `control` e altura mínima de 46px. Rótulos ficam acima, em caixa natural; foco muda a borda para vinho, além do contorno global. Erros combinam borda e texto vinho. Desabilitados usam papel quente e cinza. Textareas permitem redimensionamento vertical; checkboxes e radios preservam forma nativa com acento vinho.

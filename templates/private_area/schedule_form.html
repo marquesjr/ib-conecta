@@ -14,9 +14,9 @@
       <button class="cta" type="submit">{% if schedule %}Salvar alterações{% else %}Criar escala{% endif %}</button>
     </form>
     {% if schedule %}
-      <p><a href="{% url 'private_area:schedule_detail' schedule.pk %}">Voltar à escala</a></p>
+      <p><a class="text-link back-link" href="{% url 'private_area:schedule_detail' schedule.pk %}">{% include "public/_arrow.html" %} Voltar à escala</a></p>
     {% else %}
-      <p><a href="{% url 'private_area:ministry_detail' ministry.pk %}">Voltar ao ministério</a></p>
+      <p><a class="text-link back-link" href="{% url 'private_area:ministry_detail' ministry.pk %}">{% include "public/_arrow.html" %} Voltar ao ministério</a></p>
     {% endif %}
   </section>
 {% endblock %}

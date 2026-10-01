@@ -90,7 +90,7 @@
     <p>
       <a href="{% url 'private_area:playlist_list' %}">Todas as playlists</a>
       ·
-      <a href="{% url 'private_area:ministry_detail' playlist.ministry_id %}">Voltar ao ministério</a>
+      <a class="text-link back-link" href="{% url 'private_area:ministry_detail' playlist.ministry_id %}">{% include "public/_arrow.html" %} Voltar ao ministério</a>
     </p>
   </section>
 {% endblock %}

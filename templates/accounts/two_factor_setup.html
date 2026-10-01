@@ -19,7 +19,7 @@
           <button class="cta" type="submit">Ativar 2FA</button>
         </form>
       {% endif %}
-      <p><a href="{% url 'accounts:account_home' %}">Voltar</a></p>
+      <p><a class="text-link back-link" href="{% url 'accounts:account_home' %}">{% include "public/_arrow.html" %} Voltar</a></p>
     </div>
   </section>
 {% endblock %}

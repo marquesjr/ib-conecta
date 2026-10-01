@@ -13,6 +13,6 @@
       {{ form.as_p }}
       <button class="cta" type="submit">Criar playlist</button>
     </form>
-    <p><a href="{% url 'private_area:ministry_detail' ministry.pk %}">Voltar ao ministério</a></p>
+    <p><a class="text-link back-link" href="{% url 'private_area:ministry_detail' ministry.pk %}">{% include "public/_arrow.html" %} Voltar ao ministério</a></p>
   </section>
 {% endblock %}
