@@ -283,3 +283,23 @@ class SongbookPrintTests(TestCase):
         self.assertFalse(
             Path(self.song.score.path).is_relative_to(Path(settings.MEDIA_ROOT))
         )
+
+
+class SongDetailUxTests(TestCase):
+    def setUp(self):
+        make_user("lider", Role.MINISTRY_LEADER)
+        self.client.login(username="lider", password="senha-segura-123")
+        self.client.post(reverse("private_area:song_create"), authorized_song_payload())
+        self.song = Song.objects.get()
+        self.page = self.client.get(reverse("private_area:song_detail", args=[self.song.slug]))
+
+    def test_reference_shows_its_label_not_the_raw_path(self):
+        token = self.song.references.get().token
+        self.assertContains(self.page, f'href="/r/{token}/"', count=1)
+        self.assertNotContains(self.page, f">\n              /r/{token}/")
+        self.assertContains(self.page, "YouTube")
+
+    def test_versions_are_collapsed_and_edit_button_is_explicit(self):
+        self.assertContains(self.page, '<details class="song-version">')
+        self.assertContains(self.page, "Editar louvor")
+        self.assertNotContains(self.page, ">Revisar<")
