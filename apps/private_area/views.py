@@ -20,6 +20,10 @@ from apps.private_area.models import (
     ScheduleAssignment,
     WeeklyPlaylist,
 )
+from apps.private_area.text import fold
+
+# A busca só aparece quando a lista já é longa o bastante para precisar dela.
+DOCUMENT_SEARCH_THRESHOLD = 5
 
 
 @permission_required(Permission.ACCESS_PRIVATE_AREA)
@@ -69,11 +73,24 @@ def home(request: HttpRequest) -> HttpResponse:
 
 @permission_required(Permission.ACCESS_PRIVATE_AREA)
 def document_library(request: HttpRequest) -> HttpResponse:
+    documents = list(PrivateDocument.objects.visible_to(request.user))
+    total = len(documents)
+    query = request.GET.get("q", "").strip()
+    if query:
+        needle = fold(query)
+        documents = [
+            document
+            for document in documents
+            if needle in fold(f"{document.title} {document.description}")
+        ]
     return render(
         request,
         "private_area/document_library.html",
         {
-            "documents": PrivateDocument.objects.visible_to(request.user),
+            "documents": documents,
+            "query": query,
+            "total": total,
+            "show_search": total > DOCUMENT_SEARCH_THRESHOLD or bool(query),
             "can_manage_documents": user_has_permission(
                 request.user, Permission.MANAGE_CONTENT
             ),
