@@ -8,7 +8,7 @@
     <p class="news-meta">
       <a href="{{ page.get_parent.url }}">Sermões</a>
       {% if page.first_published_at %}
-        · {{ page.first_published_at|date:"d/m/Y" }}
+        · {{ page.first_published_at|long_date }}
       {% endif %}
     </p>
     <div class="title-row">

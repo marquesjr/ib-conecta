@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load public_tags %}
 
 {% block title %}Comissão de eventos — Igreja Batista em Santa Leopoldina{% endblock %}
 
@@ -40,7 +41,7 @@
               </a>
               <p class="news-meta">
                 {% if operation.public_event.is_retreat %}Retiro · {% endif %}
-                {{ operation.public_event.starts_at|date:"d/m/Y H:i" }}
+                {{ operation.public_event.starts_at|short_datetime }}
               </p>
             </li>
           {% endfor %}
