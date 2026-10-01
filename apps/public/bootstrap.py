@@ -11,6 +11,7 @@ from apps.public.cms import (
     ensure_cms_editors_group,
     sync_cms_access_for_user,
 )
+from apps.public.institutional_content import INSTITUTIONAL_BODIES
 from apps.public.models import (
     EventIndexPage,
     InstitutionalPage,
@@ -41,21 +42,24 @@ def ensure_news_index() -> NewsIndexPage:
 
 
 def ensure_institutional_pages() -> None:
+    """Cria as páginas institucionais e preenche as que ainda têm o texto-guia.
+
+    Páginas que a Comunicação já editou nunca são sobrescritas.
+    """
     root = _site_root()
     for slug, title, intro in INSTITUTIONAL_PAGE_SEEDS:
-        if InstitutionalPage.objects.filter(slug=slug).exists():
-            continue
-        page = InstitutionalPage(
-            title=title,
-            slug=slug,
-            intro=intro,
-            body=(
-                f"<p>{intro}</p>"
-                f"<p>{INSTITUTIONAL_PLACEHOLDER} quando estiver pronto para publicar a versão final.</p>"
-            ),
+        body = INSTITUTIONAL_BODIES.get(slug) or (
+            f"<p>{intro}</p>"
+            f"<p>{INSTITUTIONAL_PLACEHOLDER} quando estiver pronto para publicar a versão final.</p>"
         )
-        root.add_child(instance=page)
-        page.save_revision().publish()
+        page = InstitutionalPage.objects.filter(slug=slug).first()
+        if page is None:
+            page = InstitutionalPage(title=title, slug=slug, intro=intro, body=body)
+            root.add_child(instance=page)
+            page.save_revision().publish()
+        elif INSTITUTIONAL_PLACEHOLDER in page.body and slug in INSTITUTIONAL_BODIES:
+            page.body = body
+            page.save_revision().publish()
 
 
 def ensure_agenda_index() -> EventIndexPage:
