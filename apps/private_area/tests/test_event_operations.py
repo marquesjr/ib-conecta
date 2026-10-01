@@ -277,6 +277,44 @@ class EventTaskTests(TestCase):
         item.refresh_from_db()
         self.assertTrue(item.done)
 
+    def test_task_page_shows_description_deadline_assignee_and_way_back(self):
+        from apps.private_area.models import EventTask
+
+        added = self.client.post(
+            reverse("private_area:event_task_add", args=[self.operation.pk]),
+            {
+                "title": "Comprar copos",
+                "assignee": self.ana.pk,
+                "due_date": "2026-10-20",
+                "description": "Dois pacotes de copos de 200 ml.",
+            },
+        )
+        self.assertEqual(added.status_code, 302)
+        task = EventTask.objects.get()
+        self.client.logout()
+        self.client.login(username="ana", password="senha-segura-123")
+
+        page = self.client.get(reverse("private_area:event_task_update", args=[task.pk]))
+
+        self.assertContains(page, "Dois pacotes de copos de 200 ml.")
+        self.assertContains(page, "20 de outubro de 2026")
+        self.assertContains(page, "Responsável")
+        self.assertContains(page, "Voltar ao evento")
+        self.assertContains(page, self.event.url)
+
+    def test_task_page_without_deadline_says_so(self):
+        from apps.private_area.models import EventTask
+
+        self.client.post(
+            reverse("private_area:event_task_add", args=[self.operation.pk]),
+            {"title": "Comprar copos", "assignee": self.ana.pk},
+        )
+        task = EventTask.objects.get()
+        self.client.logout()
+        self.client.login(username="ana", password="senha-segura-123")
+        page = self.client.get(reverse("private_area:event_task_update", args=[task.pk]))
+        self.assertContains(page, "Sem prazo definido")
+
     def test_other_member_cannot_update_someone_elses_task(self):
         from apps.private_area.models import EventTask
 

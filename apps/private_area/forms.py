@@ -3,6 +3,7 @@ from pathlib import Path
 from django import forms
 from django.contrib.auth import get_user_model
 
+from apps.forms import FormLabelsMixin
 from apps.private_area.models import (
     MONTH_LABELS,
     WORSHIP_FUNCTIONS,
@@ -45,7 +46,7 @@ ALLOWED_EXTENSIONS = {
 MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 
 
-class PrivateDocumentForm(forms.ModelForm):
+class PrivateDocumentForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = PrivateDocument
         fields = ("title", "description", "audience", "file")
@@ -60,13 +61,13 @@ class PrivateDocumentForm(forms.ModelForm):
         return uploaded
 
 
-class MinistryForm(forms.ModelForm):
+class MinistryForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = Ministry
         fields = ("name", "description", "uses_repertoire")
 
 
-class MonthlyScheduleForm(forms.ModelForm):
+class MonthlyScheduleForm(FormLabelsMixin, forms.ModelForm):
     month = forms.TypedChoiceField(
         label="Mês",
         coerce=int,
@@ -89,7 +90,7 @@ def _people_queryset():
     return User.objects.filter(is_active=True).order_by("first_name", "last_name", "username")
 
 
-class AssignmentForm(forms.ModelForm):
+class AssignmentForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = ScheduleAssignment
         fields = ("starts_at", "function", "participant")
@@ -112,7 +113,7 @@ class AssignmentForm(forms.ModelForm):
         )
 
 
-class SubstitutionForm(forms.Form):
+class SubstitutionForm(FormLabelsMixin, forms.Form):
     substitute = PersonChoiceField(queryset=User.objects.none(), label="Substituto")
 
     def __init__(self, *args, assignment=None, **kwargs):
@@ -123,7 +124,7 @@ class SubstitutionForm(forms.Form):
         self.fields["substitute"].queryset = queryset
 
 
-class EventOperationForm(forms.ModelForm):
+class EventOperationForm(FormLabelsMixin, forms.ModelForm):
     title = forms.CharField(max_length=200, required=False, label="Título")
     starts_at = forms.DateTimeField(
         required=False,
@@ -200,19 +201,19 @@ class EventOperationForm(forms.ModelForm):
         return cleaned
 
 
-class EventPlanningForm(forms.ModelForm):
+class EventPlanningForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = EventOperation
         fields = ("notes",)
 
 
-class EventTeamForm(forms.ModelForm):
+class EventTeamForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = EventTeam
         fields = ("name",)
 
 
-class EventTeamMemberForm(forms.ModelForm):
+class EventTeamMemberForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = EventTeamMember
         fields = ("user",)
@@ -224,10 +225,14 @@ class EventTeamMemberForm(forms.ModelForm):
         )
 
 
-class EventTaskForm(forms.ModelForm):
+class EventTaskForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = EventTask
-        fields = ("title", "assignee")
+        fields = ("title", "assignee", "due_date", "description")
+        widgets = {
+            "due_date": forms.DateInput(attrs={"type": "date"}),
+            "description": forms.Textarea(attrs={"rows": 3}),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -236,7 +241,7 @@ class EventTaskForm(forms.ModelForm):
         )
 
 
-class EventChecklistForm(forms.ModelForm):
+class EventChecklistForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = EventChecklistItem
         fields = ("label", "assignee")
@@ -248,36 +253,36 @@ class EventChecklistForm(forms.ModelForm):
         )
 
 
-class EventSupplierForm(forms.ModelForm):
+class EventSupplierForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = EventSupplier
         fields = ("name", "contact", "notes")
 
 
-class EventMaterialForm(forms.ModelForm):
+class EventMaterialForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = EventMaterial
         fields = ("name", "quantity", "notes")
 
 
-class EventBudgetLineForm(forms.ModelForm):
+class EventBudgetLineForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = EventBudgetLine
         fields = ("description", "amount")
 
 
-class EventRegistrantMessageForm(forms.Form):
+class EventRegistrantMessageForm(FormLabelsMixin, forms.Form):
     subject = forms.CharField(max_length=200, label="Assunto")
     body = forms.CharField(widget=forms.Textarea, label="Mensagem")
 
 
-class EventFinalReportForm(forms.ModelForm):
+class EventFinalReportForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = EventOperation
         fields = ("final_report",)
 
 
-class EventOperationDocumentForm(forms.ModelForm):
+class EventOperationDocumentForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = EventOperationDocument
         fields = ("title", "file")
@@ -292,7 +297,7 @@ class EventOperationDocumentForm(forms.ModelForm):
         return uploaded
 
 
-class SongForm(forms.ModelForm):
+class SongForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = Song
         fields = (
@@ -330,13 +335,13 @@ class SongForm(forms.ModelForm):
         return cleaned
 
 
-class SongReferenceForm(forms.ModelForm):
+class SongReferenceForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = SongReference
         fields = ("label", "target_url")
 
 
-class SongVersionForm(forms.ModelForm):
+class SongVersionForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = SongVersion
         fields = ("name", "key", "lyrics", "chords")
@@ -359,7 +364,7 @@ SongVersionFormSet = forms.inlineformset_factory(
 )
 
 
-class WeeklyPlaylistForm(forms.ModelForm):
+class WeeklyPlaylistForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = WeeklyPlaylist
         fields = ("kind", "starts_at", "notes")
@@ -376,7 +381,7 @@ class WeeklyPlaylistForm(forms.ModelForm):
         self.fields["kind"].help_text = "Culto ou ensaio da semana."
 
 
-class PlaylistItemForm(forms.ModelForm):
+class PlaylistItemForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = PlaylistItem
         fields = ("song", "version", "key", "notes")
