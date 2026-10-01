@@ -2,8 +2,10 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 
+from apps.forms import FormLabelsMixin
 
-class LoginForm(AuthenticationForm):
+
+class LoginForm(FormLabelsMixin, AuthenticationForm):
     username = forms.CharField(
         label="E-mail ou usuário",
         widget=forms.TextInput(
@@ -22,7 +24,7 @@ class LoginForm(AuthenticationForm):
     }
 
 
-class OTPTokenForm(forms.Form):
+class OTPTokenForm(FormLabelsMixin, forms.Form):
     token = forms.CharField(
         label="Código de autenticação",
         max_length=6,
@@ -31,7 +33,7 @@ class OTPTokenForm(forms.Form):
     )
 
 
-class AccountDetailsForm(forms.ModelForm):
+class AccountDetailsForm(FormLabelsMixin, forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = ["first_name", "last_name", "email"]
@@ -60,7 +62,7 @@ class AccountDetailsForm(forms.ModelForm):
         return email
 
 
-class AccountPasswordChangeForm(PasswordChangeForm):
+class AccountPasswordChangeForm(FormLabelsMixin, PasswordChangeForm):
     old_password = forms.CharField(
         label="Senha atual",
         strip=False,
