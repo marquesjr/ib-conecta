@@ -149,3 +149,37 @@ class PrivateDocumentLibraryTests(TestCase):
         entry = AuditLog.objects.filter(action="document_uploaded").latest("created_at")
         self.assertEqual(entry.metadata.get("document_id"), document.pk)
         self.assertEqual(entry.metadata.get("title"), "Circular pastoral")
+
+
+class DocumentLibraryUxTests(TestCase):
+    def setUp(self):
+        make_user("membro", Role.MEMBER)
+        self.client.login(username="membro", password="senha-segura-123")
+        self.url = reverse("private_area:document_library")
+
+    def test_each_item_shows_file_type_and_size(self):
+        make_document(title="Comunicado", audience=DocumentAudience.MEMBERS, filename="aviso.pdf")
+        response = self.client.get(self.url)
+        self.assertContains(response, '<span class="file-type">PDF</span>', html=True)
+        self.assertContains(response, "bytes")
+
+    def test_search_box_appears_only_when_the_list_is_long(self):
+        make_document(title="Comunicado", audience=DocumentAudience.MEMBERS)
+        self.assertNotContains(self.client.get(self.url), 'name="q"')
+        for number in range(6):
+            make_document(title=f"Ata {number}", audience=DocumentAudience.MEMBERS)
+        self.assertContains(self.client.get(self.url), 'name="q"')
+
+    def test_search_ignores_accents_and_case(self):
+        make_document(title="Relatório anual", audience=DocumentAudience.MEMBERS)
+        for number in range(6):
+            make_document(title=f"Ata {number}", audience=DocumentAudience.MEMBERS)
+        response = self.client.get(self.url, {"q": "RELATORIO"})
+        self.assertContains(response, "Relatório anual")
+        self.assertNotContains(response, "Ata 1")
+
+    def test_search_without_results_says_so_and_keeps_the_box(self):
+        make_document(title="Relatório anual", audience=DocumentAudience.MEMBERS)
+        response = self.client.get(self.url, {"q": "inexistente"})
+        self.assertContains(response, "Nenhum documento encontrado")
+        self.assertContains(response, 'name="q"')
