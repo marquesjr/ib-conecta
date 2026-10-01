@@ -39,3 +39,7 @@ Base do texto inicial das páginas institucionais (issue #70). Consulta em 01/10
 ## O que ficou de fora de propósito
 
 As páginas **não** afirmam nada específico da Igreja Batista em Santa Leopoldina: ano e circunstâncias da fundação, nomes de pastores e líderes, ministérios que existem de fato, e **filiação à Convenção Batista do ES ou à CBB** (por isso a Declaração é apresentada como "dos batistas brasileiros", sem dizer que a igreja a adota). Esses dados precisam ser escritos ou confirmados pela própria igreja, no CMS (Wagtail). Páginas editadas não são sobrescritas pelo texto inicial.
+
+## Decisões confirmadas
+
+- **Família e casamento:** a igreja segue a Declaração Doutrinária da CBB (confirmado em 01/10/2026). O bloco "Família e casamento" da página Crenças reproduz o artigo da Declaração.
