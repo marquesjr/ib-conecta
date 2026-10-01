@@ -1,11 +1,12 @@
 from django import forms
 
+from apps.forms import FormLabelsMixin
 from apps.public.privacy import consent_label
 from apps.public.retreats import event_reference_date, is_minor
 from apps.public.spam import HONEYPOT_FIELD
 
 
-class HoneypotForm(forms.Form):
+class HoneypotForm(FormLabelsMixin, forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields[HONEYPOT_FIELD] = forms.CharField(
@@ -127,7 +128,7 @@ class KnowChurchForm(HoneypotForm):
         }
 
 
-class EventRegistrationForm(forms.Form):
+class EventRegistrationForm(FormLabelsMixin, forms.Form):
     name = forms.CharField(
         label="Nome",
         max_length=120,
@@ -145,7 +146,7 @@ class EventRegistrationForm(forms.Form):
     )
 
 
-class EventFamilyMemberForm(forms.Form):
+class EventFamilyMemberForm(FormLabelsMixin, forms.Form):
     name = forms.CharField(label="Nome do familiar", max_length=120, required=False)
     birth_date = forms.DateField(
         label="Data de nascimento",
@@ -177,7 +178,10 @@ class EventFamilyMemberForm(forms.Form):
 FamilyMemberFormSet = forms.formset_factory(EventFamilyMemberForm, extra=2, max_num=10)
 
 
-class RetreatRegistrationForm(forms.Form):
+class RetreatRegistrationForm(FormLabelsMixin, forms.Form):
+    # Obrigatórios quando há menor de 18 anos; "(opcional)" enganaria.
+    OPTIONAL_MARK_EXEMPT = ("guardian_name", "guardian_phone", "guardian_relationship")
+
     name = forms.CharField(
         label="Nome",
         max_length=120,
