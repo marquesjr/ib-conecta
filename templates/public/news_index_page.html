@@ -30,6 +30,7 @@
                 {% endif %}
               </span>
               {% if news.cover_image %}{% image news.cover_image fill-160x120 class="register-thumb" alt="" %}{% endif %}
+              {% include "public/_arrow.html" %}
             </a>
           </li>
         {% endfor %}

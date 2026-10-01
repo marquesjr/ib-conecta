@@ -39,6 +39,7 @@
                 {% endif %}
               </span>
               {% if sermon.cover_image %}{% image sermon.cover_image fill-160x120 class="register-thumb" alt="" %}{% endif %}
+              {% include "public/_arrow.html" %}
             </a>
           </li>
         {% endfor %}

@@ -9,10 +9,13 @@
     <p class="news-meta">
       <a href="{{ page.get_parent.url }}">Sermões</a>
       {% if page.first_published_at %}
-        · {{ page.first_published_at|date:"d/m/Y" }}
+        · {{ page.first_published_at|long_date }}
       {% endif %}
     </p>
-    <h1>{{ page.title }}</h1>
+    <div class="title-row">
+      <h1>{{ page.title }}</h1>
+      {% whatsapp_share_button page.title %}
+    </div>
     {% if page.intro %}
       <p class="lede">{{ page.intro }}</p>
     {% endif %}
@@ -47,8 +50,4 @@
       </div>
     {% endif %}
   </article>
-{% endblock %}
-
-{% block share %}
-  <div class="share-area">{% whatsapp_share page.title %}</div>
 {% endblock %}
