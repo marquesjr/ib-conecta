@@ -86,6 +86,16 @@ class NewsPage(Page):
     parent_page_types = ["public.NewsIndexPage"]
     subpage_types = []
 
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context["other_news"] = (
+            NewsPage.objects.sibling_of(self, inclusive=False)
+            .live()
+            .public()
+            .order_by("-first_published_at", "-path")[:3]
+        )
+        return context
+
     class Meta:
         verbose_name = "Notícia"
         verbose_name_plural = "Notícias"
