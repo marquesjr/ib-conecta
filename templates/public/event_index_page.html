@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load public_tags %}
 
 {% block title %}{{ page.title }} — Igreja Batista em Santa Leopoldina{% endblock %}
 
@@ -17,7 +18,7 @@
               <time class="register-date" datetime="{{ event.starts_at|date:'c' }}">
                 <span class="register-day">{{ event.starts_at|date:"d" }}</span>
                 <span class="register-month">{{ event.starts_at|date:"M Y" }}</span>
-                <span class="register-time">{{ event.starts_at|date:"H:i" }}</span>
+                <span class="register-time">{{ event.starts_at|hour_label }}</span>
               </time>
               <span class="register-body">
                 <span class="register-title">{{ event.title }}</span>

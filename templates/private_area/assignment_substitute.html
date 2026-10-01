@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load public_tags %}
 {% load person_tags %}
 
 {% block title %}Substituição — Igreja Batista em Santa Leopoldina{% endblock %}
@@ -10,7 +11,7 @@
     <h1>Registrar substituição</h1>
     <p class="lede">
       {{ assignment.function }} — {{ assignment.participant|person_name }}
-      em {{ assignment.starts_at|date:"d/m/Y H:i" }}
+      em {{ assignment.starts_at|long_datetime }}
     </p>
     <form method="post">
       {% csrf_token %}
