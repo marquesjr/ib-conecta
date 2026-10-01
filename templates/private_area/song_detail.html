@@ -21,7 +21,7 @@
         <a class="cta secondary" href="{% url 'private_area:song_score' song.slug %}">Baixar partitura</a>
       {% endif %}
       {% if can_manage_songbook %}
-        <a class="cta secondary" href="{% url 'private_area:song_edit' song.slug %}">Revisar</a>
+        <a class="cta secondary" href="{% url 'private_area:song_edit' song.slug %}">Editar louvor</a>
       {% endif %}
     </p>
     {% if can_manage_songbook and song.status != "published" %}
@@ -47,30 +47,32 @@
       </div>
     {% endif %}
     {% if song.versions.all %}
-      <div class="panel">
+      <div class="panel song-versions">
         <h2>Versões</h2>
+        <p class="muted">A letra e a cifra acima são da versão principal. Abra uma versão para ver só o que ela muda.</p>
         {% for version in song.versions.all %}
-          <h3>{{ version.name }}{% if version.key %} — Tom {{ version.key }}{% endif %}</h3>
-          {% if version.lyrics %}
-            <pre class="song-lyrics">{{ version.lyrics }}</pre>
-          {% endif %}
-          {% if version.chords %}
-            <pre class="chord-sheet" tabindex="0" aria-label="Cifra de {{ version.name }}">{{ version.chords }}</pre>
-          {% endif %}
+          <details class="song-version">
+            <summary>{{ version.name }}{% if version.key %} — Tom {{ version.key }}{% endif %}</summary>
+            {% if version.lyrics %}
+              <pre class="song-lyrics">{{ version.lyrics }}</pre>
+            {% endif %}
+            {% if version.chords %}
+              <pre class="chord-sheet" tabindex="0" aria-label="Cifra de {{ version.name }}">{{ version.chords }}</pre>
+            {% endif %}
+          </details>
         {% endfor %}
       </div>
     {% endif %}
     {% if song.references.all %}
       <div class="panel">
         <h2>Referências</h2>
-        {% for reference in song.references.all %}
-          <p>
-            {{ reference.label }}:
-            <a href="{% url 'private_area:song_reference' reference.token %}">
-              {% url 'private_area:song_reference' reference.token %}
-            </a>
-          </p>
-        {% endfor %}
+        <ul class="song-references">
+          {% for reference in song.references.all %}
+            <li>
+              <a href="{% url 'private_area:song_reference' reference.token %}" target="_blank" rel="noopener noreferrer">{{ reference.label }}<span class="visually-hidden"> (abre em nova aba)</span></a>
+            </li>
+          {% endfor %}
+        </ul>
       </div>
     {% endif %}
     <div class="panel">

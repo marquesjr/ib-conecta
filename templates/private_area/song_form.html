@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}{% if editing %}Revisar louvor{% else %}Cadastrar louvor{% endif %} — Igreja Batista em Santa Leopoldina{% endblock %}
+{% block title %}{% if editing %}Editar louvor{% else %}Cadastrar louvor{% endif %} — Igreja Batista em Santa Leopoldina{% endblock %}
 
 {% block extra_head %}<script src="{% static 'js/song-form.js' %}" defer></script>{% endblock %}
 
@@ -9,7 +9,7 @@
 
 {% block content %}
   <section class="cms-page">
-    <h1>{% if editing %}Revisar louvor{% else %}Cadastrar louvor{% endif %}</h1>
+    <h1>{% if editing %}Editar louvor{% else %}Cadastrar louvor{% endif %}</h1>
     <p class="lede">
       Só armazene letra, cifra ou partitura com autorização de uso registrada.
     </p>
