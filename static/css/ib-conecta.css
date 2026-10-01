@@ -1031,6 +1031,12 @@ form p:has(> input[type="checkbox"]) > .helptext { grid-column: 2; }
 .social-links a { gap: .65rem; text-decoration: none; font-weight: 500; }
 .social-links a::after { content: ""; flex: none; width: 21px; height: 21px; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6'%3E%3Cpath d='M4 12h15m-6-6 6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6'%3E%3Cpath d='M4 12h15m-6-6 6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat; }
 .social-links a:hover { text-decoration: underline; }
+.document-search { margin-bottom: 1.25rem; }
+.document-search-row { display: flex; gap: .5rem; align-items: stretch; max-width: 28rem; }
+.document-search-row input { flex: 1; min-width: 0; }
+.document-search-row .cta { margin: 0; }
+.document-list .news-meta { display: flex; flex-wrap: wrap; gap: .25rem .75rem; align-items: center; }
+.file-type { padding: .1em .5em; border: 1px solid currentcolor; border-radius: 5px; font-size: .8rem; font-weight: 600; letter-spacing: .04em; }
 .task-facts { display: grid; gap: .6rem; margin: 1.25rem 0; }
 .task-facts > div { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 1rem; align-items: baseline; }
 .task-facts dt { color: var(--archive-gray); font-size: .9rem; }
