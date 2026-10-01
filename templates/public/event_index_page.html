@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load public_tags %}
+{% load public_tags wagtailimages_tags %}
 
 {% block title %}{{ page.title }} — Igreja Batista em Santa Leopoldina{% endblock %}
 
@@ -36,6 +36,7 @@
                   </span>
                 {% endif %}
               </span>
+              {% if event.cover_image %}{% image event.cover_image fill-160x120 class="register-thumb" alt="" %}{% endif %}
               {% include "public/_arrow.html" %}
             </a>
           </li>

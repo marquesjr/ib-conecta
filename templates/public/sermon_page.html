@@ -5,6 +5,7 @@
 
 {% block content %}
   <article class="cms-page">
+    {% include "public/_cover_image.html" %}
     <p class="news-meta">
       <a href="{{ page.get_parent.url }}">Sermões</a>
       {% if page.first_published_at %}

@@ -9,8 +9,26 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, path
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import RichTextField
+from wagtail.images import get_image_model_string
 from wagtail.models import Page
 from wagtail.snippets.models import register_snippet
+
+
+class CoverImageMixin(models.Model):
+    """Imagem de capa opcional: miniatura nas listas e imagem no topo do detalhe."""
+
+    cover_image = models.ForeignKey(
+        get_image_model_string(),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name="Imagem de capa",
+        help_text="Opcional. Aparece como miniatura na lista e no topo da página.",
+    )
+
+    class Meta:
+        abstract = True
 
 
 class InstitutionalPage(Page):
@@ -67,7 +85,7 @@ class NewsIndexPage(Page):
         return context
 
 
-class NewsPage(Page):
+class NewsPage(CoverImageMixin, Page):
     """Notícia ou comunicado publicado pela Comunicação."""
 
     intro = models.CharField(
@@ -79,6 +97,7 @@ class NewsPage(Page):
     body = RichTextField(verbose_name="Conteúdo")
 
     content_panels = Page.content_panels + [
+        FieldPanel("cover_image"),
         FieldPanel("intro"),
         FieldPanel("body"),
     ]
@@ -134,7 +153,7 @@ class EventIndexPage(Page):
         return context
 
 
-class EventPage(RoutablePageMixin, Page):
+class EventPage(CoverImageMixin, RoutablePageMixin, Page):
     """Culto ou evento público da agenda."""
 
     starts_at = models.DateTimeField(verbose_name="Início")
@@ -172,6 +191,7 @@ class EventPage(RoutablePageMixin, Page):
     )
 
     content_panels = Page.content_panels + [
+        FieldPanel("cover_image"),
         FieldPanel("starts_at"),
         FieldPanel("ends_at"),
         FieldPanel("location"),
@@ -190,9 +210,12 @@ class EventPage(RoutablePageMixin, Page):
         verbose_name_plural = "Eventos"
 
     def get_context(self, request, *args, **kwargs):
-        from apps.public.forms import EventRegistrationForm, FamilyMemberFormSet, RetreatRegistrationForm
-
         from apps.public.event_facts import directions_url, spots_left, when_label
+        from apps.public.forms import (
+            EventRegistrationForm,
+            FamilyMemberFormSet,
+            RetreatRegistrationForm,
+        )
 
         context = super().get_context(request, *args, **kwargs)
         context["event_when"] = when_label(self.starts_at, self.ends_at)
@@ -207,7 +230,11 @@ class EventPage(RoutablePageMixin, Page):
 
     @path("inscrever/")
     def register_view(self, request):
-        from apps.public.forms import EventRegistrationForm, FamilyMemberFormSet, RetreatRegistrationForm
+        from apps.public.forms import (
+            EventRegistrationForm,
+            FamilyMemberFormSet,
+            RetreatRegistrationForm,
+        )
         from apps.public.retreats import create_retreat_registration
 
         if not self.requires_registration:
@@ -501,7 +528,7 @@ class SermonIndexPage(Page):
         return context
 
 
-class SermonPage(Page):
+class SermonPage(CoverImageMixin, Page):
     """Sermão ou estudo com texto e mídia incorporada externa (sem upload de vídeo)."""
 
     intro = models.CharField(
@@ -519,6 +546,7 @@ class SermonPage(Page):
     )
 
     content_panels = Page.content_panels + [
+        FieldPanel("cover_image"),
         FieldPanel("intro"),
         FieldPanel("body"),
         FieldPanel("media_url"),
