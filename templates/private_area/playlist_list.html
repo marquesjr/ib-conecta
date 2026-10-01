@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load public_tags %}
 
 {% block title %}Playlists semanais — Igreja Batista em Santa Leopoldina{% endblock %}
 
@@ -17,7 +18,7 @@
             <a href="{% url 'private_area:playlist_detail' playlist.pk %}">
               {{ playlist.get_kind_display }} — {{ playlist.ministry.name }}
             </a>
-            <p class="news-meta">{{ playlist.starts_at|date:"d/m/Y H:i" }}</p>
+            <p class="news-meta">{{ playlist.starts_at|short_datetime }}</p>
           </li>
         {% endfor %}
       </ul>

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load public_tags %}
 
 {% block title %}Biblioteca de documentos — Igreja Batista em Santa Leopoldina{% endblock %}
 
@@ -21,7 +22,7 @@
             {% if document.description %}
               <p>{{ document.description }}</p>
             {% endif %}
-            <p class="news-meta">{{ document.created_at|date:"d/m/Y H:i" }}</p>
+            <p class="news-meta">{{ document.created_at|short_datetime }}</p>
           </li>
         {% endfor %}
       </ul>

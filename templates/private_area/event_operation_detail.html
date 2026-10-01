@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load public_tags %}
 {% load state_tags %}
 
 {% block title %}{{ operation.public_event.title }} — Igreja Batista em Santa Leopoldina{% endblock %}
@@ -9,7 +10,7 @@
   <section class="cms-page">
     <h1>{{ operation.public_event.title }}</h1>
     <p class="lede">
-      {{ operation.public_event.starts_at|date:"d/m/Y H:i" }}
+      {{ operation.public_event.starts_at|long_datetime }}
       {% if operation.public_event.location %} · {{ operation.public_event.location }}{% endif %}
     </p>
     {% if operation.public_event.is_retreat and can_manage_operations %}
@@ -103,6 +104,7 @@
               <strong>{{ task.title }}</strong>
               <p class="news-meta">
                 {{ task.assignee.username }}
+                {% if task.due_date %}· prazo {{ task.due_date|date:"d/m" }}{% endif %}
                 {% if task.done %}{% state "done" "Concluída" %}{% else %}{% state "pending" "Pendente" %}{% endif %}
               </p>
             </li>
