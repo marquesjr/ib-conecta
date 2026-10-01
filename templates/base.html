@@ -32,13 +32,18 @@
     <a class="brand" href="{% url 'home' %}" aria-label="Igreja Batista em Santa Leopoldina — início"><img class="brand-image" src="{% static 'img/church-logo.png' %}" alt="Igreja Batista em Santa Leopoldina" width="540" height="221" /></a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" hidden>Menu <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
     <nav id="primary-nav" aria-label="Principal">
+      {% if institutional_pages %}
       <details class="nav-group"><summary>Conheça a igreja <svg class="icon-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="nav-dropdown">
+        {% for institutional in institutional_pages %}<a href="{{ institutional.url }}">{{ institutional.title }}</a>{% endfor %}
+      </div></details>
+      {% endif %}
+      <details class="nav-group"><summary>Participe <svg class="icon-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="nav-dropdown">
         <a href="{% url 'know_church' %}">Quero conhecer</a>
         <a href="{% url 'prayer_request' %}">Pedido de oração</a>
         <a href="{% url 'contribute' %}">Contribuir</a>
-        {% if news_index_url %}<a href="{{ news_index_url }}">Notícias</a>{% endif %}
         {% if whatsapp_url %}<a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer">WhatsApp da igreja</a>{% endif %}
       </div></details>
+      {% if news_index_url %}<a href="{{ news_index_url }}">Notícias</a>{% endif %}
       {% if agenda_index_url %}<a href="{{ agenda_index_url }}">Agenda</a>{% endif %}
       {% if sermon_index_url %}<a href="{{ sermon_index_url }}">Sermões</a>{% endif %}
       {% if live_stream_url %}<a href="{{ live_stream_url }}">Ao vivo</a>{% endif %}

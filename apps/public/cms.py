@@ -19,6 +19,11 @@ INSTITUTIONAL_PAGE_SEEDS = (
 )
 
 
+# Texto-guia das páginas institucionais recém-criadas; enquanto estiver no conteúdo,
+# a página ainda não foi escrita e não entra no menu público.
+INSTITUTIONAL_PLACEHOLDER = "Edite este conteúdo no CMS Wagtail"
+
+
 def ensure_cms_editors_group() -> Group:
     group, _ = Group.objects.get_or_create(name=CMS_EDITORS_GROUP_NAME)
 
