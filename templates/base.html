@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load static public_tags %}
+{% load static public_tags private_nav %}
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
@@ -53,6 +53,7 @@
       <a class="cta nav-visit" href="{% url 'plan_visit' %}">Planeje sua visita</a>{% endif %}
     </nav>
   </header>
+  {% if request.resolver_match.app_name == "private_area" and user.is_authenticated %}{% private_nav %}{% endif %}
   <main id="conteudo" tabindex="-1">
     {% if messages %}<ul class="messages" aria-live="polite">{% for message in messages %}<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>{% endfor %}</ul>{% endif %}
     {% block content %}{% endblock %}

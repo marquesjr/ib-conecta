@@ -48,6 +48,12 @@ p { margin: 0 0 1rem; }
 .nav-account summary { min-height: 48px; padding: .6rem 1.1rem; border: 1px solid var(--ink-red); border-radius: 10px; color: var(--ink-red); font-weight: 500; }
 .nav-account summary:hover, .nav-account[open] summary { background: var(--paper-warm); }
 .nav-account-name { max-width: 12ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Subnavegação da área privada: abas no computador, faixa rolável no celular. */
+.private-nav { border-bottom: 1px solid var(--paper-shade); background: var(--paper); }
+.private-nav ul { display: flex; gap: .25rem; max-width: var(--width-wide, 90rem); margin: 0 auto; padding: 0 var(--page-gutter); list-style: none; overflow-x: auto; scrollbar-width: thin; }
+.private-nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .85rem; color: var(--graphite); font-size: .95rem; font-weight: 500; white-space: nowrap; text-decoration: none; border-bottom: 3px solid transparent; }
+.private-nav a:hover { color: var(--ink-red); }
+.private-nav a[aria-current="page"] { color: var(--ink-red); border-bottom-color: var(--ink-red); }
 .nav-account-who { margin: 0 0 .4rem; padding: .4rem .8rem .7rem; border-bottom: 1px solid var(--paper-shade); color: var(--graphite); font-size: .85rem; overflow-wrap: anywhere; }
 .nav-dropdown form { margin: 0; }
 .nav-dropdown button { display: block; width: 100%; padding: .7rem .8rem; border: 0; border-radius: 6px; background: none; color: var(--graphite); font: inherit; text-align: left; cursor: pointer; }
@@ -1019,7 +1025,7 @@ form p:has(> input[type="checkbox"]) > .helptext { grid-column: 2; }
 }
 @media print {
   body { background: #fff; color: #000; }
-  .site-header nav, .nav-toggle, .share-area, .share-button, .site-footer, .skip-link { display: none !important; }
+  .site-header nav, .private-nav, .nav-toggle, .share-area, .share-button, .site-footer, .skip-link { display: none !important; }
   .cms-page { padding: 1rem 0; }
   .panel { break-inside: avoid; border-color: var(--archive-gray); }
   table { display: table; overflow: visible; }
