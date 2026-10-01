@@ -13,18 +13,33 @@
         <a class="cta" href="{% url 'private_area:document_upload' %}">Enviar documento</a>
       </p>
     {% endif %}
+    {% if show_search %}
+      <form class="document-search" method="get" role="search">
+        <label for="document-q">Buscar documento</label>
+        <div class="document-search-row">
+          <input id="document-q" type="search" name="q" value="{{ query }}" autocomplete="off">
+          <button class="cta secondary" type="submit">Buscar</button>
+        </div>
+      </form>
+    {% endif %}
     {% if documents %}
-      <ul class="news-list">
+      <ul class="news-list document-list">
         {% for document in documents %}
           <li>
             <a href="{% url 'private_area:document_download' document.pk %}">{{ document.title }}</a>
             {% if document.description %}
               <p>{{ document.description }}</p>
             {% endif %}
-            <p class="news-meta">{{ document.created_at|date:"d/m/Y H:i" }}</p>
+            <p class="news-meta">
+              {% if document.file_type %}<span class="file-type">{{ document.file_type }}</span>{% endif %}
+              {% if document.file_size is not None %}<span>{{ document.file_size|filesizeformat }}</span>{% endif %}
+              <span>{{ document.created_at|date:"d/m/Y H:i" }}</span>
+            </p>
           </li>
         {% endfor %}
       </ul>
+    {% elif query %}
+      <p class="muted">Nenhum documento encontrado para “{{ query }}”. <a href="{% url 'private_area:document_library' %}">Ver todos</a></p>
     {% else %}
       <p class="muted">Nenhum documento disponível para o seu perfil.</p>
     {% endif %}
