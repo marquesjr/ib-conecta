@@ -56,7 +56,7 @@
   <main id="conteudo" tabindex="-1">
     {% if messages %}<ul class="messages" aria-live="polite">{% for message in messages %}<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>{% endfor %}</ul>{% endif %}
     {% block content %}{% endblock %}
-    {% block share %}<div class="share-area">{% whatsapp_share %}</div>{% endblock %}
+    {% block share %}{% endblock %}
   </main>
   {% block after_nav %}{% endblock %}
   {% if request.resolver_match.app_name == "private_area" or request.resolver_match.app_name == "accounts" %}

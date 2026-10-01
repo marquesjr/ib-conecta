@@ -56,3 +56,13 @@ def whatsapp_share(context, title="IB Conecta"):
     if request is not None:
         share_url = build_whatsapp_share_url(title, request.build_absolute_uri())
     return {"share_url": share_url}
+
+
+@register.inclusion_tag("public/_whatsapp_share_button.html", takes_context=True)
+def whatsapp_share_button(context, title="IB Conecta"):
+    """Botão discreto, para ficar ao lado do título da página."""
+    request = context.get("request")
+    share_url = ""
+    if request is not None:
+        share_url = build_whatsapp_share_url(title, request.build_absolute_uri())
+    return {"share_url": share_url}
