@@ -325,6 +325,8 @@ class EventTask(models.Model):
         related_name="event_tasks",
         verbose_name="Responsável",
     )
+    description = models.TextField(blank=True, default="", verbose_name="Descrição")
+    due_date = models.DateField(null=True, blank=True, verbose_name="Prazo")
     done = models.BooleanField(default=False, verbose_name="Concluída")
 
     class Meta:

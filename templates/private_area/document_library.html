@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load public_tags %}
 
 {% block title %}Biblioteca de documentos — Igreja Batista em Santa Leopoldina{% endblock %}
 
@@ -33,7 +34,7 @@
             <p class="news-meta">
               {% if document.file_type %}<span class="file-type">{{ document.file_type }}</span>{% endif %}
               {% if document.file_size is not None %}<span>{{ document.file_size|filesizeformat }}</span>{% endif %}
-              <span>{{ document.created_at|date:"d/m/Y H:i" }}</span>
+              <span>{{ document.created_at|short_datetime }}</span>
             </p>
           </li>
         {% endfor %}
