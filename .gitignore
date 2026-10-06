@@ -28,6 +28,11 @@ db.sqlite3
 .vscode/
 *.log
 
+# Claude Code: settings.local.json carrega caminhos e hooks da máquina; worktrees são
+# checkouts temporários de sessões. O .claude/settings.json compartilhado segue versionável.
+.claude/settings.local.json
+.claude/worktrees/
+
 # Artefatos de desenho. Versionamos o sistema e o comp aprovado que o DESIGN.md cita
 # como origem das cores amostradas; a rodada de exploração de direções e as capturas
 # de verificação somam ~63 MB de raster descartável e ficam de fora.
