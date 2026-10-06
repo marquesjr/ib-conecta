@@ -52,7 +52,7 @@
     <section class="home-section" aria-labelledby="agenda-title">
       <div class="section-heading"><div><h2 id="agenda-title">Próximos encontros</h2><p class="section-intro">Acompanhe a agenda da igreja.</p></div></div>
       <ul class="editorial-list">{% for event in upcoming_events %}
-        <li><a href="{{ event.url }}"><time class="date-stack" datetime="{{ event.starts_at|date:'c' }}"><b>{{ event.starts_at|date:"d" }}</b><span>{{ event.starts_at|date:"D" }} · {{ event.starts_at|date:"b" }}</span></time><span class="entry"><span class="entry-title">{{ event.title }}</span><span class="entry-meta">{{ event.starts_at|hour_label }}{% if event.location %} · {{ event.location }}{% endif %}</span></span>{% include "public/_arrow.html" %}</a></li>
+        <li><a href="{% if event.is_weekly %}{{ agenda_index_url }}{% else %}{{ event.url }}{% endif %}"><time class="date-stack" datetime="{{ event.starts_at|date:'c' }}"><b>{{ event.starts_at|date:"d" }}</b><span>{{ event.starts_at|date:"D" }} · {{ event.starts_at|date:"b" }}</span></time><span class="entry"><span class="entry-title">{{ event.title }}</span><span class="entry-meta">{% if event.is_weekly %}{{ event.repeats_label }} · {% endif %}{{ event.starts_at|hour_label }}{% if event.location %} · {{ event.location }}{% endif %}</span></span>{% include "public/_arrow.html" %}</a></li>
         {% empty %}<li class="empty">Nenhum evento publicado no momento.</li>{% endfor %}
       </ul>
       {% if agenda_index_url %}<a class="text-link section-more" href="{{ agenda_index_url }}">Ver toda a agenda {% include "public/_arrow.html" %}</a>{% endif %}

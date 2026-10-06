@@ -14,6 +14,27 @@
       <ul class="register">
         {% for event in event_pages %}
           <li>
+            {% if event.is_weekly %}
+            <div class="register-entry register-entry--static">
+              <time class="register-date" datetime="{{ event.starts_at|date:'c' }}">
+                <span class="register-day">{{ event.starts_at|date:"d" }}</span>
+                <span class="register-month">{{ event.starts_at|date:"M Y" }}</span>
+                <span class="register-time">{{ event.starts_at|hour_label }}</span>
+              </time>
+              <span class="register-body">
+                <span class="register-title">{{ event.title }}</span>
+                {% if event.description %}
+                  <span class="register-where">{{ event.description }}</span>
+                {% endif %}
+                {% if event.location %}
+                  <span class="register-where">{{ event.location }}</span>
+                {% endif %}
+                <span class="register-tags">
+                  <span class="register-tag">{{ event.repeats_label }}</span>
+                </span>
+              </span>
+            </div>
+            {% else %}
             <a class="register-entry" href="{{ event.url }}">
               <time class="register-date" datetime="{{ event.starts_at|date:'c' }}">
                 <span class="register-day">{{ event.starts_at|date:"d" }}</span>
@@ -39,6 +60,7 @@
               {% if event.cover_image %}{% image event.cover_image fill-160x120 class="register-thumb" alt="" %}{% endif %}
               {% include "public/_arrow.html" %}
             </a>
+            {% endif %}
           </li>
         {% endfor %}
       </ul>

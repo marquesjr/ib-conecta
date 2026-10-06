@@ -1070,3 +1070,7 @@ form p:has(> input[type="checkbox"]) > .helptext { grid-column: 2; }
 .task-facts > div { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 1rem; align-items: baseline; }
 .task-facts dt { color: var(--archive-gray); font-size: .9rem; }
 .task-facts dd { margin: 0; }
+
+/* Encontro semanal na agenda: não tem página própria, então não reage como link. */
+.register-entry--static:hover { background: none; }
+.register-entry--static:hover .register-title { color: inherit; text-decoration: none; }
