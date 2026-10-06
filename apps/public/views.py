@@ -13,6 +13,7 @@ from apps.public.models import (
     NewsPage,
     PrayerRequest,
     SermonPage,
+    with_weekly_events,
 )
 from apps.public.pix import contribution_pix
 from apps.public.privacy import (
@@ -61,10 +62,13 @@ def home(request):
             "archive": archive,
             # Imagem gerada não pode passar por prova: a home diz quando o acervo é de exemplo.
             "archive_is_seeded": archive["is_seeded"],
-            "upcoming_events": EventPage.objects.live()
-            .public()
-            .filter(starts_at__gte=timezone.now())
-            .order_by("starts_at")[:3],
+            "upcoming_events": with_weekly_events(
+                EventPage.objects.live()
+                .public()
+                .filter(starts_at__gte=timezone.now())
+                .order_by("starts_at")[:3],
+                limit=3,
+            ),
             "recent_sermons": SermonPage.objects.live()
             .public()
             .order_by("-first_published_at")[:3],

@@ -1,4 +1,5 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
+from types import SimpleNamespace
 
 from django.contrib import messages
 from django.db import models
@@ -120,6 +121,113 @@ class NewsPage(CoverImageMixin, Page):
         verbose_name_plural = "Notícias"
 
 
+@register_snippet
+class RecurringEvent(models.Model):
+    """Encontro fixo semanal (EBD, culto de domingo) que a agenda repete sozinha.
+
+    Não vira página: a agenda mostra o próximo dia de cada encontro ativo, sem que
+    alguém precise cadastrar um evento novo toda semana.
+    """
+
+    class Weekday(models.IntegerChoices):
+        MONDAY = 0, "Segunda-feira"
+        TUESDAY = 1, "Terça-feira"
+        WEDNESDAY = 2, "Quarta-feira"
+        THURSDAY = 3, "Quinta-feira"
+        FRIDAY = 4, "Sexta-feira"
+        SATURDAY = 5, "Sábado"
+        SUNDAY = 6, "Domingo"
+
+    title = models.CharField(max_length=120, verbose_name="Nome")
+    weekday = models.PositiveSmallIntegerField(
+        choices=Weekday.choices,
+        verbose_name="Dia da semana",
+    )
+    starts_at = models.TimeField(
+        verbose_name="Horário",
+        help_text="Horário de Brasília.",
+    )
+    location = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+        verbose_name="Local",
+    )
+    description = models.CharField(
+        max_length=300,
+        blank=True,
+        default="",
+        verbose_name="Descrição curta",
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Aparece na agenda",
+        help_text="Desmarque para tirar da agenda sem apagar.",
+    )
+
+    panels = [
+        FieldPanel("title"),
+        FieldPanel("weekday"),
+        FieldPanel("starts_at"),
+        FieldPanel("location"),
+        FieldPanel("description"),
+        FieldPanel("is_active"),
+    ]
+
+    class Meta:
+        ordering = ["weekday", "starts_at", "title"]
+        verbose_name = "Encontro semanal"
+        verbose_name_plural = "Encontros semanais"
+
+    def __str__(self):
+        from apps.public.templatetags.public_tags import hour_label
+
+        return f"{self.title} — {self.get_weekday_display()} {hour_label(self.starts_at)}"
+
+    @property
+    def repeats_label(self):
+        """``Todo domingo``, ``Toda quarta``: como a igreja fala de encontro fixo."""
+        short = self.get_weekday_display().removesuffix("-feira").lower()
+        article = "Todo" if self.weekday in (self.Weekday.SATURDAY, self.Weekday.SUNDAY) else "Toda"
+        return f"{article} {short}"
+
+    def next_occurrence(self, after=None):
+        """Próximo início (com fuso) a partir de ``after``; hoje vale se ainda não começou."""
+        now = timezone.localtime(after or timezone.now())
+        days_ahead = (self.weekday - now.weekday()) % 7
+        day = now.date() + timedelta(days=days_ahead)
+        starts = timezone.make_aware(datetime.combine(day, self.starts_at))
+        if starts < now:
+            starts += timedelta(days=7)
+        return starts
+
+
+def with_weekly_events(event_pages, after=None, limit=None):
+    """Mistura os eventos datados com o próximo dia de cada encontro semanal ativo.
+
+    Encontro semanal que cai no mesmo horário de um evento datado (um culto especial
+    cadastrado como página) fica de fora para não aparecer duas vezes.
+    """
+    entries = list(event_pages)
+    taken = {entry.starts_at for entry in entries}
+    for weekly in RecurringEvent.objects.filter(is_active=True):
+        starts_at = weekly.next_occurrence(after)
+        if starts_at in taken:
+            continue
+        entries.append(
+            SimpleNamespace(
+                is_weekly=True,
+                title=weekly.title,
+                starts_at=starts_at,
+                location=weekly.location,
+                description=weekly.description,
+                repeats_label=weekly.repeats_label,
+            )
+        )
+    entries.sort(key=lambda entry: entry.starts_at)
+    return entries[:limit] if limit else entries
+
+
 class EventIndexPage(Page):
     """Índice público da agenda de cultos e eventos."""
 
@@ -150,6 +258,7 @@ class EventIndexPage(Page):
             .filter(starts_at__gte=timezone.now())
             .order_by("starts_at", "path")
         )
+        context["event_pages"] = with_weekly_events(context["event_pages"])
         return context
 
 

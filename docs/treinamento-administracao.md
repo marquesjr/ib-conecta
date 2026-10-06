@@ -141,6 +141,15 @@ A política pública (`/privacidade/`) não se edita neste painel. Pedido de ora
 6. Slug estável. Visibilidade: **Público**.
 7. Rascunho → revisar → **Publicar**.
 
+### Encontros semanais (EBD, culto de domingo)
+
+Encontro que acontece toda semana no mesmo dia e horário **não** precisa de uma página por semana. Ele fica em **Snippets** → **Encontros semanais**:
+
+- Já vêm cadastrados **Escola Bíblica Dominical** (domingo, 9h) e **Culto de Adoração ao Senhor** (domingo, 19h).
+- Para mudar horário, local ou nome, edite o encontro. Para tirar da agenda sem apagar, desmarque **Aparece na agenda**.
+- A agenda e a home mostram sempre o próximo dia de cada encontro, com a etiqueta “Todo domingo”.
+- Culto especial no mesmo horário (ex.: aniversário da igreja)? Cadastre a página de **Evento** normalmente: naquele dia ela aparece no lugar do encontro semanal.
+
 A lista pública `/agenda/` mostra **somente eventos com início no futuro**. Evento com data passada some da lista (a URL antiga ainda abre se a página continuar publicada). Se o culto “não apareceu”, confira **Início** antes de chamar TI.
 
 ## Sermões
