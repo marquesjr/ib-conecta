@@ -1,5 +1,5 @@
 # Deploy produção (issue #17, ADR 0012).
-# Push em master atualiza a EC2 via SSM; não abre SSH e não usa runner na VM.
+# Push em master atualiza a VM do Lightsail via SSM híbrido (ADR 0013); não abre SSH e não usa runner na VM.
 name: Deploy produção
 
 on:
@@ -15,6 +15,7 @@ on:
       - "docs/ops/deploy.md"
       - "infra/aws/deploy.tf"
       - "infra/aws/variables.tf"
+      - "infra/aws/lightsail.tf"
   workflow_dispatch:
 
 permissions:
@@ -61,7 +62,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           audience: sts.amazonaws.com
 
-      - name: Publicar na EC2 via SSM
+      - name: Publicar na VM via SSM
         env:
           DEPLOY_SHA: ${{ github.sha }}
         run: bash scripts/deploy-prod-ssm.sh "$DEPLOY_SHA"

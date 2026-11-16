@@ -6,8 +6,10 @@ region      = "us-east-2"
 project_name = "ib-conecta"
 environment  = "prod"
 
-instance_type         = "t4g.small"
-boot_volume_size_gbs  = 30
+# Lightsail 1 GB (ADR 0013). IDs: aws lightsail get-bundles --region us-east-2
+lightsail_bundle_id    = "micro_3_0"
+lightsail_blueprint_id = "ubuntu_24_04"
+# availability_zone    = "us-east-2a"
 
 # Cole a chave pública OpenSSH (uma linha)
 ssh_public_key = "ssh-ed25519 AAAA... usuario@host"
@@ -21,7 +23,8 @@ ssh_allowed_cidrs = [
   "203.0.113.10/32",
 ]
 
-# E-mail do alerta de 80% do teto de US$ 20/mês
+# Teto do AWS Budget (alerta em 80%) e destino do alerta
+budget_limit_usd   = 12
 budget_alert_email = "voce@example.com"
 
 # enable_budget = false

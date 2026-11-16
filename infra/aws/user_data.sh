@@ -1,6 +1,21 @@
 #!/bin/bash
+# Launch script da VM Lightsail (roda como root na primeira inicialização).
+# O registro no SSM vem depois, à mão: scripts/install-ssm-agent.sh com a activation.
+# O Lightsail antepõe um cabeçalho e executa com sh: roda o corpo sob bash.
+exec bash -s <<'IB_EOF'
 set -euxo pipefail
 export DEBIAN_FRONTEND=noninteractive
+
+# 1 GB de RAM: swap de 2 GB para o build da imagem e picos do Postgres (ADR 0013).
+if [ ! -f /swapfile ]; then
+  fallocate -l 2G /swapfile
+  chmod 600 /swapfile
+  mkswap /swapfile
+  swapon /swapfile
+  echo '/swapfile none swap sw 0 0' >> /etc/fstab
+fi
+echo 'vm.swappiness=10' > /etc/sysctl.d/99-ib-conecta-swap.conf
+sysctl -p /etc/sysctl.d/99-ib-conecta-swap.conf
 
 apt-get update
 apt-get install -y ca-certificates curl git
@@ -16,17 +31,13 @@ apt-get update
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin age unzip
 usermod -aG docker ubuntu
 
-# Ubuntu 24.04 ARM no longer ships the awscli v1 package.
+case "$(uname -m)" in
+  aarch64|arm64) awscli_arch="aarch64" ;;
+  *) awscli_arch="x86_64" ;;
+esac
 tmp="$(mktemp -d)"
-curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "$tmp/awscliv2.zip"
+curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-${awscli_arch}.zip" -o "$tmp/awscliv2.zip"
 unzip -q "$tmp/awscliv2.zip" -d "$tmp"
 "$tmp/aws/install" -i /usr/local/aws-cli -b /usr/local/bin
 rm -rf "$tmp"
-
-# SSM Agent: GitHub Actions publica sem SSH inbound (docs/ops/deploy.md).
-# Instâncias já existentes ignoram mudanças de user_data; nelas rode scripts/install-ssm-agent.sh.
-tmp_ssm="$(mktemp -d)"
-curl -fsSL "https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_arm64/amazon-ssm-agent.deb" -o "$tmp_ssm/amazon-ssm-agent.deb"
-dpkg -i "$tmp_ssm/amazon-ssm-agent.deb"
-rm -rf "$tmp_ssm"
-systemctl enable --now amazon-ssm-agent
+IB_EOF

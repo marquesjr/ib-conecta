@@ -1,18 +1,23 @@
 # Infraestrutura AWS — IB Conecta
 
-Stack Terraform da produção em **`us-east-2` (Ohio)**: VPC pública mínima, EC2 **`t4g.small`** (Graviton, 2 GB), Elastic IP, bucket S3 privado só para backups, instance profile e AWS Budget de US$ 20/mês.
+Stack Terraform da produção em **`us-east-2` (Ohio)**:
 
-Decisões: ADRs `0001`–`0009` em `docs/adr/`. Épico [#17](https://github.com/marquesjr/ib-conecta/issues/17).
+- Instância **Lightsail `micro_3_0`** (1 GB, x86_64, cerca de US$ 7/mês) com IP estático e firewall da instância.
+- Bucket S3 privado, usado só para backups, mais um IAM user restrito a ele.
+- Registro híbrido da VM no SSM e role OIDC para o deploy pelo GitHub Actions.
+- AWS Budget de US$ 12/mês.
+
+Decisões: ADRs `0001`–`0013` em `docs/adr/`, com destaque para a [0013](../../docs/adr/0013-lightsail-1gb.md) (Lightsail). Épico [#17](https://github.com/marquesjr/ib-conecta/issues/17).
+
+Para migrar a partir da EC2 antiga, siga [`docs/ops/migracao-lightsail.md`](../../docs/ops/migracao-lightsail.md).
 
 ## Pré-requisitos
 
-- Terraform >= 1.5
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) com profile `default` (usuário IAM, não a root)
-- Chave pública SSH para a VM
+- Terraform >= 1.5.
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) com profile `default` (usuário IAM, não a root), com permissão de Lightsail, SSM, IAM, S3 e Budgets.
+- Chave pública SSH para a VM.
 
-A conta está no **Free Plan** até **16/11/2026** (créditos). Antes dessa data é preciso passar ao plano pago; senão a conta fecha. Depois disso o teto operacional é o budget de US$ 20.
-
-## Bootstrap
+## Bootstrap (do zero)
 
 ```bash
 cd infra/aws
@@ -32,34 +37,30 @@ Anote:
 terraform output instance_public_ip
 terraform output backup_bucket_name
 terraform output ssh_command
+terraform output ssm_activation_id
+terraform output -raw ssm_activation_code
 ```
 
-O IP público vai para os registros A no Registro.br (procedimento no README da raiz, seção DNS). Elastic IP atual de produção: veja `terraform output instance_public_ip`.
+O IP estático vai para os registros A no Registro.br (procedimento no README da raiz, seção DNS).
 
 ## Depois do apply
 
-Na VM (usuário `ubuntu`), instale o app com o Compose de produção:
+O launch script (`user_data.sh`) instala Docker Engine + Compose, age e AWS CLI v2 e cria 2 GB de swap na primeira inicialização. Isso leva alguns minutos; acompanhe com `cloud-init status --wait`. Na VM (usuário `ubuntu`):
 
 ```bash
 git clone https://github.com/marquesjr/ib-conecta.git
 cd ib-conecta
+sudo SSM_ACTIVATION_ID='<id>' SSM_ACTIVATION_CODE='<code>' scripts/install-ssm-agent.sh
 cp .env.prod.example .env.prod
-# Preencha secrets; WEB_CONCURRENCY=1; CADDY_TLS vazio
+# Preencha os secrets; WEB_CONCURRENCY=1; CADDY_TLS vazio
 docker compose -f docker-compose.prod.yml --env-file .env.prod up --build -d
 ```
 
-O `user_data` já instala Docker Engine + plugin Compose e o Amazon SSM Agent na primeira inicialização (pode levar alguns minutos). Instâncias criadas antes desse change precisam de `sudo scripts/install-ssm-agent.sh` uma vez.
+Backups (access key do IAM user `ib-conecta-prod-backup` + timer): [`docs/backup.md`](../../docs/backup.md).
 
 ## Deploy contínuo (GitHub Actions)
 
-Push em `master` publica a VM via SSM (sem abrir SSH). Runbook: [`docs/ops/deploy.md`](../../docs/ops/deploy.md). ADR 0012.
-
-Depois de `terraform apply` nesta pasta, anote também:
-
-```bash
-terraform output github_actions_deploy_role_arn
-terraform output github_oidc_sub_master
-```
+Push em `master` publica na VM via SSM híbrido, sem abrir SSH. Runbook: [`docs/ops/deploy.md`](../../docs/ops/deploy.md). ADRs 0012 e 0013.
 
 ## Variáveis principais
 
@@ -67,13 +68,20 @@ terraform output github_oidc_sub_master
 |---|---|
 | `region` | Padrão `us-east-2` |
 | `aws_profile` | Profile AWS CLI (padrão `default`) |
-| `instance_type` | Padrão `t4g.small` |
+| `availability_zone` | Vazio = `<region>a` |
+| `lightsail_bundle_id` | Padrão `micro_3_0` (1 GB). Veja `aws lightsail get-bundles` |
+| `lightsail_blueprint_id` | Padrão `ubuntu_24_04` |
 | `ssh_public_key` | Chave pública OpenSSH |
-| `github_repository` | Repo do OIDC de deploy (padrão `marquesjr/ib-conecta`) |
 | `github_oidc_sub_prefix` | Prefixo imutável do claim `sub` (padrão `repo:marquesjr@2216233/ib-conecta@1314311915`) |
 | `ssh_allowed_cidrs` | CIDRs da porta 22 |
-| `budget_alert_email` | Destino do alerta de 80% de US$ 20 |
+| `budget_limit_usd` | Teto do budget (padrão 12, com alerta em 80%) |
+| `budget_alert_email` | Destino do alerta |
 | `enable_budget` | `false` se o IAM não tiver `budgets:*` |
+
+## Cuidados
+
+- `user_data` e `blueprint_id` estão em `ignore_changes`. Mudar qualquer um dos dois recriaria a VM e apagaria os volumes Docker (banco e mídia).
+- Para trocar de plano (`lightsail_bundle_id`), o Terraform também recria a VM. O caminho seguro é fazer um snapshot pelo console do Lightsail, criar a instância nova a partir dele e importar no state, ou repetir o runbook de migração com backup e restore.
 
 ## Destroy
 
@@ -81,10 +89,10 @@ terraform output github_oidc_sub_master
 terraform destroy
 ```
 
-Esvazie o bucket de backups antes se o destroy falhar em objetos versionados.
+Esvazie o bucket de backups antes, se o destroy falhar por causa de objetos versionados.
 
 ## LocalStack
 
-S3 local (não a VPC/EC2): na raiz do repo, `scripts\deploy-local.bat`. Backup/restore: `docs/backup.md`.
+S3 local (não emula o Lightsail): na raiz do repo, rode `scripts\deploy-local.bat`. Backup/restore: `docs/backup.md`.
 
-Lifecycle do bucket: prefixo `daily/` expira em 30 dias; `monthly/` em 366 dias.
+Lifecycle do bucket: o prefixo `daily/` expira em 30 dias e o `monthly/` em 366 dias.

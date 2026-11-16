@@ -30,39 +30,22 @@ variable "tags" {
   }
 }
 
-variable "vpc_cidr" {
-  description = "CIDR da VPC."
-  type        = string
-  default     = "10.0.0.0/16"
-}
-
-variable "public_subnet_cidr" {
-  description = "CIDR da subnet pública."
-  type        = string
-  default     = "10.0.0.0/24"
-}
-
 variable "availability_zone" {
-  description = "AZ da subnet/VM. Vazio = primeira AZ com o instance_type."
+  description = "AZ do Lightsail. Vazio = <region>a."
   type        = string
   default     = ""
 }
 
-variable "instance_type" {
-  description = "Tipo da EC2 (ADR 0003: t4g.small)."
+variable "lightsail_bundle_id" {
+  description = "Plano do Lightsail (ADR 0013: 1 GB). IDs em: aws lightsail get-bundles."
   type        = string
-  default     = "t4g.small"
+  default     = "micro_3_0"
 }
 
-variable "boot_volume_size_gbs" {
-  description = "Tamanho do volume raiz gp3, em GB."
-  type        = number
-  default     = 30
-
-  validation {
-    condition     = var.boot_volume_size_gbs >= 8 && var.boot_volume_size_gbs <= 50
-    error_message = "boot_volume_size_gbs deve ficar entre 8 e 50 para o teto baixo de custo."
-  }
+variable "lightsail_blueprint_id" {
+  description = "Imagem do Lightsail. IDs em: aws lightsail get-blueprints."
+  type        = string
+  default     = "ubuntu_24_04"
 }
 
 variable "ssh_public_key" {
@@ -99,8 +82,14 @@ variable "backup_bucket_name" {
   default     = ""
 }
 
+variable "budget_limit_usd" {
+  description = "Teto mensal do AWS Budget, em US$ (ADR 0013)."
+  type        = number
+  default     = 12
+}
+
 variable "budget_alert_email" {
-  description = "E-mail do alerta de 80% do budget de US$ 20 (ADR 0008)."
+  description = "E-mail do alerta de 80% do budget."
   type        = string
 }
 

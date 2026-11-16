@@ -92,22 +92,6 @@ resource "aws_s3_bucket_ownership_controls" "backups" {
   }
 }
 
-data "aws_iam_policy_document" "ec2_assume" {
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-  }
-}
-
-resource "aws_iam_role" "app" {
-  name               = "${local.name_prefix}-ec2"
-  assume_role_policy = data.aws_iam_policy_document.ec2_assume.json
-}
-
 data "aws_iam_policy_document" "backup_s3" {
   statement {
     sid = "BackupBucketList"
@@ -131,13 +115,14 @@ data "aws_iam_policy_document" "backup_s3" {
   }
 }
 
-resource "aws_iam_role_policy" "backup_s3" {
-  name   = "backup-s3"
-  role   = aws_iam_role.app.id
-  policy = data.aws_iam_policy_document.backup_s3.json
+# Lightsail não tem instance profile. A VM usa a access key deste usuário, criada à mão
+# (aws iam create-access-key) para o segredo não ir parar no state. Ver docs/backup.md.
+resource "aws_iam_user" "backup" {
+  name = "${local.name_prefix}-backup"
 }
 
-resource "aws_iam_instance_profile" "app" {
-  name = "${local.name_prefix}-ec2"
-  role = aws_iam_role.app.name
+resource "aws_iam_user_policy" "backup_s3" {
+  name   = "backup-s3"
+  user   = aws_iam_user.backup.name
+  policy = data.aws_iam_policy_document.backup_s3.json
 }

@@ -1,13 +1,56 @@
-# Deploy a partir do GitHub Actions (ADR 0012). Sem access keys no GitHub.
+# Deploy a partir do GitHub Actions (ADR 0012, ADR 0013). Sem access keys no GitHub.
+# A VM do Lightsail entra no SSM como managed instance híbrida (mi-...), registrada
+# uma vez com a activation abaixo (scripts/install-ssm-agent.sh). Tier padrão: sem custo.
 
 locals {
   github_oidc_sub_master = "${var.github_oidc_sub_prefix}:ref:refs/heads/master"
 }
 
-resource "aws_iam_role_policy_attachment" "ssm_core" {
-  role       = aws_iam_role.app.name
+# --- Registro híbrido da VM no SSM ---
+
+data "aws_iam_policy_document" "ssm_hybrid_assume" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ssm.amazonaws.com"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
+  }
+}
+
+resource "aws_iam_role" "ssm_hybrid" {
+  name               = "${local.name_prefix}-ssm-hybrid"
+  assume_role_policy = data.aws_iam_policy_document.ssm_hybrid_assume.json
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_hybrid_core" {
+  role       = aws_iam_role.ssm_hybrid.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
+
+# Vale 24 h e registra uma VM só. Para registrar de novo (VM recriada ou activation vencida):
+#   terraform apply -replace=aws_ssm_activation.app
+resource "aws_ssm_activation" "app" {
+  name               = local.app_name
+  description        = "Registro da VM Lightsail ${local.app_name} no SSM"
+  iam_role           = aws_iam_role.ssm_hybrid.name
+  registration_limit = 1
+
+  tags = {
+    Name = local.app_name
+  }
+
+  depends_on = [aws_iam_role_policy_attachment.ssm_hybrid_core]
+}
+
+# --- Role assumida pelo workflow Deploy produção ---
 
 # AWS valida o GitHub OIDC por CA confiável; o thumbprint só satisfaz o schema do provider.
 resource "aws_iam_openid_connect_provider" "github" {
@@ -57,14 +100,6 @@ resource "aws_iam_role" "github_deploy" {
 
 data "aws_iam_policy_document" "github_deploy" {
   statement {
-    sid = "FindInstance"
-    actions = [
-      "ec2:DescribeInstances",
-    ]
-    resources = ["*"]
-  }
-
-  statement {
     sid = "SsmInventory"
     actions = [
       "ssm:DescribeInstanceInformation",
@@ -74,14 +109,22 @@ data "aws_iam_policy_document" "github_deploy" {
   }
 
   statement {
-    sid = "SsmRunShellOnApp"
-    actions = [
-      "ssm:SendCommand",
-    ]
-    resources = [
-      "arn:aws:ssm:${var.region}::document/AWS-RunShellScript",
-      "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:instance/${aws_instance.app.id}",
-    ]
+    sid       = "SsmRunShellDocument"
+    actions   = ["ssm:SendCommand"]
+    resources = ["arn:aws:ssm:${var.region}::document/AWS-RunShellScript"]
+  }
+
+  # O id mi-... só existe depois do registro; a tag Name restringe o alvo à VM do portal.
+  statement {
+    sid       = "SsmRunShellOnApp"
+    actions   = ["ssm:SendCommand"]
+    resources = ["arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:managed-instance/*"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "ssm:resourceTag/Name"
+      values   = [local.app_name]
+    }
   }
 }
 

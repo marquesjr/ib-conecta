@@ -17,14 +17,16 @@ Criptografia em camadas: age no arquivo + SSE-S3 AES256 no bucket.
 
 Antes do `pg_dump`, o script dispara `discard_retreat_sensitive_data` no container `web` (dados médicos e de menores já vencidos não entram no artefato novo). Para pular: `BACKUP_SKIP_DISCARD=1`. Prazos e responsáveis: `docs/privacidade.md`.
 
-## Produção (EC2)
+## Produção (Lightsail)
 
 Na VM (`/home/ubuntu/ib-conecta`), depois de `git pull`:
 
 ```bash
-sudo scripts/install-backup-timer.sh
 cp .env.backup.example .env.backup
+chmod 600 .env.backup
 # Confira BACKUP_S3_BUCKET (terraform output backup_bucket_name)
+# Preencha AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY (veja abaixo)
+sudo scripts/install-backup-timer.sh
 ```
 
 O timer dispara **06:00 UTC** (03:00 em Brasília, sem horário de verão) com atraso aleatório de até 10 minutos. Disparo manual:
@@ -34,9 +36,16 @@ sudo systemctl start ib-conecta-backup.service
 journalctl -u ib-conecta-backup.service -n 50 --no-pager
 ```
 
-A EC2 autentica no S3 pelo **instance profile**. Não coloque access keys no `.env.backup` de produção.
+O Lightsail não tem instance profile (ADR 0013). A VM autentica no S3 com a access key do IAM user `ib-conecta-prod-backup`, criado pelo Terraform, cuja policy só alcança o bucket de backups. A chave é gerada à mão, para não ir parar no state do Terraform:
 
-Pacotes: `age` e AWS CLI v2. O `user_data` de instâncias novas já os instala; a VM atual precisa do `install-backup-timer.sh` uma vez (o pacote `awscli` v1 não existe no Ubuntu 24.04 ARM).
+```bash
+# no laptop (profile com permissão de IAM)
+aws iam create-access-key --user-name ib-conecta-prod-backup
+```
+
+Grave os dois valores no `.env.backup` da VM (o arquivo nunca entra no git). Para rotacionar: crie a chave nova, troque no `.env.backup`, rode um backup manual e então `aws iam delete-access-key --user-name ib-conecta-prod-backup --access-key-id <antiga>`.
+
+Pacotes: `age` e AWS CLI v2. O launch script da VM (`infra/aws/user_data.sh`) já instala os dois; `install-backup-timer.sh` também, se faltarem.
 
 ## Local (notebook + LocalStack)
 

@@ -9,3 +9,5 @@ Recusado neste desenho:
 - Access keys de IAM user no GitHub: OIDC com `aud` = `sts.amazonaws.com` e `sub` imutável `repo:marquesjr@2216233/ib-conecta@1314311915:ref:refs/heads/master` (repositório criado após 15/07/2026; o formato antigo `repo:marquesjr/ib-conecta:ref:…` é recusado pelo STS).
 
 Issue #17. Runbook `docs/ops/deploy.md`.
+
+> Desde a [ADR 0013](0013-lightsail-1gb.md), o alvo do SSM é a VM do Lightsail registrada como managed instance híbrida, e não mais a EC2.
