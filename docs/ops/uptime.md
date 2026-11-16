@@ -2,7 +2,7 @@
 
 Issue [#36](https://github.com/marquesjr/ib-conecta/issues/36). Parte do épico [#17](https://github.com/marquesjr/ib-conecta/issues/17).
 
-O portal em produção é checado **de fora da AWS**, a cada **5 minutos**, pelo GitHub Actions (`Monitoramento do portal`). A origem da checagem é a infra do GitHub, não a EC2 — se a VM, o Caddy ou o Django caírem, o alerta ainda dispara.
+O portal em produção é checado **de fora da AWS**, a cada **5 minutos**, pelo GitHub Actions (`Monitoramento do portal`). A origem da checagem é a infra do GitHub, não a VM — se a VM, o Caddy ou o Django caírem, o alerta ainda dispara.
 
 ## O que é checado
 
@@ -50,7 +50,7 @@ Não há canal SMS. Complementos gratuitos (UptimeRobot, [Pulsetic](https://puls
    ```
 
 5. Disco e memória: `df -h`, `free -m`. Volume cheio derruba PostgreSQL e o `healthz`.
-6. DNS: `www` e o apex devem apontar para o Elastic IP (`terraform output instance_public_ip`). Procedimento no README da raiz, seção DNS.
+6. DNS: `www` e o apex devem apontar para o IP estático do Lightsail (`terraform output instance_public_ip`). Procedimento no README da raiz, seção DNS.
 7. TLS: logs do Caddy se o certificado Let's Encrypt tiver falhado (`CADDY_TLS` vazio no `.env.prod`).
 8. Recolocar o stack se os containers saíram:
 

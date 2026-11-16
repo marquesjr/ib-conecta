@@ -8,24 +8,14 @@ output "availability_zone" {
   value       = local.availability_zone
 }
 
-output "vpc_id" {
-  description = "ID da VPC."
-  value       = aws_vpc.app.id
-}
-
-output "instance_id" {
-  description = "ID da instância EC2."
-  value       = aws_instance.app.id
-}
-
-output "instance_private_ip" {
-  description = "IP privado da instância."
-  value       = aws_instance.app.private_ip
+output "instance_name" {
+  description = "Nome da instância Lightsail (e do managed instance no SSM)."
+  value       = aws_lightsail_instance.app.name
 }
 
 output "instance_public_ip" {
-  description = "Elastic IP da VM (usar no DNS www)."
-  value       = aws_eip.app.public_ip
+  description = "IP estático da VM (usar nos registros A do DNS)."
+  value       = aws_lightsail_static_ip.app.ip_address
 }
 
 output "backup_bucket_name" {
@@ -33,9 +23,25 @@ output "backup_bucket_name" {
   value       = aws_s3_bucket.backups.bucket
 }
 
+output "backup_iam_user" {
+  description = "IAM user cujas access keys vão no .env.backup da VM."
+  value       = aws_iam_user.backup.name
+}
+
 output "ssh_command" {
   description = "Comando SSH sugerido (usuário ubuntu, chave local)."
-  value       = "ssh -i ~/.ssh/id_ed25519_ib_conecta ubuntu@${aws_eip.app.public_ip}"
+  value       = "ssh -i ~/.ssh/id_ed25519_ib_conecta ubuntu@${aws_lightsail_static_ip.app.ip_address}"
+}
+
+output "ssm_activation_id" {
+  description = "ID da activation híbrida do SSM (scripts/install-ssm-agent.sh)."
+  value       = aws_ssm_activation.app.id
+}
+
+output "ssm_activation_code" {
+  description = "Código da activation híbrida. Leia com: terraform output -raw ssm_activation_code"
+  value       = aws_ssm_activation.app.activation_code
+  sensitive   = true
 }
 
 output "github_actions_deploy_role_arn" {

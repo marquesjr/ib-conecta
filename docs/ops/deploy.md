@@ -1,150 +1,123 @@
 # Deploy produção ao fazer push em master (issue #17)
 
-O portal em `https://www.ibsantaleopoldina.com.br` **não** atualiza sozinho só com o merge. Quem publica é o workflow **Deploy produção**: push em `master` (ou *Run workflow*) assume uma role IAM por OIDC, manda um SSM Run Command na EC2 e a VM faz o mesmo `git` + `docker compose` documentado no README.
+O portal em `https://www.ibsantaleopoldina.com.br` **não** se atualiza só com o merge. Quem publica é o workflow **Deploy produção**. Um push em `master` (ou *Run workflow*) faz o seguinte:
 
-Não abre a porta 22 para o GitHub. Não usa runner self-hosted (o repositório é público). Não grava access key da AWS no GitHub.
+1. Assume uma role IAM por OIDC.
+2. Manda um SSM Run Command para a VM do Lightsail.
+3. A VM roda o mesmo `git` + `docker compose` documentado no README.
+
+O deploy não abre a porta 22 para o GitHub, não usa runner self-hosted (o repositório é público) e não grava access key da AWS no GitHub.
+
+A VM do Lightsail não tem instance profile. Por isso ela entra no SSM como **managed instance híbrida** (ID `mi-…`), registrada uma única vez com uma activation (ADR 0013).
 
 ## O que o pipeline faz
 
-1. Job `verify` — `bash -n` nos scripts (também roda em pull request).
-2. Job `deploy` — só em `push`/`workflow_dispatch` em `master`:
-   - OIDC → role `ib-conecta-prod-github-deploy`
-   - Localiza a EC2 pela tag `Name=ib-conecta-prod-app`
-   - SSM: `git fetch` + `checkout` do SHA do push + `scripts/deploy-prod.sh`
-   - `docker compose -f docker-compose.prod.yml --env-file .env.prod up --build -d --wait`
-   - Checagem externa: `python scripts/check-uptime.py` (igual ao monitoramento)
+1. Job `verify`: roda `bash -n` nos scripts e as asserções de `scripts/test-deploy-scripts.sh`. Também roda em pull request.
+2. Job `deploy`: só em `push`/`workflow_dispatch` em `master`.
+   - Assume a role `ib-conecta-prod-github-deploy` por OIDC.
+   - Localiza a managed instance **Online** com `Name=ib-conecta-prod-app` (`ssm describe-instance-information`).
+   - Pelo SSM, faz `git fetch` + `checkout` do SHA do push e roda `scripts/deploy-prod.sh`.
+   - O script roda `docker compose -f docker-compose.prod.yml --env-file .env.prod up --build -d --wait`.
+   - Por fim, faz a checagem externa com `python scripts/check-uptime.py` (a mesma do monitoramento).
 
-O rebuild **é obrigatório**: a imagem Docker de produção não faz bind-mount do código.
+O rebuild **é obrigatório**, porque a imagem Docker de produção não faz bind-mount do código.
 
 ## Passos únicos (operador com AWS + SSH)
 
-Faça **uma vez**. Sem isso a Action falha (não inventamos credenciais da conta).
+Faça estes passos **uma vez** por VM. Sem eles a Action falha. Se for a migração a partir da EC2, siga [`migracao-lightsail.md`](migracao-lightsail.md), que já inclui estes passos na ordem certa.
 
-### 1. IAM + OIDC (Terraform, máquina que tem o state)
+### 1. IAM + OIDC + activation (Terraform, na máquina que tem o state)
 
 ```bash
 cd infra/aws
 terraform init
 terraform apply
 terraform output github_actions_deploy_role_arn
-terraform output github_oidc_provider_arn
+terraform output ssm_activation_id
+terraform output -raw ssm_activation_code   # segredo: não cole em issue/PR
 ```
 
-Isso **não** recria a EC2 (`user_data` está em `ignore_changes`). Só entra: policy `AmazonSSMManagedInstanceCore` na role da VM, provider OIDC do GitHub e a role de deploy.
-
-A trust policy aceita **somente** o `sub` imutável deste repositório (criado em 27/07/2026, depois do corte do GitHub de 15/07/2026):
+A trust policy aceita **somente** o `sub` imutável deste repositório, criado em 27/07/2026 (depois do corte do GitHub de 15/07/2026):
 
 `repo:marquesjr@2216233/ib-conecta@1314311915:ref:refs/heads/master`
 
-O formato antigo `repo:marquesjr/ib-conecta:ref:refs/heads/master` **não** casa com o token. Sintoma: `Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWebIdentity` com `id-token: write` e `aud=sts.amazonaws.com` já corretos (run [35139727929](https://github.com/marquesjr/ib-conecta/actions/runs/35139727929)). Depois de puxar este commit: `terraform apply` de novo e conferir `terraform output github_oidc_sub_master`.
+O formato antigo, `repo:marquesjr/ib-conecta:ref:refs/heads/master`, **não** casa com o token. O sintoma é `Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWebIdentity`.
 
-Prefixo atual (API): `GET /repos/marquesjr/ib-conecta/actions/oidc/customization/sub` → `sub_claim_prefix`.
+Por padrão, a Action usa `arn:aws:iam::354354997468:role/ib-conecta-prod-github-deploy`. Se o apply imprimir outro ARN, grave-o em GitHub → Settings → Secrets and variables → Actions → **Variables** → `AWS_DEPLOY_ROLE_ARN`.
 
-A Action usa, por padrão:
-
-`arn:aws:iam::354354997468:role/ib-conecta-prod-github-deploy`
-
-Se o apply imprimir outro ARN, grave em GitHub → Settings → Secrets and variables → Actions → **Variables** → `AWS_DEPLOY_ROLE_ARN`.
-
-### 2. Agente SSM na VM (SSH uma vez)
-
-A VM de produção **já tem** o agente pelo snap (`amazon-ssm-agent` classic). A unit systemd **não** é `amazon-ssm-agent` — essa não existe — e sim `snap.amazon-ssm-agent.amazon-ssm-agent`. Instalar o `.deb` em cima falha: o preinst do dpkg recusa porque o snap é o dono.
-
-`scripts/install-ssm-agent.sh` detecta o snap, **pula o .deb**, faz `enable`/`start` da unit do snap e sai 0.
-
-O `user_data` novo ainda instala o `.deb` em instâncias futuras sem snap. A VM atual ignora mudança de `user_data`, então:
+A activation vale **24 horas** e registra **uma** VM. Se ela vencer ou a VM for recriada:
 
 ```bash
-ssh -i ~/.ssh/id_ed25519_ib_conecta ubuntu@52.14.75.54
+terraform apply -replace=aws_ssm_activation.app
+```
+
+### 2. Registrar a VM no SSM (SSH uma vez)
+
+As imagens Ubuntu da AWS trazem o agente pelo snap (`amazon-ssm-agent` classic). Nesse caso a unit systemd é `snap.amazon-ssm-agent.amazon-ssm-agent`, e não `amazon-ssm-agent`. Instalar o `.deb` por cima falha, porque o preinst do dpkg recusa. `scripts/install-ssm-agent.sh` detecta o snap, **pula o .deb**, registra a VM com a activation e sobe a unit.
+
+```bash
+ssh -i ~/.ssh/id_ed25519_ib_conecta ubuntu@<IP estático>
 cd /home/ubuntu/ib-conecta
-git pull origin master
-sudo scripts/install-ssm-agent.sh
+sudo SSM_ACTIVATION_ID='<id>' SSM_ACTIVATION_CODE='<code>' scripts/install-ssm-agent.sh
 ```
 
-O script deve imprimir `OK snap.amazon-ssm-agent.amazon-ssm-agent.service`. `systemctl status amazon-ssm-agent` continuar “unit could not be found” é esperado.
+O script imprime `registro híbrido: {"ManagedInstanceID":"mi-…",…}` e `OK snap.amazon-ssm-agent.amazon-ssm-agent.service` (ou `amazon-ssm-agent.service`, quando a imagem não tem o snap).
 
-Se o `git pull` ainda não tiver este commit, baixe o instalador do `master` depois do merge (ou desta branch, enquanto o PR não mergeou):
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/marquesjr/ib-conecta/master/scripts/install-ssm-agent.sh | sudo bash
-```
-
-Reinicie o agente se o Terraform/IAM tiver sido aplicado **depois** da instalação:
-
-```bash
-# VM atual (snap):
-sudo systemctl restart snap.amazon-ssm-agent.amazon-ssm-agent
-# Instância nova com o pacote .deb:
-# sudo systemctl restart amazon-ssm-agent
-```
-
-Do laptop (profile `default`, região `us-east-2`):
+Do laptop (profile `default`, região `us-east-2`), confira se o nó está `Online` e se tem a tag `Name`. A role de deploy só alcança nós com `Name=ib-conecta-prod-app`. A activation já aplica essa tag, mas o `add-tags-to-resource` abaixo pode ser repetido sem efeito colateral:
 
 ```bash
 aws ssm describe-instance-information \
   --region us-east-2 \
-  --query 'InstanceInformationList[].{Id:InstanceId,Ping:PingStatus,Name:ComputerName}' \
+  --query 'InstanceInformationList[].{Id:InstanceId,Name:Name,Ping:PingStatus,Ip:IPAddress}' \
   --output table
+
+aws ssm add-tags-to-resource --region us-east-2 \
+  --resource-type ManagedInstance --resource-id mi-XXXXXXXXXXXXXXXXX \
+  --tags Key=Name,Value=ib-conecta-prod-app
 ```
 
-`PingStatus` tem de ser `Online`. Se a lista vier vazia: a role `ib-conecta-prod-ec2` ainda não tem `AmazonSSMManagedInstanceCore`, ou o agente não está rodando.
+Se sobrar um nó antigo com o mesmo `Name` (VM recriada), ele aparece como `ConnectionLost` e o deploy o ignora. Mesmo assim, remova-o:
+
+```bash
+aws ssm deregister-managed-instance --region us-east-2 --instance-id mi-ANTIGO
+```
 
 ### 3. Disparar o primeiro deploy
 
-Depois do merge deste pipeline (ou com o workflow já em `master`):
-
 1. GitHub → Actions → **Deploy produção** → **Run workflow** → branch `master`.
 2. O run tem de ficar verde.
-3. Confirme o SHA no log (`HEAD …`) e `https://www.ibsantaleopoldina.com.br/healthz/` → `{"status":"ok"}`.
+3. Confirme o SHA no log (`HEAD …`) e que `https://www.ibsantaleopoldina.com.br/healthz/` responde `{"status":"ok"}`.
 
-A partir daí, **cada push/merge em `master` publica sozinho**. Não é preciso SSH.
-
-## Fallback sem o state do Terraform
-
-Na mesma conta (`354354997468`), profile `default`. Role da VM: `ib-conecta-prod-ec2`.
-
-```bash
-aws iam attach-role-policy \
-  --role-name ib-conecta-prod-ec2 \
-  --policy-arn arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
-
-# Se ainda não existir o provider OIDC do GitHub nesta conta:
-aws iam create-open-id-connect-provider \
-  --url https://token.actions.githubusercontent.com \
-  --client-id-list sts.amazonaws.com \
-  --thumbprint-list 6938fd4d98bab03faadb97b34396831e3780aea1
-```
-
-A role `ib-conecta-prod-github-deploy` (trust `repo:marquesjr/ib-conecta:ref:refs/heads/master` + `aud=sts.amazonaws.com`, permissões SSM/EC2 Describe) é a do arquivo `infra/aws/deploy.tf`. Prefira `terraform apply`; o fallback CLI completo é copiar o JSON gerado por `terraform show` depois do apply numa máquina que tenha o state.
-
-Não crie access keys de IAM user para o GitHub.
+A partir daí, **cada push/merge em `master` publica sozinho**, sem SSH.
 
 ## O que **não** entra em GitHub Secrets
 
 | Item | Onde fica |
 |---|---|
 | `.env.prod` (Django, Postgres, Let's Encrypt) | Só na VM, gitignored |
-| Chave SSH da EC2 | Só no laptop do operador; a Action **não** SSH |
-| Access keys AWS | Não usar; a Action assume role por OIDC |
+| `.env.backup` (access key do IAM user de backup) | Só na VM, `chmod 600` |
+| Chave SSH da VM | Só no laptop do operador, porque a Action **não** usa SSH |
+| Código da activation SSM | Só no state do Terraform. Usado uma vez no registro |
 
 Não é necessário secret `PROD_SSH_KEY` nem runner `self-hosted`.
 
 ## Como conferir o próximo merge
 
-1. Merge (ou push) em `master`.
-2. Actions → **Deploy produção** deve iniciar em segundos no SHA do merge.
-3. Concurrency `production-deploy`: um deploy por vez; o seguinte espera (não cancela rebuild).
-4. Site: `https://www.ibsantaleopoldina.com.br/healthz/` e a mudança do PR (ex.: página nova).
-5. Se falhar: logs da Action (stdout/stderr do SSM, truncados em ~24 KB). SSH só para diagnóstico, não para publicar:
+1. Faça merge (ou push) em `master`.
+2. Em Actions, o **Deploy produção** deve iniciar em segundos no SHA do merge.
+3. A concurrency `production-deploy` roda um deploy por vez. O seguinte espera, sem cancelar o rebuild.
+4. No site, confira `https://www.ibsantaleopoldina.com.br/healthz/` e a mudança do PR.
+5. Se falhar, veja os logs da Action (stdout/stderr do SSM, truncados em ~24 KB). Use SSH só para diagnóstico, não para publicar:
 
    ```bash
    cd /home/ubuntu/ib-conecta
    git log -1 --oneline
+   free -m
    docker compose -f docker-compose.prod.yml --env-file .env.prod ps
    docker compose -f docker-compose.prod.yml --env-file .env.prod logs --tail=150 web caddy db
    ```
 
-   Publicação manual de emergência (mesmo script da Action):
+   Para uma publicação manual de emergência (o mesmo script da Action):
 
    ```bash
    bash scripts/deploy-prod.sh
@@ -152,9 +125,9 @@ Não é necessário secret `PROD_SSH_KEY` nem runner `self-hosted`.
 
 ## Arquivos
 
-- `.github/workflows/deploy.yml` — verify + deploy
-- `scripts/deploy-prod.sh` — git + compose na VM
-- `scripts/deploy-prod-ssm.sh` — SSM a partir do runner hospedado
-- `scripts/install-ssm-agent.sh` — agente na Ubuntu ARM
-- `infra/aws/deploy.tf` — OIDC, role, policy SSM na EC2
-- ADR `docs/adr/0012-deploy-on-push-to-master.md`
+- `.github/workflows/deploy.yml`: verify + deploy.
+- `scripts/deploy-prod.sh`: git + compose na VM.
+- `scripts/deploy-prod-ssm.sh`: SSM a partir do runner hospedado.
+- `scripts/install-ssm-agent.sh`: agente e registro híbrido na VM.
+- `infra/aws/deploy.tf`: OIDC, role de deploy, activation e service role do SSM.
+- ADRs `docs/adr/0012-deploy-on-push-to-master.md` e `docs/adr/0013-lightsail-1gb.md`.

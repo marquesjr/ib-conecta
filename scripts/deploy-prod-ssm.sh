@@ -4,7 +4,7 @@
 set -euo pipefail
 
 AWS_REGION="${AWS_REGION:-us-east-2}"
-INSTANCE_NAME_TAG="${INSTANCE_NAME_TAG:-ib-conecta-prod-app}"
+INSTANCE_NAME="${INSTANCE_NAME:-ib-conecta-prod-app}"
 DEPLOY_SHA="${1:-${DEPLOY_SHA:-}}"
 POLL_SECONDS="${DEPLOY_POLL_SECONDS:-20}"
 MAX_POLLS="${DEPLOY_MAX_POLLS:-90}"
@@ -36,32 +36,23 @@ if ! command -v jq >/dev/null 2>&1; then
   exit 1
 fi
 
-echo "região $AWS_REGION — procurando instância Name=$INSTANCE_NAME_TAG"
-mapfile -t INSTANCE_IDS < <(aws ec2 describe-instances \
+# A VM é uma managed instance híbrida do SSM (Lightsail, ADR 0013): o Name vem da activation.
+echo "região $AWS_REGION — procurando managed instance Name=$INSTANCE_NAME"
+NODES="$(aws ssm describe-instance-information \
   --region "$AWS_REGION" \
-  --filters \
-    "Name=tag:Name,Values=${INSTANCE_NAME_TAG}" \
-    "Name=instance-state-name,Values=running" \
-  --query 'Reservations[].Instances[].InstanceId' \
-  --output text | tr '\t' '\n' | sed '/^$/d')
+  --output json \
+  | jq -c --arg name "$INSTANCE_NAME" \
+    '[.InstanceInformationList[] | select(.Name == $name) | {id: .InstanceId, ping: .PingStatus}]')"
+mapfile -t INSTANCE_IDS < <(jq -r '.[] | select(.ping == "Online") | .id' <<<"$NODES")
 
 if [[ "${#INSTANCE_IDS[@]}" -ne 1 ]]; then
-  echo "esperado 1 instância running com Name=$INSTANCE_NAME_TAG, achei ${#INSTANCE_IDS[@]} (${INSTANCE_IDS[*]:-nenhuma})" >&2
+  echo "esperado 1 managed instance Online com Name=$INSTANCE_NAME, achei ${#INSTANCE_IDS[@]}." >&2
+  echo "Registradas com esse Name: $NODES" >&2
+  echo "Registro da VM e limpeza de nós antigos: docs/ops/deploy.md" >&2
   exit 1
 fi
 INSTANCE_ID="${INSTANCE_IDS[0]}"
 echo "instância $INSTANCE_ID"
-
-PING="$(aws ssm describe-instance-information \
-  --region "$AWS_REGION" \
-  --filters "Key=InstanceIds,Values=${INSTANCE_ID}" \
-  --query 'InstanceInformationList[0].PingStatus' \
-  --output text)"
-if [[ "$PING" != "Online" ]]; then
-  echo "SSM não está Online nesta instância (PingStatus=${PING})." >&2
-  echo "Na VM: sudo scripts/install-ssm-agent.sh  — e confira docs/ops/deploy.md" >&2
-  exit 1
-fi
 
 PAYLOAD="$(jq -n \
   --arg instance "$INSTANCE_ID" \

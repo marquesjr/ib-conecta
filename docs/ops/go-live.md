@@ -48,7 +48,7 @@ O GitHub costuma atrasar o cron de `*/5 * * * *` em repositórios com pouca ativ
 
 ## 4. Backup e restauração
 
-Na EC2 (procedimento completo em [backup.md](../backup.md)):
+Na VM (procedimento completo em [backup.md](../backup.md)):
 
 - [ ] `journalctl -u ib-conecta-backup.service -n 50 --no-pager` mostra o backup da última madrugada sem erro
 - [ ] `aws s3 ls s3://<bucket>/daily/ --recursive` lista o artefato do dia anterior

@@ -199,9 +199,9 @@ cp .env.prod.example .env.prod
 docker compose -f docker-compose.prod.yml --env-file .env.prod up --build
 ```
 
-Na VM AWS (`t4g.small`, ARM, Ohio), use o mesmo par de comandos com `SITE_ADDRESS` público, `WEB_CONCURRENCY=1` e `CADDY_TLS` vazio (Let's Encrypt). Suba em background com `-d`.
+Na VM AWS (Lightsail de 1 GB, x86_64, Ohio), use o mesmo par de comandos com `SITE_ADDRESS` público, `WEB_CONCURRENCY=1` e `CADDY_TLS` vazio (Let's Encrypt). Suba em background com `-d`.
 
-**Deploy:** push em `master` dispara o deploy (GitHub Actions → SSM → o Compose acima). Passos únicos (IAM/OIDC + agente SSM na VM) e o fallback via SSH: [`docs/ops/deploy.md`](docs/ops/deploy.md). Sem esse bootstrap, merge em `master` **não** atualiza o site.
+**Deploy:** push em `master` dispara o deploy (GitHub Actions → SSM → o Compose acima). Passos únicos (IAM/OIDC + registro da VM no SSM) e o fallback via SSH: [`docs/ops/deploy.md`](docs/ops/deploy.md). Sem esse bootstrap, merge em `master` **não** atualiza o site.
 
 O entrypoint roda `migrate`, `collectstatic`, o bootstrap do CMS, o descarte de dados sensíveis de retiro vencidos e cria o superusuário se `DJANGO_SUPERUSER_*` estiver definido.
 
@@ -216,11 +216,11 @@ O entrypoint roda `migrate`, `collectstatic`, o bootstrap do CMS, o descarte de 
 
 Domínio canônico: `https://www.ibsantaleopoldina.com.br`.
 
-No painel do Registro.br use **Configurar zona DNS** (modo avançado) e não altere os servidores DNS — o domínio permanece nos nameservers do Registro.br. Crie dois registros **A** para o Elastic IP (`terraform output instance_public_ip` em `infra/aws`):
+No painel do Registro.br use **Configurar zona DNS** (modo avançado) e não altere os servidores DNS — o domínio permanece nos nameservers do Registro.br. Crie dois registros **A** para o IP estático do Lightsail (`terraform output instance_public_ip` em `infra/aws`):
 
 | Nome | Dados |
 |---|---|
-| `ibsantaleopoldina.com.br` | IPv4 do Elastic IP |
+| `ibsantaleopoldina.com.br` | IPv4 estático da VM |
 | `www.ibsantaleopoldina.com.br` | o mesmo IPv4 |
 
 O Caddyfile redireciona o apex para `https://www.ibsantaleopoldina.com.br` (301). O Let's Encrypt exige `SITE_ADDRESS=www.ibsantaleopoldina.com.br` e `CADDY_TLS` vazio no `.env.prod`. Para trocar o IP, atualize os dois registros A, aguarde o DNS e recrie o Caddy se o certificado falhar.

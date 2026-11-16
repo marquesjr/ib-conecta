@@ -75,10 +75,21 @@ assert "token.actions.githubusercontent.com:aud" in tf
 assert "sts.amazonaws.com" in tf
 print("oidc assertions ok")
 
+# Lightsail (ADR 0013): VM é managed instance híbrida; a role só alcança a de Name certo.
+assert 'resource "aws_ssm_activation" "app"' in tf
+assert "managed-instance/*" in tf
+assert "ssm:resourceTag/Name" in tf
+assert "ec2:" not in tf, "deploy.tf não deve depender de EC2"
+ssm = Path("scripts/deploy-prod-ssm.sh").read_text()
+assert "describe-instance-information" in ssm
+assert "ec2 describe-instances" not in ssm
+print("lightsail hybrid assertions ok")
+
 install = Path("scripts/install-ssm-agent.sh").read_text()
 assert "snap.amazon-ssm-agent.amazon-ssm-agent.service" in install
 assert "pulando o pacote .deb" in install
 assert "snap list amazon-ssm-agent" in install
+assert "-register" in install and "SSM_ACTIVATION_CODE" in install
 docs = Path("docs/ops/deploy.md").read_text()
 assert "snap.amazon-ssm-agent.amazon-ssm-agent" in docs
 assert "pula o .deb" in docs
